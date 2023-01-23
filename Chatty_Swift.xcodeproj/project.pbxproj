@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B042952F79C007F5EA7 /* IndexView.swift */; };
+		2ED68B0B29530550007F5EA7 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B0A29530550007F5EA7 /* LoginView.swift */; };
+		2ED68B1329534952007F5EA7 /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B1229534952007F5EA7 /* LoginService.swift */; };
+		2ED68B172954952D007F5EA7 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B162954952D007F5EA7 /* RegisterView.swift */; };
+		2ED68B1B296677A4007F5EA7 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B1A296677A4007F5EA7 /* MainView.swift */; };
+		2ED68B1F296679FF007F5EA7 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B1E296679FF007F5EA7 /* APIClient.swift */; };
 		2EE6CB332952F4F300E281A0 /* Chatty_SwiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB322952F4F300E281A0 /* Chatty_SwiftApp.swift */; };
 		2EE6CB352952F4F300E281A0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB342952F4F300E281A0 /* ContentView.swift */; };
 		2EE6CB372952F4F400E281A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EE6CB362952F4F400E281A0 /* Assets.xcassets */; };
@@ -34,6 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2ED68B042952F79C007F5EA7 /* IndexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexView.swift; sourceTree = "<group>"; };
+		2ED68B0A29530550007F5EA7 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		2ED68B1229534952007F5EA7 /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
+		2ED68B162954952D007F5EA7 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		2ED68B1A296677A4007F5EA7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2ED68B1E296679FF007F5EA7 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		2EE6CB2F2952F4F300E281A0 /* Chatty_Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chatty_Swift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE6CB322952F4F300E281A0 /* Chatty_SwiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_SwiftApp.swift; sourceTree = "<group>"; };
 		2EE6CB342952F4F300E281A0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -71,6 +83,81 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2ED68B08295304BF007F5EA7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B1929667705007F5EA7 /* main */,
+				2ED68B1829549533007F5EA7 /* Register */,
+				2ED68B0C295305E9007F5EA7 /* Login */,
+				2ED68B09295304C9007F5EA7 /* Index */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2ED68B09295304C9007F5EA7 /* Index */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B042952F79C007F5EA7 /* IndexView.swift */,
+			);
+			path = Index;
+			sourceTree = "<group>";
+		};
+		2ED68B0C295305E9007F5EA7 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B0A29530550007F5EA7 /* LoginView.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		2ED68B102953492A007F5EA7 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B1129534934007F5EA7 /* Login */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2ED68B1129534934007F5EA7 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B1229534952007F5EA7 /* LoginService.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		2ED68B1829549533007F5EA7 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B162954952D007F5EA7 /* RegisterView.swift */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		2ED68B1929667705007F5EA7 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B1A296677A4007F5EA7 /* MainView.swift */,
+			);
+			path = main;
+			sourceTree = "<group>";
+		};
+		2ED68B1C296679E6007F5EA7 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B1D296679EE007F5EA7 /* Router */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		2ED68B1D296679EE007F5EA7 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				2ED68B1E296679FF007F5EA7 /* APIClient.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 		2EE6CB262952F4F300E281A0 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +181,9 @@
 		2EE6CB312952F4F300E281A0 /* Chatty_Swift */ = {
 			isa = PBXGroup;
 			children = (
+				2ED68B1C296679E6007F5EA7 /* API */,
+				2ED68B102953492A007F5EA7 /* Service */,
+				2ED68B08295304BF007F5EA7 /* View */,
 				2EE6CB322952F4F300E281A0 /* Chatty_SwiftApp.swift */,
 				2EE6CB342952F4F300E281A0 /* ContentView.swift */,
 				2EE6CB362952F4F400E281A0 /* Assets.xcassets */,
@@ -258,6 +348,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EE6CB352952F4F300E281A0 /* ContentView.swift in Sources */,
+				2ED68B1B296677A4007F5EA7 /* MainView.swift in Sources */,
+				2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */,
+				2ED68B1F296679FF007F5EA7 /* APIClient.swift in Sources */,
+				2ED68B1329534952007F5EA7 /* LoginService.swift in Sources */,
+				2ED68B172954952D007F5EA7 /* RegisterView.swift in Sources */,
+				2ED68B0B29530550007F5EA7 /* LoginView.swift in Sources */,
 				2EE6CB332952F4F300E281A0 /* Chatty_SwiftApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
