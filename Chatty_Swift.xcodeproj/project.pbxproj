@@ -7,9 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E0B9958297F507000BDC534 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B9957297F507000BDC534 /* UserData.swift */; };
+		2E0B995B297F51A000BDC534 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2E0B995A297F51A000BDC534 /* Alamofire */; };
+		2E0B995E297F536600BDC534 /* BaseInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B995D297F536600BDC534 /* BaseInterceptor.swift */; };
+		2E0B9960297F542C00BDC534 /* APILogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B995F297F542C00BDC534 /* APILogger.swift */; };
+		2E0B9962297F55AC00BDC534 /* AuthRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B9961297F55AC00BDC534 /* AuthRouter.swift */; };
+		2E0B9965297F58F800BDC534 /* AuthAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B9964297F58F800BDC534 /* AuthAPIService.swift */; };
+		2E0B996C297F5CB700BDC534 /* UserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B996B297F5CB700BDC534 /* UserVM.swift */; };
 		2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B042952F79C007F5EA7 /* IndexView.swift */; };
 		2ED68B0B29530550007F5EA7 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B0A29530550007F5EA7 /* LoginView.swift */; };
-		2ED68B1329534952007F5EA7 /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B1229534952007F5EA7 /* LoginService.swift */; };
 		2ED68B172954952D007F5EA7 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B162954952D007F5EA7 /* RegisterView.swift */; };
 		2ED68B1B296677A4007F5EA7 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B1A296677A4007F5EA7 /* MainView.swift */; };
 		2ED68B1F296679FF007F5EA7 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED68B1E296679FF007F5EA7 /* APIClient.swift */; };
@@ -40,9 +46,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E0B9957297F507000BDC534 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		2E0B995D297F536600BDC534 /* BaseInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseInterceptor.swift; sourceTree = "<group>"; };
+		2E0B995F297F542C00BDC534 /* APILogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APILogger.swift; sourceTree = "<group>"; };
+		2E0B9961297F55AC00BDC534 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
+		2E0B9964297F58F800BDC534 /* AuthAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPIService.swift; sourceTree = "<group>"; };
+		2E0B996B297F5CB700BDC534 /* UserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVM.swift; sourceTree = "<group>"; };
 		2ED68B042952F79C007F5EA7 /* IndexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexView.swift; sourceTree = "<group>"; };
 		2ED68B0A29530550007F5EA7 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		2ED68B1229534952007F5EA7 /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		2ED68B162954952D007F5EA7 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		2ED68B1A296677A4007F5EA7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		2ED68B1E296679FF007F5EA7 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
@@ -63,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E0B995B297F51A000BDC534 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +95,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E0B9956297F504000BDC534 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B9957297F507000BDC534 /* UserData.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2E0B995C297F533C00BDC534 /* Interceptor */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B995D297F536600BDC534 /* BaseInterceptor.swift */,
+			);
+			path = Interceptor;
+			sourceTree = "<group>";
+		};
+		2E0B9963297F58E600BDC534 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B9964297F58F800BDC534 /* AuthAPIService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2E0B996A297F5CA900BDC534 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B996B297F5CB700BDC534 /* UserVM.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		2ED68B08295304BF007F5EA7 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -110,22 +154,6 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		2ED68B102953492A007F5EA7 /* Service */ = {
-			isa = PBXGroup;
-			children = (
-				2ED68B1129534934007F5EA7 /* Login */,
-			);
-			path = Service;
-			sourceTree = "<group>";
-		};
-		2ED68B1129534934007F5EA7 /* Login */ = {
-			isa = PBXGroup;
-			children = (
-				2ED68B1229534952007F5EA7 /* LoginService.swift */,
-			);
-			path = Login;
-			sourceTree = "<group>";
-		};
 		2ED68B1829549533007F5EA7 /* Register */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,7 +173,12 @@
 		2ED68B1C296679E6007F5EA7 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				2E0B9963297F58E600BDC534 /* Service */,
+				2E0B995C297F533C00BDC534 /* Interceptor */,
+				2E0B9956297F504000BDC534 /* Model */,
 				2ED68B1D296679EE007F5EA7 /* Router */,
+				2ED68B1E296679FF007F5EA7 /* APIClient.swift */,
+				2E0B995F297F542C00BDC534 /* APILogger.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -153,7 +186,7 @@
 		2ED68B1D296679EE007F5EA7 /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				2ED68B1E296679FF007F5EA7 /* APIClient.swift */,
+				2E0B9961297F55AC00BDC534 /* AuthRouter.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -181,8 +214,8 @@
 		2EE6CB312952F4F300E281A0 /* Chatty_Swift */ = {
 			isa = PBXGroup;
 			children = (
+				2E0B996A297F5CA900BDC534 /* ViewModel */,
 				2ED68B1C296679E6007F5EA7 /* API */,
-				2ED68B102953492A007F5EA7 /* Service */,
 				2ED68B08295304BF007F5EA7 /* View */,
 				2EE6CB322952F4F300E281A0 /* Chatty_SwiftApp.swift */,
 				2EE6CB342952F4F300E281A0 /* ContentView.swift */,
@@ -233,6 +266,9 @@
 			dependencies = (
 			);
 			name = Chatty_Swift;
+			packageProductDependencies = (
+				2E0B995A297F51A000BDC534 /* Alamofire */,
+			);
 			productName = Chatty_Swift;
 			productReference = 2EE6CB2F2952F4F300E281A0 /* Chatty_Swift.app */;
 			productType = "com.apple.product-type.application";
@@ -305,6 +341,9 @@
 				Base,
 			);
 			mainGroup = 2EE6CB262952F4F300E281A0;
+			packageReferences = (
+				2E0B9959297F51A000BDC534 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = 2EE6CB302952F4F300E281A0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -348,12 +387,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EE6CB352952F4F300E281A0 /* ContentView.swift in Sources */,
+				2E0B996C297F5CB700BDC534 /* UserVM.swift in Sources */,
 				2ED68B1B296677A4007F5EA7 /* MainView.swift in Sources */,
 				2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */,
+				2E0B9958297F507000BDC534 /* UserData.swift in Sources */,
 				2ED68B1F296679FF007F5EA7 /* APIClient.swift in Sources */,
-				2ED68B1329534952007F5EA7 /* LoginService.swift in Sources */,
+				2E0B995E297F536600BDC534 /* BaseInterceptor.swift in Sources */,
 				2ED68B172954952D007F5EA7 /* RegisterView.swift in Sources */,
 				2ED68B0B29530550007F5EA7 /* LoginView.swift in Sources */,
+				2E0B9965297F58F800BDC534 /* AuthAPIService.swift in Sources */,
+				2E0B9960297F542C00BDC534 /* APILogger.swift in Sources */,
+				2E0B9962297F55AC00BDC534 /* AuthRouter.swift in Sources */,
 				2EE6CB332952F4F300E281A0 /* Chatty_SwiftApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -679,6 +723,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2E0B9959297F51A000BDC534 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2E0B995A297F51A000BDC534 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2E0B9959297F51A000BDC534 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2EE6CB272952F4F300E281A0 /* Project object */;
 }

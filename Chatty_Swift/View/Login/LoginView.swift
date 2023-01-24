@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct LoginView: View {
+    
+    @EnvironmentObject var userVM: UserVM
+    
     @State
     private var username = ""
     
@@ -46,7 +49,7 @@ struct LoginView: View {
                                 Text("비밀번호")
                                     .font(.system(size:12))
                                     .fontWeight(.light)
-                                TextField("비밀번호", text: $password)
+                                SecureField("비밀번호", text: $password)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
                                     .mask(RoundedRectangle(cornerRadius: 16))
@@ -64,8 +67,7 @@ struct LoginView: View {
                                 .font(Font.system(size: 16))
                         }
                         .padding(16)
-                        NavigationLink(destination: MainView()){
-                            //                                Button(action: makeGetCall) {
+                        Button(action: {userVM.login(username: username, password: password)}){
                             Text("로그인")
                                 .fontWeight(.bold)
                                 .frame(width: 350, height: 60)

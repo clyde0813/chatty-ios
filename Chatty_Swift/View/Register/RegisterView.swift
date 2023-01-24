@@ -8,11 +8,20 @@
 import SwiftUI
 
 struct RegisterView: View {
+    
+    @EnvironmentObject var userVM: UserVM
+    
     @State
     private var username = ""
     
     @State
+    private var email = ""
+    
+    @State
     private var password = ""
+    
+    @State
+    private var password2 = ""
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -47,14 +56,12 @@ struct RegisterView: View {
                                 .font(.system(size:12))
                                 .fontWeight(.light)
                                 HStack {
-                                    TextField("이메일", text: $username)
+                                    TextField("이메일", text: $email)
                                         .frame(width: 300)
                                         .padding()
                                         .background(Color(uiColor: .secondarySystemBackground))
                                         .mask(RoundedRectangle(cornerRadius: 16))
                                         .padding(.bottom, 20)
-                                    Rectangle()
-                                        .frame(width: 80)
                                 }
                                 Text("비밀번호")
                                 .font(.system(size:12))
@@ -68,7 +75,7 @@ struct RegisterView: View {
                                 Text("비밀번호 확인")
                                 .font(.system(size:12))
                                 .fontWeight(.light)
-                                SecureField("비밀번호 확인", text: $password)
+                                SecureField("비밀번호 확인", text: $password2)
                                     .frame(width: 300)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
@@ -77,6 +84,7 @@ struct RegisterView: View {
                         }
                         Spacer()
                         VStack {
+                            Button(action: {userVM.register(username: username, password: password, password2: password2, email: email)}) {
                                 Text("회원가입")
                                     .fontWeight(.bold)
                                     .frame(width: 350, height: 60)
@@ -84,6 +92,7 @@ struct RegisterView: View {
                                     .background(Color("Main Color"))
                                     .cornerRadius(16)
                                     .padding(.bottom, 20)
+                            }
                         }
                     }
                 }
