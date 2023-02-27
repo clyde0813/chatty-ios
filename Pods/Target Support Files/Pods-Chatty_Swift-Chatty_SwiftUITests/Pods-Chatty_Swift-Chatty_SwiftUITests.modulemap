@@ -1,0 +1,6 @@
+framework module Pods_Chatty_Swift_Chatty_SwiftUITests {
+  umbrella header "Pods-Chatty_Swift-Chatty_SwiftUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

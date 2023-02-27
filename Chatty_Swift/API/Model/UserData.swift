@@ -17,3 +17,18 @@ struct UserData: Codable {
     }
 }
 
+enum APIError:Error {
+    case http(ErrorData)
+    
+    case unknown
+}
+
+struct ErrorData: Codable {
+    let error, status_code: String
+    
+    enum CodingKeys: String, CodingKey {
+        case error
+        
+        case status_code
+    }
+}

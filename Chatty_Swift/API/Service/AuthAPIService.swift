@@ -32,8 +32,14 @@ enum AuthAPIService {
             .value()
             .map{
                 receivedValue in
+                // 응답 토큰값 저장
+                // keychain으로 변경 예정\
+//                UserDefaultManager.shared.setToken(token: receivedValue.token)
+                KeyChain.create(key: "username", value: receivedValue.username)
+                KeyChain.create(key: "token", value: receivedValue.token)
                 return receivedValue
                 
-            }.eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
 }
