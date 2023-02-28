@@ -38,7 +38,6 @@ enum AuthAPIService {
                 KeyChain.create(key: "username", value: receivedValue.username)
                 KeyChain.create(key: "token", value: receivedValue.token)
                 return receivedValue
-                
             }
             .eraseToAnyPublisher()
     }

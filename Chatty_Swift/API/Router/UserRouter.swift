@@ -25,7 +25,7 @@ enum UserRouter: URLRequestConvertible {
         }
     }
         
-    var method: HTTPMethod {
+    var method: HTTPMethod { 
         switch self {
         default:
             return .get

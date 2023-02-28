@@ -7,13 +7,12 @@
 
 import SwiftUI
 
+
 struct LoginView: View {
     
     @EnvironmentObject var userVM: UserVM
     
     @Environment(\.dismiss) var dismiss
-    
-    @State private var shouldShowAlert : Bool = false
     
     @State
     private var username = ""
@@ -23,12 +22,39 @@ struct LoginView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State private var loginPress = false
+    
+    @State private var shouldAnimate = false
+    
     var body: some View {
-        if shouldShowAlert {
+        if UserDefaults.standard.bool(forKey: "isLoggedIn") {
             MainView()
         } else {
-            NavigationStack {
-                VStack {
+            ZStack {
+                Color.white
+                if self.loginPress {
+                    HStack {
+                        Circle()
+                            .fill(Color("Main Color"))
+                            .frame(width: 20, height: 20)
+                            .scaleEffect(shouldAnimate ? 1.0 : 0.5)
+                            .animation(Animation.easeInOut(duration: 0.5).repeatForever(), value: shouldAnimate)
+                        Circle()
+                            .fill(Color("Main Color"))
+                            .frame(width: 20, height: 20)
+                            .scaleEffect(shouldAnimate ? 1.0 : 0.5)
+                            .animation(Animation.easeInOut(duration: 0.5).repeatForever().delay(0.3), value: shouldAnimate)
+                        Circle()
+                            .fill(Color("Main Color"))
+                            .frame(width: 20, height: 20)
+                            .scaleEffect(shouldAnimate ? 1.0 : 0.5)
+                            .animation(Animation.easeInOut(duration: 0.5).repeatForever().delay(0.6), value: shouldAnimate)
+                    }
+                    .onAppear{
+                        self.shouldAnimate = true
+                    }
+                }
+                VStack{
                     VStack(alignment: .leading) {
                         HStack{
                             Button(action: {presentationMode.wrappedValue.dismiss()}) {
@@ -40,13 +66,13 @@ struct LoginView: View {
                                     .padding()
                             }
                         }
-                        .padding(.leading, 30)
                         .foregroundColor(Color("Black"))
                         VStack(alignment: .leading){
                             Text("아이디")
                                 .font(.system(size:12))
                                 .fontWeight(.light)
                             TextField("아이디", text: $username)
+                                .frame(width: 300)
                                 .padding()
                                 .background(Color(uiColor: .secondarySystemBackground))
                                 .mask(RoundedRectangle(cornerRadius: 16))
@@ -55,13 +81,13 @@ struct LoginView: View {
                                 .font(.system(size:12))
                                 .fontWeight(.light)
                             SecureField("비밀번호", text: $password)
+                                .frame(width: 300)
                                 .padding()
                                 .background(Color(uiColor: .secondarySystemBackground))
                                 .mask(RoundedRectangle(cornerRadius: 16))
                         }
-                        .padding(.leading, 30)
-                        .padding(.trailing, 30)
                     }
+                    .padding([.leading, .trailing], 30)
                     Spacer()
                     VStack {
                         HStack {
@@ -71,12 +97,15 @@ struct LoginView: View {
                                 .font(Font.system(size: 16))
                         }
                         .padding(16)
-                        Button(action: {userVM.login(username: username, password: password)}){
+                        Button(action: {
+                            userVM.login(username: username, password: password)
+                            self.loginPress = true
+                        }){
                             Text("로그인")
                                 .fontWeight(.bold)
-                                .frame(width: 350, height: 60)
+                                .frame(width: 330, height: 60)
                                 .foregroundColor(Color("White"))
-                                .background(Color("Button Grey 2"))
+                                .background(Color("Main Color"))
                                 .cornerRadius(16)
                                 .padding(.bottom, 20)
                         }
@@ -84,14 +113,18 @@ struct LoginView: View {
                 }
                 .onReceive(userVM.loginSuccess, perform: {
                     print("LoginView - loginSuccess() called")
-                    self.shouldShowAlert = true
+                    UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                    
                 })
+                .navigationBarHidden(true)
             }
-            .ignoresSafeArea(.all)
-            .navigationBarHidden(true)
+            .onTapGesture {
+                endEditing()
+            }
         }
     }
 }
+
 
 
 struct LoginView_Previews: PreviewProvider {
@@ -99,3 +132,5 @@ struct LoginView_Previews: PreviewProvider {
         LoginView().environmentObject(UserVM())
     }
 }
+
+

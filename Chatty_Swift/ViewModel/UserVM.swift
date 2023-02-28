@@ -16,7 +16,10 @@ class UserVM: ObservableObject {
     
     @Published var userInfo : UserInfoResponse? = nil
     
+        
     var loginSuccess = PassthroughSubject<(), Never>()
+    
+    var logoutSuccess = PassthroughSubject<(), Never>()
     
     func register(username:String, password:String, password2:String, email:String){
         print("UserVM : register() called")
@@ -29,7 +32,7 @@ class UserVM: ObservableObject {
     }
     
     func login(username:String, password:String){
-        print("UserVM : register() called")
+        print("UserVM : login() called")
         AuthAPIService.login(username: username, password: password)
             .sink { (completion: Subscribers.Completion<AFError>) in
                 print("UserVM completion : \(completion)")
@@ -37,6 +40,10 @@ class UserVM: ObservableObject {
                 self.loggedInUser = receivedUser
                 self.loginSuccess.send()
             }.store(in: &subscription)
+    }
+    
+    func logout(){
+        self.logoutSuccess.send()
     }
     
     func fetchUserInfo(){

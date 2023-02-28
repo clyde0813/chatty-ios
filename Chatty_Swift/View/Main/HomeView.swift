@@ -42,13 +42,14 @@ struct HomeView: View {
                                     .frame(height: 50)
                             }
                             .frame(height: 275)
-                            Image(systemName: "chevron.backward")
-                                .foregroundColor(.white)
-                                .font(Font.system(size: 25, weight: .bold))
-                                .frame(alignment: .leading)
-                                .padding(.leading, 20)
-                                .padding(.top, proxy.safeAreaInsets.top)
-                                .padding()
+                            // 뒤로가기 버튼
+//                            Image(systemName: "chevron.backward")
+//                                .foregroundColor(.white)
+//                                .font(Font.system(size: 25, weight: .bold))
+//                                .frame(alignment: .leading)
+//                                .padding(.leading, 20)
+//                                .padding(.top, proxy.safeAreaInsets.top)
+//                                .padding()
                             ZStack {
                                 AsyncImage(url: URL(string:
                                                         "\(profile_image)")) {

@@ -9,7 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        IndexView()
+        if !UserDefaults.standard.bool(forKey: "isLoggedIn") {
+            IndexView()
+        } else {
+            MainView()
+        }
     }
 }
 

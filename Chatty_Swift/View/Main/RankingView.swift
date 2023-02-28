@@ -10,7 +10,7 @@ import SwiftUI
 struct RankingView: View {
     var body: some View {
         Color.red.edgesIgnoringSafeArea(.all)
-            .tag(BottomTab.home)
+            .tag(BottomTab.ranking)
             .tabItem{
                 Image(systemName: "crown.fill")
                 Text("랭킹")

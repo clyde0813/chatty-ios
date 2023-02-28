@@ -37,6 +37,7 @@
 		2EE6CB442952F4F500E281A0 /* Chatty_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB432952F4F400E281A0 /* Chatty_SwiftTests.swift */; };
 		2EE6CB4E2952F4F500E281A0 /* Chatty_SwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB4D2952F4F500E281A0 /* Chatty_SwiftUITests.swift */; };
 		2EE6CB502952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB4F2952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift */; };
+		2EF5AC8F29AEB1940019A37D /* TextExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF5AC8E29AEB1940019A37D /* TextExtensions.swift */; };
 		8DBC72128597918FEB62BD71 /* Pods_Chatty_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09318CB4F1F9D0A77D755B11 /* Pods_Chatty_Swift.framework */; };
 		A99B07ABDB68F535C3439E88 /* Pods_Chatty_Swift_Chatty_SwiftUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0EF149E370F335EE3F45E0 /* Pods_Chatty_Swift_Chatty_SwiftUITests.framework */; };
 		AA5865828BC88C212E33A8E5 /* Pods_Chatty_SwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 500D836B645EB754191E3DB5 /* Pods_Chatty_SwiftTests.framework */; };
@@ -94,6 +95,7 @@
 		2EE6CB492952F4F500E281A0 /* Chatty_SwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Chatty_SwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE6CB4D2952F4F500E281A0 /* Chatty_SwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_SwiftUITests.swift; sourceTree = "<group>"; };
 		2EE6CB4F2952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_SwiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2EF5AC8E29AEB1940019A37D /* TextExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
 		37B7AB71AEED31738A6CEA4C /* Pods-Chatty_SwiftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatty_SwiftTests.release.xcconfig"; path = "Target Support Files/Pods-Chatty_SwiftTests/Pods-Chatty_SwiftTests.release.xcconfig"; sourceTree = "<group>"; };
 		500D836B645EB754191E3DB5 /* Pods_Chatty_SwiftTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatty_SwiftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0EF149E370F335EE3F45E0 /* Pods_Chatty_Swift_Chatty_SwiftUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatty_Swift_Chatty_SwiftUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -278,6 +280,7 @@
 		2EE6CB312952F4F300E281A0 /* Chatty_Swift */ = {
 			isa = PBXGroup;
 			children = (
+				2EF5AC8B29AEB0770019A37D /* Extension */,
 				2E5F21FB29AD6147003B2A14 /* Keychain */,
 				2E5F21F029AD4C03003B2A14 /* Manager */,
 				2E0B996A297F5CA900BDC534 /* ViewModel */,
@@ -314,6 +317,14 @@
 				2EE6CB4F2952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift */,
 			);
 			path = Chatty_SwiftUITests;
+			sourceTree = "<group>";
+		};
+		2EF5AC8B29AEB0770019A37D /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2EF5AC8E29AEB1940019A37D /* TextExtensions.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		416AAA9CBB9831AB58D9D337 /* Frameworks */ = {
@@ -592,6 +603,7 @@
 				2E5F21F629AD4EA0003B2A14 /* UserRouter.swift in Sources */,
 				2E0B996C297F5CB700BDC534 /* UserVM.swift in Sources */,
 				2E5F21F429AD4D31003B2A14 /* TokenData.swift in Sources */,
+				2EF5AC8F29AEB1940019A37D /* TextExtensions.swift in Sources */,
 				2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */,
 				2E0B9958297F507000BDC534 /* UserData.swift in Sources */,
 				2ED68B1F296679FF007F5EA7 /* APIClient.swift in Sources */,
@@ -772,8 +784,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -804,8 +815,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (

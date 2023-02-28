@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IndexView: View {
     var body: some View {
-        NavigationView() {
+        NavigationStack {
             ZStack {
                 Color("Main Color").edgesIgnoringSafeArea(.all)
                 VStack {
@@ -42,10 +42,11 @@ struct IndexView: View {
                     }
                     .frame(width: 500, height: 180)
                     .background(Color.white)
-                    .ignoresSafeArea(.all)
                 }
             }
         }
+        .navigationBarHidden(true)
+        .ignoresSafeArea(.all)
     }
 }
 
