@@ -22,7 +22,7 @@ struct LoginView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @State private var loginPress = false
+    @State private var loginPressed = false
     
     @State private var shouldAnimate = false
     
@@ -32,7 +32,7 @@ struct LoginView: View {
         } else {
             ZStack {
                 Color.white
-                if self.loginPress {
+                if self.loginPressed {
                     HStack {
                         Circle()
                             .fill(Color("Main Color"))
@@ -98,8 +98,9 @@ struct LoginView: View {
                         }
                         .padding(16)
                         Button(action: {
+                            endEditing()
+                            self.loginPressed = true
                             userVM.login(username: username, password: password)
-                            self.loginPress = true
                         }){
                             Text("로그인")
                                 .fontWeight(.bold)

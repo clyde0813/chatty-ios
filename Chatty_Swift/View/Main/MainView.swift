@@ -19,10 +19,9 @@ struct MainView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State var currentTab : BottomTab = .home
-    
+        
     init(){
         UITabBar.appearance().backgroundColor = .white
-        
     }
     
     var body: some View {
