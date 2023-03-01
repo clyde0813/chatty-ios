@@ -34,10 +34,9 @@
 		2EE6CB352952F4F300E281A0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB342952F4F300E281A0 /* ContentView.swift */; };
 		2EE6CB372952F4F400E281A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EE6CB362952F4F400E281A0 /* Assets.xcassets */; };
 		2EE6CB3A2952F4F400E281A0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EE6CB392952F4F400E281A0 /* Preview Assets.xcassets */; };
-		2EE6CB442952F4F500E281A0 /* Chatty_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB432952F4F400E281A0 /* Chatty_SwiftTests.swift */; };
-		2EE6CB4E2952F4F500E281A0 /* Chatty_SwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB4D2952F4F500E281A0 /* Chatty_SwiftUITests.swift */; };
-		2EE6CB502952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB4F2952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift */; };
 		2EF5AC8F29AEB1940019A37D /* TextExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF5AC8E29AEB1940019A37D /* TextExtensions.swift */; };
+		2EF5AC9429AF01AB0019A37D /* Chatty_LoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF5AC9329AF01AB0019A37D /* Chatty_LoginTests.swift */; };
+		2EF5AC9629AF01DF0019A37D /* Chatty_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF5AC9529AF01DF0019A37D /* Chatty_SwiftTests.swift */; };
 		8DBC72128597918FEB62BD71 /* Pods_Chatty_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09318CB4F1F9D0A77D755B11 /* Pods_Chatty_Swift.framework */; };
 		A99B07ABDB68F535C3439E88 /* Pods_Chatty_Swift_Chatty_SwiftUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0EF149E370F335EE3F45E0 /* Pods_Chatty_Swift_Chatty_SwiftUITests.framework */; };
 		AA5865828BC88C212E33A8E5 /* Pods_Chatty_SwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 500D836B645EB754191E3DB5 /* Pods_Chatty_SwiftTests.framework */; };
@@ -91,11 +90,10 @@
 		2EE6CB362952F4F400E281A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2EE6CB392952F4F400E281A0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2EE6CB3F2952F4F400E281A0 /* Chatty_SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Chatty_SwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EE6CB432952F4F400E281A0 /* Chatty_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_SwiftTests.swift; sourceTree = "<group>"; };
 		2EE6CB492952F4F500E281A0 /* Chatty_SwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Chatty_SwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EE6CB4D2952F4F500E281A0 /* Chatty_SwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_SwiftUITests.swift; sourceTree = "<group>"; };
-		2EE6CB4F2952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_SwiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		2EF5AC8E29AEB1940019A37D /* TextExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
+		2EF5AC9329AF01AB0019A37D /* Chatty_LoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_LoginTests.swift; sourceTree = "<group>"; };
+		2EF5AC9529AF01DF0019A37D /* Chatty_SwiftTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chatty_SwiftTests.swift; sourceTree = "<group>"; };
 		37B7AB71AEED31738A6CEA4C /* Pods-Chatty_SwiftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatty_SwiftTests.release.xcconfig"; path = "Target Support Files/Pods-Chatty_SwiftTests/Pods-Chatty_SwiftTests.release.xcconfig"; sourceTree = "<group>"; };
 		500D836B645EB754191E3DB5 /* Pods_Chatty_SwiftTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatty_SwiftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0EF149E370F335EE3F45E0 /* Pods_Chatty_Swift_Chatty_SwiftUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatty_Swift_Chatty_SwiftUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -305,7 +303,7 @@
 		2EE6CB422952F4F400E281A0 /* Chatty_SwiftTests */ = {
 			isa = PBXGroup;
 			children = (
-				2EE6CB432952F4F400E281A0 /* Chatty_SwiftTests.swift */,
+				2EF5AC9529AF01DF0019A37D /* Chatty_SwiftTests.swift */,
 			);
 			path = Chatty_SwiftTests;
 			sourceTree = "<group>";
@@ -313,8 +311,7 @@
 		2EE6CB4C2952F4F500E281A0 /* Chatty_SwiftUITests */ = {
 			isa = PBXGroup;
 			children = (
-				2EE6CB4D2952F4F500E281A0 /* Chatty_SwiftUITests.swift */,
-				2EE6CB4F2952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift */,
+				2EF5AC9329AF01AB0019A37D /* Chatty_LoginTests.swift */,
 			);
 			path = Chatty_SwiftUITests;
 			sourceTree = "<group>";
@@ -429,6 +426,7 @@
 					};
 					2EE6CB3E2952F4F400E281A0 = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1420;
 						TestTargetID = 2EE6CB2E2952F4F300E281A0;
 					};
 					2EE6CB482952F4F500E281A0 = {
@@ -626,7 +624,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EE6CB442952F4F500E281A0 /* Chatty_SwiftTests.swift in Sources */,
+				2EF5AC9629AF01DF0019A37D /* Chatty_SwiftTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,8 +632,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EE6CB4E2952F4F500E281A0 /* Chatty_SwiftUITests.swift in Sources */,
-				2EE6CB502952F4F500E281A0 /* Chatty_SwiftUITestsLaunchTests.swift in Sources */,
+				2EF5AC9429AF01AB0019A37D /* Chatty_LoginTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -837,15 +834,22 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7UBD4822X7;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Chatty.Chatty-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Chatty_Swift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Chatty_Swift";
@@ -858,11 +862,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7UBD4822X7;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Chatty.Chatty-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -9,11 +9,13 @@ import SwiftUI
 
 struct MyPageView: View {
     @EnvironmentObject var userVM: UserVM
-    
+                    
     var body: some View {
         VStack {
-            //                Button(action: {userVM.logout()}){
-            Button(action: {UserDefaults.standard.set(false, forKey: "isLoggedIn")}){
+            Button(action: {
+                UserDefaults.standard.set(false, forKey: "isLoggedIn")
+                
+            }){
                 Text("로그아웃")
                     .fontWeight(.bold)
                     .frame(width: 300, height: 60)
@@ -22,18 +24,6 @@ struct MyPageView: View {
                     .cornerRadius(16)
                     .padding(.bottom, 20)
             }
-        }
-        //            .onReceive(userVM.logoutSuccess, perform: {
-        //                print("Logout - logoutSuccess() called")
-        //                UserDefaults.standard.set(false, forKey: "isLoggedIn")
-        //                KeyChain.delete(key: "username")
-        //                KeyChain.delete(key: "token")
-        //                print(UserDefaults.standard.bool(forKey: "isLoggedIn"))
-        //            })
-        .tag(BottomTab.mypage)
-        .tabItem{
-            Image(systemName: "person.crop.circle.fill")
-            Text("마이페이지")
         }
     }
 }

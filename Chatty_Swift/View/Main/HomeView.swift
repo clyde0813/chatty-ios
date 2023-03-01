@@ -183,11 +183,6 @@ struct HomeView: View {
                 print(user)
             }
         }
-        .tag(BottomTab.home)
-        .tabItem{
-            Image(systemName: "house")
-            Text("롬")
-        }
     }
 }
 
