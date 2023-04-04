@@ -30,7 +30,7 @@ struct MainView: View {
             ContentView()
         } else {
             TabView (selection: $currentTab) {
-                HomeView()
+                ProfileView(username: KeyChain.read(key: "username")!, isOwner: true)
                     .tag(BottomTab.home)
                     .tabItem{
                         Image(systemName: "house")

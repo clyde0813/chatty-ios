@@ -21,6 +21,9 @@ struct RegisterView: View {
     private var password = ""
     
     @State
+    private var togglePassword : Bool = true
+    
+    @State
     private var password2 = ""
     @Environment(\.presentationMode) var presentationMode
     
@@ -46,7 +49,7 @@ struct RegisterView: View {
                             .font(.system(size:12))
                             .fontWeight(.light)
                         TextField("아이디", text: $username)
-                            .frame(width: 300)
+                            .frame(height: 25)
                             .padding()
                             .background(Color(uiColor: .secondarySystemBackground))
                             .mask(RoundedRectangle(cornerRadius: 16))
@@ -56,7 +59,7 @@ struct RegisterView: View {
                             .fontWeight(.light)
                         HStack {
                             TextField("이메일", text: $email)
-                                .frame(width: 300)
+                                .frame(height: 25)
                                 .padding()
                                 .background(Color(uiColor: .secondarySystemBackground))
                                 .mask(RoundedRectangle(cornerRadius: 16))
@@ -65,17 +68,35 @@ struct RegisterView: View {
                         Text("비밀번호")
                             .font(.system(size:12))
                             .fontWeight(.light)
-                        SecureField("비밀번호", text: $password)
-                            .frame(width: 300)
-                            .padding()
-                            .background(Color(uiColor: .secondarySystemBackground))
-                            .mask(RoundedRectangle(cornerRadius: 16))
-                            .padding(.bottom, 20)
+                        ZStack(alignment: .trailing){
+                            if togglePassword == true {
+                                SecureField("비밀번호", text: $password)
+                                    .frame(height: 25)
+                                    .padding()
+                                    .background(Color(uiColor: .secondarySystemBackground))
+                                    .mask(RoundedRectangle(cornerRadius: 16))
+                                    .padding(.bottom, 20)
+                            } else {
+                                TextField("비밀번호", text: $password)
+                                    .frame(height: 25)
+                                    .padding()
+                                    .background(Color(uiColor: .secondarySystemBackground))
+                                    .mask(RoundedRectangle(cornerRadius: 16))
+                                    .padding(.bottom, 20)
+                            }
+                            Image(systemName: self.togglePassword ? "eye": "eye.slash")
+                                .foregroundColor(Color(.lightGray))
+                                .font(Font.system(size: 20))
+                                .padding([.bottom, .trailing], 18)
+                                .onTapGesture(perform: {
+                                    togglePassword.toggle()
+                                })
+                        }
                         Text("비밀번호 확인")
                             .font(.system(size:12))
                             .fontWeight(.light)
                         SecureField("비밀번호 확인", text: $password2)
-                            .frame(width: 300)
+                            .frame(height: 25)
                             .padding()
                             .background(Color(uiColor: .secondarySystemBackground))
                             .mask(RoundedRectangle(cornerRadius: 16))

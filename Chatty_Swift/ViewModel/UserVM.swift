@@ -16,7 +16,8 @@ class UserVM: ObservableObject {
     
     @Published var userInfo : UserInfoResponse? = nil
     
-        
+    @Published var questionData = [ResultDetail]()
+    
     var loginSuccess = PassthroughSubject<(), Never>()
     
     var logoutSuccess = PassthroughSubject<(), Never>()
@@ -46,13 +47,23 @@ class UserVM: ObservableObject {
         self.logoutSuccess.send()
     }
     
-    func fetchUserInfo(){
+    func fetchUserInfo(username: String){
         print("UserVM - fetchUserInfo() called")
-        UserAPIService.fetchUserInfo()
+        UserAPIService.fetchUserInfo(username: username)
             .sink { (completion: Subscribers.Completion<AFError>) in
                 print("UserVM completion : \(completion)")
             } receiveValue: { (receivedUserInfo: UserInfoResponse) in
                 self.userInfo = receivedUserInfo
+            }.store(in: &subscription)
+    }
+    
+    func answeredQuestion(username: String){
+        print("UserVM - answeredQuestion() called")
+        QuestionAPIService.answered(username: username)
+            .sink { (completion: Subscribers.Completion<AFError>) in
+                print("UserVM completion : \(completion)")
+            } receiveValue: { (receivedQuestionData : QuestionData) in
+                self.questionData += receivedQuestionData.results
             }.store(in: &subscription)
     }
 }

@@ -13,7 +13,7 @@ struct UserInfoResponse: Codable {
     let questionCount: QuestionCount
     let profileImage: String
     let backgroundImage: String
-    let profileMessage: String? = nil
+    let profileMessage: String?
     let follower, following: Int
 
     enum CodingKeys: String, CodingKey {

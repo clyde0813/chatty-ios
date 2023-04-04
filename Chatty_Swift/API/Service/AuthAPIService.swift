@@ -12,7 +12,6 @@ import Combine
 enum AuthAPIService {
     static func register(username: String, password: String, password2: String, email: String) -> AnyPublisher<UserData , AFError>{
         print("AuthAPIService - register() called")
-        
         return ApiClient.shared.session
             .request(AuthRouter.register(username: username, password: password, password2: password2, email: email))
             .publishDecodable(type: UserData.self)

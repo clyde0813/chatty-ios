@@ -13,8 +13,7 @@ struct MyPageView: View {
     var body: some View {
         VStack {
             Button(action: {
-                UserDefaults.standard.set(false, forKey: "isLoggedIn")
-                
+                userVM.logout()
             }){
                 Text("로그아웃")
                     .fontWeight(.bold)
@@ -25,6 +24,9 @@ struct MyPageView: View {
                     .padding(.bottom, 20)
             }
         }
+        .onReceive(userVM.logoutSuccess, perform:{
+            UserDefaults.standard.set(false, forKey: "isLoggedIn")
+        })
     }
 }
 

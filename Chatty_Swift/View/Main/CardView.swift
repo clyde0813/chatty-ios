@@ -8,34 +8,80 @@
 import SwiftUI
 
 struct CardView: View {
+    
+    @State var questionData : ResultDetail
+    
+    @State var username : String = ""
+    @State var profile_image : String = ""
+    
+    @State var content : String = ""
+    @State var answer : String = ""
+    
     var body: some View {
         ZStack {
             Color.white
-                VStack(alignment:.leading){
-                    HStack{
-                        Text("익명의 질문자")
-                            .font(Font.system(size: 14, weight: .bold))
-                        Spacer()
-                        Image(systemName: "poweroff")
-                            .font(Font.system(size: 14, weight: .none))
+            VStack(alignment: .leading, spacing: 16) {
+                HStack{
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 0){
+                            Text("To @")
+                                .font(.system(size:12))
+                            Text("\(username)")
+                                .font(.system(size:12, weight: .bold))
+                        }
+                        .foregroundColor(Color("MainPrimary"))
+                        Text("\(questionData.content)")
                     }
-                    .padding(.bottom, 5)
-                    Text("속에 보이는 품었기 그들의 뿐이다. 따뜻한 것은 원대하고")
-                        .font(Font.system(size: 16, weight: .none))
-                        .padding(.bottom, 5)
-                    Text("47분전")
-                        .font(Font.system(size: 14, weight: .light))
-                        .padding(.bottom, 5)
-                    Text("열매를 그들의 가치를 가치를 것이다. 지혜는 청춘을 얼음과 쓸쓸하랴")
-                        .fontWeight(.bold)
-                        .frame(width: 320, height: 75)
-                        .foregroundColor(Color("Main Color"))
-                        .background(Color("Button Grey"))
-                        .cornerRadius(16)
+                    Spacer()
                 }
-            .padding()
+                HStack(alignment: .top){
+                    Image(systemName:"arrow.turn.down.right")
+                        .foregroundColor(Color("MainPrimary"))
+                        .fontWeight(.bold)
+                        .frame(width: 25, height: 25)
+                    AsyncImage(url: URL(string:
+                                            "\(profile_image)")) {
+                        image in image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 48)
+                            .clipShape(Circle())
+                    } placeholder: {
+                    }
+                    VStack(alignment: .leading) {
+                        HStack(alignment: .center){
+                            Text("\(username)")
+                                .font(.system(size:16, weight: .bold))
+                                .padding(.bottom, 0.5)
+                            Text("@...")
+                                .font(.system(size:12, weight: .light))
+                                .foregroundColor(Color.gray)
+                            Text("\(elapsedtime(time: questionData.createdDate))")
+                                .font(.system(size:12, weight: .light))
+                                .foregroundColor(Color.gray)
+                        }
+                        Text("\(questionData.answerContent)")
+                            .font(.system(size:16, weight: .none))
+                    }
+                }
+                HStack(alignment: .center, spacing: 0){
+                    Spacer()
+                    Image(systemName: "heart")
+                        .font(.system(size:14, weight: .regular))
+                    Text("3")
+                        .font(.system(size:14, weight: .regular))
+                    Spacer()
+                    Image(systemName: "bookmark")
+                        .font(.system(size:14, weight: .regular))
+                    Spacer()
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size:14, weight: .regular))
+                    Spacer()
+                }
+            }
+            .padding(16)
         }
-        .frame(width:360, height: 240)
+        .frame(width:380, height: 200)
         .mask(RoundedRectangle(cornerRadius: 20))
         .shadow(
             color: Color("Main Background"),
@@ -46,6 +92,6 @@ struct CardView: View {
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView()
+        CardView(questionData: ResultDetail(pk: 2, nickname: "안녕안녕", content: "안녕안녕", createdDate: "안녕안녕", answerContent: "안녕안녕"), username: "안녕안녕", profile_image: "안녕안녕")
     }
 }

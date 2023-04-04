@@ -1,30 +1,28 @@
 //
-//  UserRouter.swift
+//  QuestionRouter.swift
 //  Chatty_Swift
 //
-//  Created by Clyde on 2023/02/28.
+//  Created by Clyde on 2023/03/24.
 //
-
 import Foundation
 import Alamofire
 
 
-enum UserRouter: URLRequestConvertible {
-    case fetchUserInfo(String)
-
+enum QuestionRouter: URLRequestConvertible {
+    case answered(String)
+    
     var baseURL: URL {
         return URL(string: ApiClient.BASE_URL)!
-        
     }
-
+    
     var endPoint: String {
         switch self {
-        case .fetchUserInfo(let username):
-            return "/users/profile/\(username)"
+        case .answered(let username):
+            return "/posts/question/\(username)"
         }
     }
-        
-    var method: HTTPMethod { 
+    
+    var method: HTTPMethod {
         switch self {
         default:
             return .get

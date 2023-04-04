@@ -108,7 +108,7 @@
 		51AD5278B5A163836375769733492A96 /* Pods-Chatty_Swift-Chatty_SwiftUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Chatty_Swift-Chatty_SwiftUITests-acknowledgements.plist"; sourceTree = "<group>"; };
 		53F89094F10FCB5CD6FAFD56DF1BE1D1 /* URLRequest+Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "URLRequest+Alamofire.swift"; path = "Source/URLRequest+Alamofire.swift"; sourceTree = "<group>"; };
 		5B49B6E385714464DB6F39C69CDCF3AD /* Request.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Request.swift; path = Source/Request.swift; sourceTree = "<group>"; };
-		5D797E9A5C5782CE845840781FA1CC81 /* Alamofire */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alamofire; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DF0A0974AB3647E46E265B59FAFE7DC /* RequestInterceptor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RequestInterceptor.swift; path = Source/RequestInterceptor.swift; sourceTree = "<group>"; };
 		6460AF5711679BFE969A86868CD927BE /* Pods-Chatty_SwiftTests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Chatty_SwiftTests"; path = Pods_Chatty_SwiftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6833208193CE1F5ED1C6CAC145F1FF8E /* Pods-Chatty_SwiftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Chatty_SwiftTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 		9652D97A0537D81BAA53DBD29494FABF /* Pods-Chatty_Swift */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Chatty_Swift"; path = Pods_Chatty_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B9EE4A0A84E7A2AC0C42AB1111AE3FF /* Pods-Chatty_Swift-Chatty_SwiftUITests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Chatty_Swift-Chatty_SwiftUITests"; path = Pods_Chatty_Swift_Chatty_SwiftUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CD27E56025A1A7F604285792B21A6B1 /* OperationQueue+Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "OperationQueue+Alamofire.swift"; path = "Source/OperationQueue+Alamofire.swift"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E4EAA72E5E73A1839F90C2650B084F2 /* Pods-Chatty_SwiftTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Chatty_SwiftTests-Info.plist"; sourceTree = "<group>"; };
 		9E73162EC3C8C995E99E67E63241A462 /* Pods-Chatty_Swift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Chatty_Swift-Info.plist"; sourceTree = "<group>"; };
 		A0FEA7D0ABAF694A3F75736158344A91 /* EventMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EventMonitor.swift; path = Source/EventMonitor.swift; sourceTree = "<group>"; };
@@ -233,7 +233,7 @@
 		78F96624BE4207D9A593D14CA6BB9594 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5D797E9A5C5782CE845840781FA1CC81 /* Alamofire */,
+				5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */,
 				9652D97A0537D81BAA53DBD29494FABF /* Pods-Chatty_Swift */,
 				9B9EE4A0A84E7A2AC0C42AB1111AE3FF /* Pods-Chatty_Swift-Chatty_SwiftUITests */,
 				6460AF5711679BFE969A86868CD927BE /* Pods-Chatty_SwiftTests */,
@@ -282,7 +282,6 @@
 				02F0E367AD0EFC79467D657D126B9FBD /* Validation.swift */,
 				2B0810928A6319057A946D6BCAD4DD5E /* Support Files */,
 			);
-			name = Alamofire;
 			path = Alamofire;
 			sourceTree = "<group>";
 		};
@@ -475,7 +474,7 @@
 			);
 			name = Alamofire;
 			productName = Alamofire;
-			productReference = 5D797E9A5C5782CE845840781FA1CC81 /* Alamofire */;
+			productReference = 5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -786,7 +785,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Alamofire/Alamofire-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Alamofire/Alamofire-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -998,7 +997,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Alamofire/Alamofire-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Alamofire/Alamofire-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

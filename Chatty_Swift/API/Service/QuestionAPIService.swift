@@ -1,21 +1,21 @@
 //
-//  AuthAPIService.swift
+//  QuestionAPIService.swift
 //  Chatty_Swift
 //
-//  Created by Clyde on 2023/01/24.
+//  Created by Clyde on 2023/03/24.
 //
 
 import Foundation
 import Alamofire
 import Combine
 
-enum UserAPIService {
-    static func fetchUserInfo(username: String) -> AnyPublisher<UserInfoResponse, AFError>{
+enum QuestionAPIService {
+    static func answered(username: String) -> AnyPublisher<QuestionData, AFError>{
         print("AuthAPIService - register() called")
         
         return ApiClient.shared.session
-            .request(UserRouter.fetchUserInfo(username))
-            .publishDecodable(type: UserInfoResponse.self)
+            .request(QuestionRouter.answered(username))
+            .publishDecodable(type: QuestionData.self)
             .value()
             .map{
                 receivedValue in
