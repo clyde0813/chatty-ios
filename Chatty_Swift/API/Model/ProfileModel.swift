@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserInfoResponse: Codable {
+struct ProfileModel: Codable {
     let username: String
     let userID, responseRate: Int
     let questionCount: QuestionCount

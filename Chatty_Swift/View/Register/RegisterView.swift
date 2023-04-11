@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RegisterView: View {
     
-    @EnvironmentObject var userVM: UserVM
+    @EnvironmentObject var userVM: ChattyVM
     
     @State
     private var username = ""
@@ -106,7 +106,10 @@ struct RegisterView: View {
                 }
                 Spacer()
                 VStack {
-                    Button(action: {userVM.register(username: username, password: password, password2: password2, email: email)}) {
+                    Button(action: {
+//                        userVM.register(username: username, password: password, password2: password2, email: email)
+                        
+                    }) {
                         Text("회원가입")
                             .fontWeight(.bold)
                             .frame(width: 330, height: 60)
@@ -128,6 +131,6 @@ struct RegisterView: View {
 
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
-        RegisterView().environmentObject(UserVM())
+        RegisterView().environmentObject(ChattyVM())
     }
 }

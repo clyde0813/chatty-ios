@@ -10,11 +10,6 @@ import SwiftUI
 struct CommunityView: View {
     var body: some View {
         Color.red.edgesIgnoringSafeArea(.all)
-            .tag(BottomTab.community)
-            .tabItem{
-                Image(systemName: "message.badge.filled.fill")
-                Text("커뮤니티")
-            }
     }
 }
 

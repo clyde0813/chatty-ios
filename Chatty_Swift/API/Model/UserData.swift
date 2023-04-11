@@ -8,27 +8,9 @@
 import Foundation
 
 struct UserData: Codable {
-    let username, token: String
+    let username, refresh_token, access_token: String
     
     enum CodingKeys: String, CodingKey {
-        case username
-        
-        case token
-    }
-}
-
-enum APIError:Error {
-    case http(ErrorData)
-    
-    case unknown
-}
-
-struct ErrorData: Codable {
-    let error, status_code: String
-    
-    enum CodingKeys: String, CodingKey {
-        case error
-        
-        case status_code
+        case username, refresh_token, access_token
     }
 }

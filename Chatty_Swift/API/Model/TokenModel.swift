@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct TokenData: Codable {
-    let token: String
+struct TokenModel: Codable {
+    let refresh, access: String
     
     enum Codingkeys: String, CodingKey {
-        case token = "token"
+        case refresh, access
     }
 }

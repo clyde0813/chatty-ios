@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyPageView: View {
-    @EnvironmentObject var userVM: UserVM
+    @EnvironmentObject var userVM: ChattyVM
                     
     var body: some View {
         VStack {
@@ -24,14 +24,11 @@ struct MyPageView: View {
                     .padding(.bottom, 20)
             }
         }
-        .onReceive(userVM.logoutSuccess, perform:{
-            UserDefaults.standard.set(false, forKey: "isLoggedIn")
-        })
     }
 }
 
 struct MyPageView_Previews: PreviewProvider {
     static var previews: some View {
-        MyPageView().environmentObject(UserVM())
+        MyPageView().environmentObject(ChattyVM())
     }
 }

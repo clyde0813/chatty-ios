@@ -7,12 +7,14 @@
 
 import SwiftUI
 
+
+
 enum BottomTab {
     case home, community, ranking, mypage
 }
 
 struct MainView: View {
-    @EnvironmentObject var userVM: UserVM
+    @EnvironmentObject var chattyVM: ChattyVM
     
     @Environment(\.dismiss) var dismiss
     
@@ -20,30 +22,31 @@ struct MainView: View {
     
     @State var currentTab : BottomTab = .home
     
+    @State var logoutStatus : Bool = false
     
     init(){
         UITabBar.appearance().backgroundColor = .white
     }
     
     var body: some View {
-        if !UserDefaults.standard.bool(forKey: "isLoggedIn") {
-            ContentView()
+        if self.logoutStatus {
+            IndexView()
         } else {
             TabView (selection: $currentTab) {
                 ProfileView(username: KeyChain.read(key: "username")!, isOwner: true)
                     .tag(BottomTab.home)
                     .tabItem{
-                        Image(systemName: "house")
-                        Text("롬")}
+                        Image(systemName: "house.fill")
+                        Text("홈")}
                 CommunityView()
                     .tag(BottomTab.community)
                     .tabItem{
-                        Image(systemName: "message.badge.filled.fill")
+                        Image(systemName: "message.fill")
                         Text("커뮤니티")}
                 RankingView()
                     .tag(BottomTab.ranking)
                     .tabItem{
-                        Image(systemName: "crown.fill")
+                        Image(systemName: "trophy.fill")
                         Text("랭킹")}
                 MyPageView()
                     .tag(BottomTab.mypage)
@@ -51,7 +54,11 @@ struct MainView: View {
                         Image(systemName: "person.crop.circle.fill")
                         Text("마이페이지")}
             }
-            .accentColor(Color("Main Color"))
+            .onReceive(chattyVM.logoutSuccess){
+//                UserDefaults.standard.set(false, forKey: "isLoggedIn")
+                self.logoutStatus = true
+            }
+            .accentColor(Color.black)
             .ignoresSafeArea(.all)
             .navigationBarHidden(true)
         }
@@ -61,6 +68,9 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView().environmentObject(UserVM())
+        MainView().environmentObject(ChattyVM())
     }
 }
+
+
+

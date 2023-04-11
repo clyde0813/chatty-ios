@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @EnvironmentObject var userVM: UserVM
+    @EnvironmentObject var userVM: ChattyVM
     
     @Environment(\.dismiss) var dismiss
     
@@ -26,8 +26,10 @@ struct LoginView: View {
     
     @State private var shouldAnimate = false
     
+    @State private var loginSuccess = false
+    
     var body: some View {
-        if UserDefaults.standard.bool(forKey: "isLoggedIn") {
+        if self.loginSuccess {
             MainView()
         } else {
             ZStack {
@@ -112,13 +114,11 @@ struct LoginView: View {
                         }
                     }
                 }
-                .onReceive(userVM.loginSuccess, perform: {
-                    print("LoginView - loginSuccess() called")
-                    UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                    
-                })
                 .navigationBarHidden(true)
             }
+            .onReceive(userVM.loginSuccess, perform: {
+                self.loginSuccess = true
+            })
             .onTapGesture {
                 endEditing()
             }
@@ -130,7 +130,7 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView().environmentObject(UserVM())
+        LoginView().environmentObject(ChattyVM())
     }
 }
 

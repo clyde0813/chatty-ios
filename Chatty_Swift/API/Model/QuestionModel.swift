@@ -7,14 +7,15 @@
 
 import Foundation
 
-struct QuestionData: Codable {
+struct QuestionModel: Codable {
     let next, previous: Int?
     let results: [ResultDetail]
 }
 
 struct ResultDetail: Codable {
     let pk: Int
-    let nickname, content, createdDate, answerContent: String
+    let nickname, content, createdDate: String
+    let answerContent : String?
 
     enum CodingKeys: String, CodingKey {
         case pk, nickname, content

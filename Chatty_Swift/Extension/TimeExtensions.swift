@@ -14,6 +14,5 @@ func elapsedtime(time: String) -> String{
     let formatter = RelativeDateTimeFormatter()
     formatter.unitsStyle = .full
     let relativeDate = formatter.localizedString(for: convertDate!, relativeTo: Date())
-    print(Date())
     return relativeDate
 }
