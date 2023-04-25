@@ -26,28 +26,31 @@ struct QuestionEditor: View {
                     Button(action: {
                         dismiss()
                     }){
-                        Image(systemName: "xmark")
-                            .foregroundColor(Color.black)
-                            .fontWeight(.semibold)
-                            .font(Font.system(size: 16, weight: .bold))
+                        ZStack{
+                            Image(systemName: "xmark")
+                                .foregroundColor(Color.black)
+                                .fontWeight(.semibold)
+                                .font(Font.system(size: 16, weight: .bold))
+                        }
+                        .frame(width: 20, height: 20)
                     }
                 }
                 .padding(.bottom, 16)
                 HStack(spacing: 0){
                     Text("To @")
                         .font(.system(size:12))
-                    Text("Username")
+                    Text("\(username)")
                         .font(.system(size:12, weight: .bold))
                 }
-                .foregroundColor(Color("MainPrimary"))
+                .foregroundColor(Color("Main Primary"))
                 .padding(.bottom, 16)
-                HStack(spacing: 0){
-                    Toggle(isOn: $anonymous){
-                        Text("익명으로 쓰기")
-                            .font(.system(size:14, weight: .none))
-                    }
-                }
-                .padding(.bottom, 16)
+//                HStack(spacing: 0){
+//                    Toggle(isOn: $anonymous){
+//                        Text("익명으로 쓰기")
+//                            .font(.system(size:14, weight: .none))
+//                    }
+//                }
+//                .padding(.bottom, 16)
                 //질문 입력창
                 ZStack(alignment: .topLeading){
                     Text("@\(username)에게 질문하기")
@@ -72,7 +75,7 @@ struct QuestionEditor: View {
                             maxWidth: .infinity
                         )
                         .foregroundColor(Color.white)
-                        .background(Color("MainPrimary"))
+                        .background(Color("Main Primary"))
                         .cornerRadius(8)
                 }
             }

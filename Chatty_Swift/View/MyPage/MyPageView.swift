@@ -1,0 +1,189 @@
+//
+//  MyPageView.swift
+//  Chatty_Swift
+//
+//  Created by Clyde on 2023/02/23.
+//
+
+import SwiftUI
+import Kingfisher
+
+struct MyPageView: View {
+    @EnvironmentObject var chattyVM: ChattyVM
+    
+    var body: some View {
+        GeometryReader{ proxy in
+            ZStack{
+                Color.white
+                ScrollView(showsIndicators: false){
+                    VStack(alignment: .center, spacing: 0){
+                        HStack{
+                            Image("Logo Small")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 32, height: 32)
+                        }
+                        .frame(width: proxy.size.width, height: 60)
+                        .background(Rectangle()
+                            .fill(Color.white)
+                            .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
+                        )
+                        ZStack{
+                            Color.white
+                            VStack(alignment: .leading, spacing: 0){
+                                HStack{
+                                    KFImage(URL(string: "\(chattyVM.profileModel?.profileImage ?? "")"))
+                                        .resizable()
+                                        .scaledToFill()
+                                        .clipShape(Circle())
+                                        .frame(width: 80, height: 80)
+                                        .clipped()
+                                    Spacer()
+                                }
+                                .padding(.bottom, 10)
+                                Text("\(chattyVM.profileModel?.profile_name ?? "")")
+                                    .font(Font.system(size: 18, weight: .semibold))
+                                    .padding(.bottom, 5)
+                                Text("@\(chattyVM.profileModel?.username ?? "")")
+                                    .font(Font.system(size: 12, weight: .none))
+                                    .foregroundColor(Color.gray)
+                                    .padding(.bottom, 8)
+                                HStack(spacing: 0){
+                                    Text("\(chattyVM.profileModel?.follower ?? 0) ")
+                                        .font(Font.system(size: 16, weight: .semibold))
+                                    Text("팔로워")
+                                        .font(Font.system(size: 12, weight: .none))
+                                        .padding(.trailing, 16)
+                                    Text("\(chattyVM.profileModel?.following ?? 0) ")
+                                        .font(Font.system(size: 16, weight: .semibold))
+                                    Text("팔로잉")
+                                        .font(Font.system(size: 12, weight: .none))
+                                }
+                                .padding(.bottom, 16)
+                                Button(action:{
+                                    chattyVM.profileEditPressed.send()
+                                }){
+                                    Text("프로필 수정")
+                                        .font(.system(size:14, weight: .bold))
+                                        .frame(height: 40)
+                                        .frame(minWidth: 0,
+                                               maxWidth: .infinity
+                                        )
+                                        .foregroundColor(Color("Pink Main"))
+                                        .background(
+                                            Capsule()
+                                                .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                        )
+                                }
+                            }
+                            .padding(16)
+                        }
+                        .frame(width: proxy.size.width - 32)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .mask(RoundedRectangle(cornerRadius: 20))
+                        .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
+                        .padding(.top, 16)
+                        .shadow(color: Color("Shadow Button"), radius: 10, x: 8, y: 10)
+                        VStack(alignment: .leading, spacing: 0){
+                            HStack{
+                                Text("고객 지원")
+                                    .font(Font.system(size: 16, weight: .none))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 16, weight: .none))
+                            }
+                            .frame(height: 48)
+                            HStack{
+                                Text("공지사항")
+                                    .font(Font.system(size: 16, weight: .none))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 16, weight: .none))
+                            }
+                            .frame(height: 48)
+                            HStack{
+                                Text("FAQ")
+                                    .font(Font.system(size: 16, weight: .none))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 16, weight: .none))
+                            }
+                            .frame(height: 48)
+                            HStack{
+                                Text("차단된 IP 및 계정 목록")
+                                    .font(Font.system(size: 16, weight: .none))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 16, weight: .none))
+                            }
+                            .frame(height: 48)
+                            HStack{
+                                Text("신고 기록 및 처리 상태 확인")
+                                    .font(Font.system(size: 16, weight: .none))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 16, weight: .none))
+                            }
+                            .frame(height: 48)
+                        }
+                        .padding(.top, 40)
+                        .padding([.leading, .trailing], 20)
+                        .frame(width: proxy.size.width)
+                        
+                        VStack(alignment: .leading, spacing: 0){
+                            HStack{
+                                Text("회원 정보")
+                                    .font(Font.system(size: 14, weight: .none))
+                                    .foregroundColor(Color.gray)
+                                Spacer()
+                            }
+                            HStack{
+                                Text("통계")
+                                    .font(Font.system(size: 16, weight: .none))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 16, weight: .none))
+                            }
+                            .frame(height: 48)
+                            HStack{
+                                Text("개인정보 수정")
+                                    .font(Font.system(size: 16, weight: .none))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 16, weight: .none))
+                            }
+                            .frame(height: 48)
+                            HStack{
+                                Text("로그아웃")
+                                    .font(Font.system(size: 16, weight: .none))
+                                    .foregroundColor(Color.red)
+                                Spacer()
+                                
+                            }
+                            .frame(height: 48)
+                            .onTapGesture {
+                                chattyVM.logout()
+                            }
+                            
+                        }
+                        .padding(.top, 32)
+                        .padding([.leading, .trailing], 20)
+                        Spacer()
+                    }
+                    .background(Color.clear)
+                }
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
+        }
+        .onAppear{
+            chattyVM.profileModel = nil
+            chattyVM.fetchUserInfo(username: KeyChain.read(key: "username")!)
+        }
+    }
+}
+
+struct MyPageView_Previews: PreviewProvider {
+    static var previews: some View {
+        MyPageView().environmentObject(ChattyVM())
+    }
+}

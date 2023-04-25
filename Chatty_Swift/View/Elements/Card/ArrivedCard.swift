@@ -13,8 +13,17 @@ struct ArrivedCard: View {
     
     @State var width : CGFloat = 0.0
 
-    @State var questionData : ResultDetail
-        
+    @State var questiondata : ResultDetail
+    
+    @State var username : String = ""
+    
+    @State var profile_name : String = ""
+    
+    @State var profile_image : String = ""
+    
+    @State var background_image : String = ""
+
+    
     var body: some View {
         ZStack{
             Color.white
@@ -27,39 +36,56 @@ struct ArrivedCard: View {
                             Text("익명")
                                 .font(.system(size:12, weight: .bold))
                         }
-                        .foregroundColor(Color("MainPrimary"))
+                        .foregroundColor(Color("Main Primary"))
                         Spacer()
-                        Image(systemName: "ellipsis")
-                            .foregroundColor(.black)
-                            .rotationEffect(.degrees(-90))
-                            .font(Font.system(size: 16, weight: .bold))
+                        Button(action : {
+                            chattyVM.username = self.username
+                            chattyVM.profile_name = self.profile_name
+                            chattyVM.profile_image = self.profile_image
+                            chattyVM.background_image = self.background_image
+                            chattyVM.questiondata = self.questiondata
+                            chattyVM.questionOptionStatus = true
+                        }){
+                            ZStack{
+                                Image(systemName: "ellipsis")
+                                    .foregroundColor(.black)
+                                    .rotationEffect(.degrees(-90))
+                                    .font(Font.system(size: 16, weight: .bold))
+                            }
+                            .frame(width:20, height: 20)
+                        }
                     }
                 }
                 .padding(.bottom, 4)
-                Text("\(questionData.content)")
+                Text("\(questiondata.content)")
                     .font(Font.system(size: 16, weight: .none))
                     .padding(.bottom, 16)
                     .padding(.trailing, 15)
                 HStack(spacing: 0){
                     Button(action:{
-                        chattyVM.questionReject(question_id: questionData.pk)
+                        chattyVM.questionReject(question_id: questiondata.pk)
                     }){
                         Text("거절하기")
                             .font(.system(size: 16, weight: .bold))
                             .frame(width: (width - 48) / 2, height: 40)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color("MainPrimary"), lineWidth: 1)
+                                    .stroke(Color("Main Primary"), lineWidth: 1)
                             )
-                            .foregroundColor(Color("MainPrimary"))
+                            .foregroundColor(Color("Main Primary"))
                             .padding(.trailing, 16)
                     }
-                    Text("답변하기")
-                        .font(.system(size: 16, weight: .bold))
-                        .frame(width: (width - 48) / 2, height: 40)
-                        .foregroundColor(Color.white)
-                        .background(Color("MainPrimary"))
-                        .cornerRadius(8)
+                    Button(action:{
+                        chattyVM.answerEditorQuestionId = questiondata.pk
+                        chattyVM.answerEditorStatus = true
+                    }){
+                        Text("답변하기")
+                            .font(.system(size: 16, weight: .bold))
+                            .frame(width: (width - 48) / 2, height: 40)
+                            .foregroundColor(Color.white)
+                            .background(Color("Main Primary"))
+                            .cornerRadius(8)
+                    }
                 }
             }
             .padding(16)
@@ -68,12 +94,12 @@ struct ArrivedCard: View {
         .frame(minHeight: 130)
         .fixedSize(horizontal: false, vertical: true)
         .mask(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: Color("Button Grey"), radius: 3, x: 0, y: 1)
+        .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
     }
 }
 
 struct ArrivedCard_Previews: PreviewProvider {
     static var previews: some View {
-        ArrivedCard(questionData: ResultDetail(pk: 2, nickname: "안녕안녕", content: "안녕안녕", createdDate: "2023-03-26T22:01:42.000000", answerContent: "안녕안녕")).environmentObject(ChattyVM())
+        ArrivedCard(questiondata: ResultDetail(pk: 2, content: "안녕안녕", createdDate: "2023-03-26T22:01:42.000000", answerContent: "안녕안녕")).environmentObject(ChattyVM())
     }
 }

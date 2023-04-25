@@ -11,9 +11,9 @@ struct NewQuestionButton: View {
     var body: some View {
         ZStack{
             RoundedRectangle(cornerRadius: 99)
-                .fill(Color("MainPrimary"))
+                .fill(Color("Main Primary"))
                 .frame(width: 115,height: 45)
-                .shadow(color: .gray, radius: 2, x: 0, y: 1)
+                .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
             HStack{
                 Image(systemName: "plus")
                     .foregroundColor(.white)

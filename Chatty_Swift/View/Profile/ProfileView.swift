@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 enum PostTab {
     case responsedTab, arrivedTab, refusedTab
@@ -14,11 +15,22 @@ enum PostTab {
 struct ProfileView: View {
     @EnvironmentObject var chattyVM: ChattyVM
     
-    var username: String
-    var isOwner: Bool
+    @Environment(\.presentationMode) var presentationMode
+
+    @Binding var username: String
     
-    @State var widthFix : CGFloat = 0.0
+    @State var isOwner: Bool
     
+    @Binding var currentTab : BottomTab
+    
+    
+    @State var offset: CGFloat = 0
+    
+    @State var tabBarOffset: CGFloat = 0
+    
+    @State var titleOffset: CGFloat = 0
+    
+    @State var profile_name: String = ""
     @State var response_rate: Int = 0
     @State var answered: Int = 0
     @State var unanswered: Int = 0
@@ -39,302 +51,418 @@ struct ProfileView: View {
     
     @State var questionEditorStatus : Bool = false
     
+    @State var questionEmpty : Bool = false
+    
+    @State var questionPostSuccess : Bool = false
+    
     var body: some View {
         GeometryReader { proxy in
+            let size = proxy.size
+            let widthFix = (proxy.size.width - 40) / 3
             ZStack(alignment: .bottomTrailing){
-                ScrollView {
-                    VStack {
-                        ZStack (alignment: .topLeading) {
-                            VStack{
-                                AsyncImage(url: URL(string: "\(background_image)"))
-                                {
-                                    image in image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(height: 220)
-                                        .clipped()
-                                } placeholder: {
-                                }
-                                Color.white
-                                    .frame(height: 50)
+                ScrollView(.vertical, showsIndicators: false, content: {
+                    // ScrollView content VStack
+                    VStack(spacing: 0){
+                        
+                        
+                        GeometryReader { proxy -> AnyView in
+                            
+                            // Sticky Header...
+                            let minY = proxy.frame(in: .global).minY
+                            
+                            DispatchQueue.main.async {
+                                
+                                self.offset = minY
                             }
-                            .frame(height: 275)
-                            .onAppear{
-                                self.widthFix = (proxy.size.width - 40) / 3
-                            }
-                            if !isOwner{
-                                //뒤로가기 버튼
-                                Image(systemName: "chevron.backward")
-                                    .foregroundColor(.white)
-                                    .font(Font.system(size: 25, weight: .bold))
-                                    .frame(alignment: .leading)
-                                    .padding(.leading, 20)
-                                    .padding(.top, proxy.safeAreaInsets.top)
-                                    .padding()
-                            }
-                            ZStack {
-                                AsyncImage(url: URL(string:
-                                                        "\(profile_image)")) {
-                                    image in image
+                            
+                            return AnyView(
+                                ZStack{
+                                    KFImage(URL(string:"\(background_image)"))
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 110)
-                                        .clipShape(Circle())
-                                        .overlay(Circle()
-                                            .stroke(Color.white, lineWidth: 3))
-                                } placeholder: {
+                                        .frame(
+                                            width: size.width,
+                                            height: minY > 0 ? 180 + minY : 180, alignment: .center
+                                            )
+                                    HStack(spacing: 0) {
+                                        Button(action:{
+                                            if self.currentTab == BottomTab.home {
+                                                
+                                            } else if self.currentTab == BottomTab.ranking {
+                                                presentationMode.wrappedValue.dismiss()
+                                            }
+                                        }){
+                                            Image(systemName: "arrow.left")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                                .padding(.leading, 25)
+                                                .padding(.bottom, 40)
+                                        }
+                                        Spacer()
+                                    }
+                                    BlurView()
+                                        .opacity(blurViewOpacity())
+                                    HStack{
+                                        Button(action:{
+                                            if self.currentTab == BottomTab.home {
+                                                
+                                            } else if self.currentTab == BottomTab.ranking {
+                                                presentationMode.wrappedValue.dismiss()
+                                            }
+                                        }){
+                                            Image(systemName: "arrow.left")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                                .padding([.leading, .trailing], 25)
+                                                .padding(.bottom, 10)
+                                        }
+                                        VStack(alignment: .leading, spacing: 8){
+                                            Text("\(profile_name)")
+                                                .font(Font.system(size: 18, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                            
+                                            Text("답변완료 \(answered)개")
+                                                .font(Font.system(size: 14, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                        }
+                                        Spacer()
+                                    }
+                                    // to slide from bottom added extra 60..
+                                    .offset(y: 120)
+                                    .offset(y: titleOffset > 100 ? 0 : -getTitleTextOffset())
+                                    .opacity(titleOffset < 100 ? 1 : 0)
                                 }
-                            }
-                            .padding(.leading, 25)
-                            .padding(.top, 155)
-                        }
-                        .frame(height: 245)
-                        //프로필 정보 영역
-                        VStack{
+                                    .clipped()
+                                // Stretchy Header...
+                                    .frame(height: minY > 0 ? 180 + minY : nil)
+                                    .offset(y: minY > 0 ? -minY : -minY < 80 ? 0 : -minY - 80)
+                                
+                            )}
+                        .frame(height: 180)
+                        .zIndex(1)
+                        
+                        
+                        // Profile
+                        VStack(spacing: 0) {
+                            
+                            //프로필 정보 영역
                             VStack(alignment: .leading, spacing: 8) {
-                                HStack{
-                                    Text("\(username)")
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(spacing: 0){
+                                        KFImage(URL(string:"\(profile_image)"))
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 110, height: 110)
+                                                .clipShape(Circle())
+                                                .overlay(Circle()
+                                                    .stroke(Color.white, lineWidth: 3))
+                                                .scaleEffect(getScale())
+                                                .padding(.top, -50)
+                                        Spacer()
+                                        ZStack{
+                                            if !isOwner{
+                                                Text("팔로우")
+                                                    .fontWeight(.bold)
+                                                    .frame(width: 80, height: 40)
+                                                    .foregroundColor(Color("Main Secondary"))
+                                                    .background(Color.white)
+                                                    .cornerRadius(16)
+                                            } else {
+                                                Image(systemName: "doc.on.doc")
+                                                    .fontWeight(.bold)
+                                                    .frame(width: 80, height: 40)
+                                                    .foregroundColor(Color.white)
+                                                    .background(Color("Main Secondary"))
+                                                    .cornerRadius(16)
+                                            }
+                                        }
+                                    }
+                                    Text("\(profile_name)")
                                         .font(Font.system(size: 20, weight: .semibold))
-                                    Spacer()
-                                    if !isOwner{
-                                        Text("팔로우")
-                                            .fontWeight(.bold)
-                                            .frame(width: 80, height: 40)
-                                            .foregroundColor(Color("Pink"))
-                                            .background(Color.white)
-                                            .cornerRadius(16)
-                                    } else {
-                                        Image(systemName: "doc.on.doc")
-                                            .fontWeight(.bold)
-                                            .frame(width: 80, height: 40)
-                                            .foregroundColor(Color.white)
-                                            .background(Color("Pink"))
-                                            .cornerRadius(16)
-                                            .padding(.top, -60)
+                                        .padding(.bottom, -4)
+                                    Text("@\(username)")
+                                        .font(Font.system(size:12, weight: .ultraLight))
+                                    if self.profile_message != nil {
+                                        Text("\(profile_message ?? "")")
+                                            .font(Font.system(size: 16, weight: .light))
+                                    }
+                                    HStack{
+                                        Text("\(follower)")
+                                            .font(Font.system(size: 18, weight: .bold))
+                                        Text("팔로워")
+                                            .font(Font.system(size: 14, weight: .light))
+                                            .padding(.trailing, 20)
+                                        Text("\(following)")
+                                            .font(Font.system(size: 18, weight: .bold))
+                                        Text("팔로잉")
+                                            .font(Font.system(size: 14, weight: .light))
                                     }
                                 }
-                                .padding(.bottom, -2)
-                                Text("@\(username)")
-                                    .font(Font.system(size:12, weight: .ultraLight))
-                                Text("\(profile_message ?? " ")")
-                                    .font(Font.system(size: 16, weight: .light))
-                                HStack{
-                                    Text("\(follower)")
-                                        .font(Font.system(size: 18, weight: .bold))
-                                    Text("팔로워")
-                                        .font(Font.system(size: 14, weight: .light))
-                                        .padding(.trailing, 20)
-                                    Text("\(following)")
-                                        .font(Font.system(size: 18, weight: .bold))
-                                    Text("팔로잉")
-                                        .font(Font.system(size: 14, weight: .light))
+                                .padding([.leading, .trailing], 16)
+                                HStack(spacing: 0) {
+                                    Spacer()
+                                    VStack (alignment: .center) {
+                                        Text("\(answered + unanswered + rejected)")
+                                            .font(Font.system(size: 20, weight: .semibold))
+                                        Text("받은 질문 수")
+                                            .font(Font.system(size: 14, weight: .ultraLight))
+                                    }
+                                    .frame(width: widthFix)
+                                    Spacer()
+                                    VStack (alignment: .center) {
+                                        Text("\(response_rate)%")
+                                            .font(Font.system(size: 20, weight: .semibold))
+                                        Text("답변률")
+                                            .font(Font.system(size: 14, weight: .ultraLight))
+                                    }
+                                    .frame(width: widthFix)
+                                    Spacer()
+                                    VStack (alignment: .center) {
+                                        Text("345")
+                                            .font(Font.system(size: 20, weight: .semibold))
+                                        Text("오늘 방문자 수")
+                                            .font(Font.system(size: 14, weight: .ultraLight))
+                                    }
+                                    .frame(width: widthFix)
+                                    Spacer()
                                 }
+                                .frame(width: proxy.size.width)
+                                .padding(.top, 16)
                             }
-                            .padding(.top, 8)
-                            .padding([.leading, .trailing], 16)
+                            .overlay(
+                                
+                                GeometryReader{proxy -> Color in
+                                    
+                                    let minY = proxy.frame(in: .global).minY
+                                    
+                                    DispatchQueue.main.async {
+                                        self.titleOffset = minY
+                                    }
+                                    return Color.clear
+                                }
+                                    .frame(width: 0, height: 0)
+                                
+                                ,alignment: .top
+                            )
                             //프로필 정보 영역 end
                             
-                            // middle 받은 질문수 ~ 오늘 방문자 수 영역
-                            HStack(spacing: 0) {
-                                Spacer()
-                                VStack (alignment: .center) {
-                                    Text("\(answered + unanswered + rejected)")
-                                        .font(Font.system(size: 20, weight: .semibold))
-                                    Text("받은 질문 수")
-                                        .font(Font.system(size: 14, weight: .ultraLight))
-                                }
-                                .frame(width: self.widthFix)
-                                Spacer()
-                                VStack (alignment: .center) {
-                                    Text("\(response_rate)%")
-                                        .font(Font.system(size: 20, weight: .semibold))
-                                    Text("답변률")
-                                        .font(Font.system(size: 14, weight: .ultraLight))
-                                }
-                                .frame(width: self.widthFix)
-                                Spacer()
-                                VStack (alignment: .center) {
-                                    Text("345")
-                                        .font(Font.system(size: 20, weight: .semibold))
-                                    Text("오늘 방문자 수")
-                                        .font(Font.system(size: 14, weight: .ultraLight))
-                                }
-                                .frame(width: self.widthFix)
-                                Spacer()
-                            }
-                            .frame(width: proxy.size.width)
-                            .padding(.top, 16)
-                            // middle end
-                        }
-                        // 질문 카드 및 탭 헤더 영역
-                        LazyVStack(alignment: .center, pinnedViews: [.sectionHeaders]) {
-                            Section(header:
-                                        //질문 탭 헤더 시작
-                                    HStack(alignment: .center){
-                                ZStack{
-                                    if currentPostTab == .responsedTab {
-                                    }
-                                    Button(action: {
-                                        currentPostTab = .responsedTab
-                                        self.questionType = "responsed"
-                                        chattyVM.questionModel = nil
-                                        self.questionList = []
-                                        self.currentQuestionPage = 1
-                                        chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
-                                    }){
-                                        if currentPostTab == .responsedTab {
-                                            VStack(alignment: .center, spacing: 0){
+                            
+                            
+                            VStack(spacing: 0){
+                                HStack(alignment: .bottom, spacing: 0){
+                                    ZStack(alignment: .bottom){
+                                        Button(action: {
+                                            self.questionType = "responsed"
+                                            currentPostTab = .responsedTab
+                                            self.initProfileView()
+                                        }){
+                                            if currentPostTab == .responsedTab {
+                                                VStack(alignment: .center, spacing: 0){
+                                                    Text("답변 완료")
+                                                        .font(Font.system(size: 14, weight: .bold))
+                                                        .accentColor(.black)
+                                                        .padding(.bottom, 9)
+                                                    Rectangle()
+                                                        .fill(Color("Main Secondary"))
+                                                        .frame(width: 50, height: 3)
+                                                }
+                                            } else {
                                                 Text("답변 완료")
-                                                    .font(Font.system(size: 14, weight: .bold))
-                                                    .accentColor(.black)
-                                                Spacer()
-                                                Rectangle()
-                                                    .fill(Color("Pink"))
-                                                    .frame(width: 50, height: 2)
+                                                    .font(Font.system(size: 14, weight: .semibold))
+                                                    .foregroundColor(Color.gray)
+                                                    .padding(.bottom, 12)
                                             }
-                                        } else {
-                                            Text("답변 완료")
-                                                .font(Font.system(size: 14, weight: .none))
                                         }
+                                        .accentColor(.black)
                                     }
-                                    .accentColor(.black)
-                                }
-                                .frame(width: self.widthFix)
-                                
-                                ZStack {
-                                    if currentPostTab == .arrivedTab {
-                                    }
-                                    Button(action: {
-                                        currentPostTab = .arrivedTab
-                                        self.questionType = "arrived"
-                                        chattyVM.questionModel = nil
-                                        self.questionList = []
-                                        self.currentQuestionPage = 1
-                                        chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
-                                    }){
-                                        if currentPostTab == .arrivedTab {
-                                            VStack(alignment: .center, spacing: 0){
-                                                Text("새 질문")
-                                                    .font(Font.system(size: 14, weight: .bold))
-                                                    .accentColor(.black)
-                                                Spacer()
-                                                Rectangle()
-                                                    .fill(Color("Pink"))
-                                                    .frame(width: 50, height: 2)
+                                    .frame(width: widthFix, alignment: .bottom)
+                                    
+                                    ZStack {
+                                        if isOwner {
+                                            Button(action: {
+                                                currentPostTab = .arrivedTab
+                                                self.questionType = "arrived"
+                                                self.initProfileView()
+                                            }){
+                                                if currentPostTab == .arrivedTab {
+                                                    VStack(alignment: .center, spacing: 0){
+                                                        Text("새 질문")
+                                                            .font(Font.system(size: 14, weight: .bold))
+                                                            .accentColor(.black)
+                                                        Spacer()
+                                                        Rectangle()
+                                                            .fill(Color("Main Secondary"))
+                                                            .frame(width: 50, height: 3)
+                                                    }
+                                                } else {
+                                                    Text("새 질문")
+                                                        .font(Font.system(size: 14, weight: .semibold))
+                                                        .foregroundColor(Color.gray)
+                                                        .padding(.bottom, 12)
+                                                }
                                             }
+                                            .accentColor(.black)
                                         } else {
                                             Text("새 질문")
-                                                .font(Font.system(size: 14, weight: .none))
+                                                .font(Font.system(size: 14, weight: .semibold))
+                                                .foregroundColor(Color.gray)
+                                                .padding(.bottom, 12)
                                         }
                                     }
-                                    .accentColor(.black)
-                                }
-                                .frame(width: self.widthFix)
-                                
-                                ZStack {
-                                    if currentPostTab == .refusedTab {
-                                    }
-                                    Button(action: {
-                                        currentPostTab = .refusedTab
-                                        self.questionType = "refused"
-                                        chattyVM.questionModel = nil
-                                        self.questionList = []
-                                        self.currentQuestionPage = 1
-                                        chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
-                                    }){
-                                        if currentPostTab == .refusedTab {
-                                            VStack(alignment: .center, spacing: 0){
-                                                Text("거절 질문")
-                                                    .font(Font.system(size: 14, weight: .bold))
-                                                    .accentColor(.black)
-                                                Spacer()
-                                                Rectangle()
-                                                    .fill(Color("Pink"))
-                                                    .frame(width: 50, height: 2)
+                                    .frame(width: widthFix)
+                                    
+                                    ZStack {
+                                        if isOwner {
+                                            Button(action: {
+                                                currentPostTab = .refusedTab
+                                                self.questionType = "refused"
+                                                self.initProfileView()
+                                            }){
+                                                if currentPostTab == .refusedTab {
+                                                    VStack(alignment: .center, spacing: 0){
+                                                        Text("거절 질문")
+                                                            .font(Font.system(size: 14, weight: .bold))
+                                                            .accentColor(.black)
+                                                        Spacer()
+                                                        Rectangle()
+                                                            .fill(Color("Main Secondary"))
+                                                            .frame(width: 50, height: 3)
+                                                    }
+                                                } else {
+                                                    Text("거절 질문")
+                                                        .font(Font.system(size: 14, weight: .semibold))
+                                                        .foregroundColor(Color.gray)
+                                                        .padding(.bottom, 12)
+                                                }
                                             }
+                                            .accentColor(.black)
                                         } else {
                                             Text("거절 질문")
-                                                .font(Font.system(size: 14, weight: .none))
+                                                .font(Font.system(size: 14, weight: .semibold))
+                                                .foregroundColor(Color.gray)
+                                                .padding(.bottom, 12)
                                         }
                                     }
-                                    .accentColor(.black)
+                                    .frame(width: widthFix)
                                 }
-                                .frame(width: self.widthFix)
                             }
-                                .frame(width: proxy.size.width, height: 20)
-                                .background(Rectangle()
-                                    .foregroundColor(.white))
-                                    .padding(.top, 20)
-                                    //질문 탭 헤더 종료
-                            ) {
-                                ZStack{
-                                    Color("Main Background")
-                                    LazyVStack(spacing: 0){
-                                        if self.questionList.count != 0 {
-                                                ForEach(questionList, id:\.pk) { questiondata in
-                                                    if self.currentPostTab == .responsedTab {
-                                                        ResponsedCard(width: proxy.size.width - 32, questionData: questiondata, username: self.username, profile_image: self.profile_image)
-                                                            .padding(.top, 16)
-                                                            .onAppear{
-                                                                if !questionList.isEmpty && questiondata.pk == questionList.last!.pk && chattyVM.questionModel?.next != nil{                self.currentQuestionPage += 1
-                                                                    chattyVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
-                                                                }
-                                                            }
+                            .padding(.top, 32)
+                            .frame(width: proxy.size.width)
+                            .background(Color.white)
+                            .offset(y: tabBarOffset < 90 ? -tabBarOffset + 90 : 0)
+                            .overlay(
+                                
+                                GeometryReader{reader -> Color in
+                                    
+                                    let minY = reader.frame(in: .global).minY
+                                    
+                                    DispatchQueue.main.async {
+                                        self.tabBarOffset = minY
+                                    }
+                                    
+                                    return Color.clear
+                                }
+                                    .frame(width: 0, height: 0)
+                                
+                                ,alignment: .top
+                            )
+                            .zIndex(1)
+                            
+                            
+                            ZStack(alignment: .top){
+                                Color("Background inner")
+                                    .frame(minHeight: 500,
+                                           maxHeight: .infinity
+                                           )
+                                LazyVStack(spacing: 16){
+                                    if !self.questionList.isEmpty {
+                                        ForEach(self.questionList, id:\.pk) { questiondata in
+                                            if self.currentPostTab == .responsedTab {
+                                                ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image)
+                                                    .onAppear{
+                                                        callNextQuestion(questiondata: questiondata)
                                                     }
-                                                    if self.currentPostTab == .arrivedTab {
-                                                        ArrivedCard(width: proxy.size.width - 32,questionData: questiondata)
-                                                            .padding(.top, 16)
-                                                            .onAppear{
-                                                                if !questionList.isEmpty && questiondata.pk == questionList.last!.pk && chattyVM.questionModel?.next != nil{                self.currentQuestionPage += 1
-                                                                    chattyVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
-                                                                }
-                                                            }
-                                                    }
-                                                    if self.currentPostTab == .refusedTab {
-                                                        RefusedCard(width: proxy.size.width - 32, questionData: questiondata)
-                                                            .padding(.top, 16)
-                                                            .onAppear{
-                                                                if !questionList.isEmpty && questiondata.pk == questionList.last!.pk && chattyVM.questionModel?.next != nil {
-                                                                    self.currentQuestionPage += 1
-                                                                    chattyVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
-                                                                }
-                                                            }
-                                                    }
-                                                }
-                                        } else {
-                                            VStack(alignment: .center){
-                                                ProgressView()
-                                                    .font(.system(size:20))
                                             }
-                                            .frame(width: proxy.size.width, height: 300)
+                                            if self.currentPostTab == .arrivedTab {
+                                                ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image)
+                                                    .onAppear{
+                                                        callNextQuestion(questiondata: questiondata)
+
+                                                    }
+                                            }
+                                            if self.currentPostTab == .refusedTab {
+                                                RefusedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image)
+                                                    .onAppear{
+                                                        callNextQuestion(questiondata: questiondata)
+                                                    }
+                                            }
                                         }
+                                    } else if self.questionEmpty{
+                                        VStack(alignment: .center){
+                                            Text("아직 받은 질문이 없어요!")
+                                                .font(.system(size: 16, weight: .none))
+                                            Image("EmptyImage")
+                                        }
+                                        .frame(width: proxy.size.width, height: 300)
+                                    } else {
+                                        VStack(alignment: .center){
+                                            Spacer()
+                                            ProgressView()
+                                            Spacer()
+                                        }
+                                        .frame(width: proxy.size.width, height: 300)
                                     }
-                                    .padding(.bottom, questionList.count > 2 ? 100 : 200)
                                 }
+                                .padding([.top, .bottom])
                             }
+                            .zIndex(0)
                         }
+                        .zIndex(-offset > 80 ? 0 : 1)
                     }
-                }
-                
-                if isOwner {
+                })
+                if !isOwner {
                     Button(action: {
                         self.questionEditorStatus = true
                     }
                     ){
                         NewQuestionButton()
-                            .padding(.bottom, 100)
-                            .padding(.trailing, 16)
+                            .padding([.bottom, .trailing], 16)
+                    }
+                }
+                
+                if questionPostSuccess {
+                    VStack{
+                        Spacer()
+                        HStack{
+                            Spacer()
+                            Text("질문 보내기 성공!")
+                                .frame(width: 310, height: 40)
+                                .foregroundColor(Color.white)
+                                .background(Color("Error Background"))
+                                .cornerRadius(16)
+                                .padding(.bottom, 50)
+                            Spacer()
+                        }
                     }
                 }
             }
+            .ignoresSafeArea(.all, edges: .top)
             .onAppear(perform: {
-                self.questionList = []
-                self.currentQuestionPage = 1
-                chattyVM.fetchUserInfo(username: username)
-                chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+                self.initProfileView()
             })
             .onReceive(chattyVM.$profileModel) { userInfo in
                 guard let user = userInfo else { return }
+                self.profile_name = user.profile_name
                 self.profile_message = user.profileMessage
                 self.profile_image = user.profileImage
                 self.background_image = user.backgroundImage
@@ -347,36 +475,96 @@ struct ProfileView: View {
             }
             .onReceive(chattyVM.$questionModel) { data in
                 self.questionList += data?.results ?? []
+                if self.questionList.isEmpty{
+                    self.questionEmpty = true
+                }
             }
             .onReceive(chattyVM.refuseComplete) {
-                self.questionList = []
-                self.currentQuestionPage = 1
-                chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+                self.initProfileView()
+            }
+            .onReceive(chattyVM.questionPostSuccess){
+                self.questionPostSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.questionPostSuccess = false
+                }
             }
             .sheet(isPresented: $questionEditorStatus){
                 QuestionEditor(username: username)
                     .presentationDetents([.fraction(0.45)])
+            }
+            .sheet(isPresented: .constant(chattyVM.answerEditorStatus)){
+                AnswerEditor(question_id: chattyVM.answerEditorQuestionId)
+                    .presentationDetents([.fraction(0.45)])
                     .onDisappear{
-                        self.questionList = []
-                        self.currentQuestionPage = 1
-                        chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+                        self.initProfileView()
                     }
             }
-            .ignoresSafeArea(.all)
+            .sheet(isPresented: .constant(chattyVM.questionOptionStatus)){
+                QuestionOption()
+                    .presentationDetents([.fraction(0.4)])
+            }
             .refreshable {
-                self.questionList = []
-                self.currentQuestionPage = 1
-                chattyVM.fetchUserInfo(username: username)
-                chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+                self.initProfileView()
             }
         }
+        .navigationBarHidden(true)
+    }
+    
+    func getOffset()->CGFloat{
+        
+        let progress = (-offset / 80) * 20
+        
+        return progress <= 20 ? progress : 20
+    }
+    
+    func getTitleTextOffset()->CGFloat{
+        
+        // some amount of progress for slide effect..
+        let progress = 20 / titleOffset
+        
+        let offset = 60 * (progress > 0 && progress <= 1 ? progress : 1)
+        
+        return offset
+    }
+    
+    func getScale()->CGFloat{
+        
+        let progress = -offset / 80
+        
+        let scale = 1.8 - (progress < 1.0 ? progress : 1)
+        
+        // since were scaling the view to 0.8...
+        // 1.8 - 1 = 0.8....
+        
+        return scale < 1 ? scale : 1
+    }
+    
+    func blurViewOpacity()->Double{
+        
+        let progress = -(offset + 80) / 150
+        
+        return Double(-offset > 80 ? progress : 0)
+    }
+    
+    func callNextQuestion(questiondata: ResultDetail){
+        if !questionList.isEmpty && chattyVM.questionModel?.next != nil && questiondata.pk == questionList.last?.pk{
+            self.currentQuestionPage += 1
+            chattyVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
+        }
+    }
+    
+    func initProfileView() {
+        self.questionEmpty = false
+        self.questionList.removeAll()
+        self.currentQuestionPage = 1
+        chattyVM.fetchUserInfo(username: username)
+        chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
     }
 }
 
 
-
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(username: "TestAccount1", isOwner: true).environmentObject(ChattyVM())
+        ProfileView(username: .constant("clyde0813"), isOwner: true, currentTab: .constant(BottomTab.home)).environmentObject(ChattyVM())
     }
 }

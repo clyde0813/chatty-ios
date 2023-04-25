@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ResponsedCard: View {
+    @EnvironmentObject var chattyVM: ChattyVM
+    
     @State var width : CGFloat = 0.0
-    @State var questionData : ResultDetail
+    
+    @State var questiondata : ResultDetail
     
     @State var username : String = ""
+    
+    @State var profile_name : String = ""
+    
     @State var profile_image : String = ""
+    
+    @State var background_image : String = ""
     
     var body: some View {
         ZStack{
@@ -25,16 +34,28 @@ struct ResponsedCard: View {
                         Text("익명")
                             .font(.system(size:12, weight: .bold))
                     }
-                    .foregroundColor(Color("MainPrimary"))
+                    .foregroundColor(Color("Main Primary"))
                     Spacer()
-                    Image(systemName: "ellipsis")
-                        .foregroundColor(.black)
-                        .rotationEffect(.degrees(-90))
-                        .font(Font.system(size: 16, weight: .bold))
+                    Button(action : {
+                        chattyVM.username = self.username
+                        chattyVM.profile_name = self.profile_name
+                        chattyVM.profile_image = self.profile_image
+                        chattyVM.background_image = self.background_image
+                        chattyVM.questiondata = self.questiondata
+                        chattyVM.questionOptionStatus = true
+                    }){
+                        ZStack{
+                            Image(systemName: "ellipsis")
+                                .foregroundColor(.black)
+                                .rotationEffect(.degrees(-90))
+                                .font(Font.system(size: 16, weight: .bold))
+                        }
+                        .frame(width: 20, height: 20)
+                    }
                 }
                 .padding(.bottom, 4)
                 //질문 내용
-                Text("\(questionData.content)")
+                Text("\(questiondata.content)")
                     .font(Font.system(size: 16, weight: .none))
                     .padding(.bottom, 16)
                     .padding(.trailing, 15)
@@ -42,24 +63,20 @@ struct ResponsedCard: View {
                 HStack(alignment: .top, spacing: 0){
                     //답변 표현 화살표
                     Image(systemName: "arrow.turn.down.right")
-                        .foregroundColor(Color("MainPrimary"))
+                        .foregroundColor(Color("Main Primary"))
                         .fontWeight(.semibold)
                         .font(Font.system(size: 16, weight: .bold))
                         .padding([.top, .trailing], 4)
                     //Profile 사진
-                    AsyncImage(url: URL(string:
-                                            "\(profile_image)")) {
-                        image in image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 45, height: 45)
-                            .clipShape(Circle())
-                            .overlay(Circle()
+                    KFImage(URL(string:"\(profile_image)"))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 45, height: 45)
+                        .clipShape(Circle())
+                        .overlay(Circle()
                             .stroke(Color.white, lineWidth: 3))
-                            .clipped()
-                    } placeholder: {
-                    }
-                    .padding(.trailing, 8)
+                        .clipped()
+                        .padding(.trailing, 8)
                     VStack(alignment: .leading, spacing: 0){
                         HStack(spacing: 4){
                             Text("\(username)")
@@ -70,13 +87,14 @@ struct ResponsedCard: View {
                             Text("•")
                                 .font(Font.system(size: 12, weight: .semibold))
                                 .foregroundColor(Color.gray)
-                            Text("\(elapsedtime(time: questionData.createdDate))")
+                            Text("\(elapsedtime(time: questiondata.createdDate))")
                                 .font(Font.system(size: 12, weight: .semibold))
                                 .foregroundColor(Color.gray)
                         }
                         .padding(.bottom, 8)
-                        Text("\(questionData.answerContent ?? "")")
+                        Text("\(questiondata.answerContent ?? "")")
                             .font(Font.system(size: 16, weight: .none))
+                            .padding(.trailing, 5)
                     }
                 }
                 .padding(.bottom, 16)
@@ -101,12 +119,12 @@ struct ResponsedCard: View {
         .frame(minHeight: 170)
         .fixedSize(horizontal: false, vertical: true)
         .mask(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: Color("Button Grey"), radius: 3, x: 0, y: 1)
+        .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
     }
 }
 
 struct ResponsedCard_Previews: PreviewProvider {
     static var previews: some View {
-        ResponsedCard(width: 320, questionData: ResultDetail(pk: 2, nickname: "Questioner Name", content: "Question Content", createdDate: "2023-03-26T22:01:42.000000", answerContent: "Answer Content"), username: "Username", profile_image: "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default.png")
+        ResponsedCard(width: 320, questiondata: ResultDetail(pk: 2, content: "Question Content", createdDate: "2023-03-26T22:01:42.000000", answerContent: "Answer Content"), username: "Username", profile_image: "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default.png")
     }
 }
