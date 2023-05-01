@@ -35,6 +35,14 @@ struct ArrivedCard: View {
                                 .font(.system(size:12))
                             Text("익명")
                                 .font(.system(size:12, weight: .bold))
+                                .padding(.trailing, 8)
+                            Text("•")
+                                .font(Font.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color.gray)
+                                .padding(.trailing, 8)
+                            Text("\(elapsedtime(time: questiondata.createdDate))")
+                                .font(Font.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color.gray)
                         }
                         .foregroundColor(Color("Main Primary"))
                         Spacer()
@@ -76,7 +84,7 @@ struct ArrivedCard: View {
                             .padding(.trailing, 16)
                     }
                     Button(action:{
-                        chattyVM.answerEditorQuestionId = questiondata.pk
+                        chattyVM.questiondata = self.questiondata
                         chattyVM.answerEditorStatus = true
                     }){
                         Text("답변하기")

@@ -57,7 +57,7 @@ struct QuestionOption: View {
                     HStack(spacing: 8){
                         Image(systemName: "light.beacon.max")
                             .font(Font.system(size: 16, weight: .bold))
-                        Text("신고하기")
+                        Text("신고하기 (준비중)")
                             .font(.system(size: 16, weight: .bold))
                     }
                     .frame(height: 60)
@@ -78,7 +78,7 @@ struct QuestionOption: View {
                     HStack(spacing: 8){
                         Image(systemName: "trash.fill")
                             .font(Font.system(size: 16, weight: .bold))
-                        Text("삭제하기")
+                        Text("삭제하기 (준비중)")
                             .font(.system(size: 16, weight: .bold))
                     }
                     .frame(height: 60)
@@ -91,13 +91,8 @@ struct QuestionOption: View {
                     .cornerRadius(16)
                 }
             }
+            .clipped()
             .padding(20)
-        }
-        .onAppear{
-            print(chattyVM.questionOptionStatus)
-        }
-        .onTapGesture {
-            chattyVM.questionOptionStatus = false
         }
     }
 }

@@ -21,17 +21,17 @@ struct IndexView: View {
                         VStack(spacing:0){
                             VStack(alignment: .leading, spacing: 16){
                                 Text("안녕!")
-                                    .font(.system(size: 32, weight: .bold))
+                                    .font(.system(size: 32, weight: .heavy))
                                     .foregroundColor(Color("Main Primary"))
                                 Text("자유로운 우리를 봐,")
-                                    .font(.system(size: 32, weight: .bold))
+                                    .font(.system(size: 32, weight: .heavy))
                                     .foregroundColor(Color("Pink Main"))
                                 HStack(spacing: 0){
                                     Text("Chatty ")
-                                        .font(.system(size: 32, weight: .bold))
+                                        .font(.custom("SUIT-Heavy", size: 32))
                                         .foregroundColor(Color("Main Primary"))
                                     Text("예요!")
-                                        .font(.system(size: 32, weight: .bold))
+                                        .font(.system(size: 32, weight: .heavy))
                                         .foregroundColor(Color("Pink Main"))
                                     Spacer()
                                 }
@@ -41,16 +41,20 @@ struct IndexView: View {
                             Spacer()
                             VStack(spacing: 0){
                                 NavigationLink(destination: LoginView()){
-                                    Text("Chatty 로그인")
-                                        .font(.system(size: 16, weight: .bold))
-                                        .frame(height: 60)
-                                        .frame(
-                                            minWidth: 0,
-                                            maxWidth: .infinity
-                                        )
-                                        .foregroundColor(Color.white)
-                                        .background(Color("Main Primary"))
-                                        .cornerRadius(6)
+                                    HStack(spacing: 0){
+                                        Text("Chatty ")
+                                            .font(.custom("SUIT-Heavy", size: 16))
+                                        Text("로그인")
+                                            .font(.system(size: 16, weight: .heavy))
+                                    }
+                                    .frame(height: 60)
+                                    .frame(
+                                        minWidth: 0,
+                                        maxWidth: .infinity
+                                    )
+                                    .foregroundColor(Color.white)
+                                    .background(Color("Main Primary"))
+                                    .cornerRadius(6)
                                 }
                                 .padding(.bottom, 16)
                                 Text("앗, 회원이 아니라면?")

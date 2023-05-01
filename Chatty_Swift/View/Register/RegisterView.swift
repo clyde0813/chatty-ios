@@ -76,7 +76,6 @@ struct RegisterView: View {
                             }
                         }
                         .foregroundColor(Color.black)
-                        .padding(.leading, 30)
                         VStack(alignment: .leading){
                             
                             VStack(alignment: .leading, spacing: 0){
@@ -152,7 +151,7 @@ struct RegisterView: View {
                                         .mask(RoundedRectangle(cornerRadius: 16))
                                         .disabled(emailVerify)
                                     Button(action: {
-                                        chattyVM.verifyEmail(username: username, email: email)
+                                        chattyVM.verifyEmail(email: email)
                                     }){
                                         if emailVerify {
                                             Image(systemName: "checkmark.seal.fill")
@@ -192,12 +191,12 @@ struct RegisterView: View {
                                     .padding(.bottom, 10)
                                 ZStack(alignment: .trailing){
                                     if togglePassword == true {
-                                        SecureField("비밀번호 8글자 이상 15글자 이하", text: $password)
+                                        SecureField("비밀번호 4글자 이상 20글자 이하", text: $password)
                                             .padding()
                                             .background(Color(uiColor: .secondarySystemBackground))
                                             .mask(RoundedRectangle(cornerRadius: 16))
                                     } else {
-                                        TextField("비밀번호", text: $password)
+                                        TextField("비밀번호 4글자 이상 20글자 이하", text: $password)
                                             .frame(height: 25)
                                             .padding()
                                             .background(Color(uiColor: .secondarySystemBackground))
@@ -226,7 +225,6 @@ struct RegisterView: View {
                                     .mask(RoundedRectangle(cornerRadius: 16))
                             }
                         }
-                        .padding([.leading, .trailing], 20)
                     }
                     Spacer()
                     VStack {
@@ -247,8 +245,8 @@ struct RegisterView: View {
                         }
                         .disabled(dataVerify())
                     }
-                    .padding([.leading, .trailing], 20)
                 }
+                .padding([.leading, .trailing], 20)
                 .navigationBarHidden(true)
                 if self.registerError{
                     VStack{
@@ -318,7 +316,7 @@ struct RegisterView: View {
         }
     }
     func dataVerify()-> Bool {
-        if !self.profile_name.isEmpty && !self.email.isEmpty && !self.username.isEmpty && !self.password.isEmpty && !self.password2.isEmpty && self.usernameVerify && self.emailVerify && 4 <= self.username.count && self.username.count <= 20 && 1 <= profile_name.count && profile_name.count <= 20 && 8 <= self.password.count && self.password.count <= 15 && self.password == self.password2{
+        if !self.profile_name.isEmpty && !self.email.isEmpty && !self.username.isEmpty && !self.password.isEmpty && !self.password2.isEmpty && self.usernameVerify && self.emailVerify && 4 <= self.username.count && self.username.count <= 20 && 1 <= profile_name.count && profile_name.count <= 20 && 4 <= self.password.count && self.password.count <= 20 && self.password == self.password2{
             return false
         } else {
             return true

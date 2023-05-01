@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct CommunityView: View {
+    @EnvironmentObject var chattyVM: ChattyVM
+    
+    @State var currentUser : Int = 0
+    @State var percent : Double = 0.0
+
     var body: some View {
         GeometryReader{ proxy in
             ZStack{
@@ -30,7 +35,7 @@ struct CommunityView: View {
                             .foregroundColor(Color("Pink Main"))
                             .padding(.bottom, 15)
                         HStack(spacing : 0){
-                            Text("2,123명")
+                            Text("\(self.currentUser.formatted())명")
                                 .font(.system(size: 32, weight: .bold))
                                 .foregroundColor(Color("Main Primary"))
                             Text("이")
@@ -43,24 +48,24 @@ struct CommunityView: View {
                     }
                     .padding(.top, 88)
                     .padding(.leading, 32)
-                    VStack(spacing: 0){
+                    VStack(alignment: .leading, spacing: 0){
                         VStack(spacing: 0){
                             Text("커뮤니티 오픈까지🔥")
-                                .font(.system(size: 12, weight: .bold))
+                                .font(.system(size: 10, weight: .bold))
                                 .padding(.bottom, 5)
                                 .padding(.leading, 5)
                             ZStack(alignment: .center){
                                 MessageBoxShape()
                                     .fill(Color("Grey900"))
                                     .frame(width: 70, height: 50)
-                                Text("2,123명")
+                                Text("\(self.currentUser.formatted())명")
                                     .font(.system(size: 14, weight: .bold))
                                     .foregroundColor(Color("Pink Main"))
                                     .padding(.bottom, 9)
                             }
                             .frame(width: 70, height: 50)
                         }
-                        .padding(.leading, (proxy.size.width - 32) * 0.6 - 170)
+                        .padding(.leading, (proxy.size.width - 64) * self.percent - 55)
                         .padding(.bottom, 6)
                         ZStack(alignment: .leading){
                             Capsule()
@@ -73,7 +78,7 @@ struct CommunityView: View {
                                     Capsule()
                                         .fill(LinearGradient(gradient: Gradient(colors: [Color("MainGradient1"), Color("MainGradient2"),Color("MainGradient3")]),
                                                              startPoint: .trailing, endPoint: .leading))
-                                        .frame(width: (proxy.size.width - 64) * 0.6, height: 40)
+                                        .frame(width: (proxy.size.width - 64) * self.percent, height: 40)
                                     ,alignment: .leading
                                 )
                                 .overlay(
@@ -112,11 +117,21 @@ struct CommunityView: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
+        .onAppear{
+            chattyVM.currentUser()
+        }
+        .onReceive(chattyVM.$currentUserModel){ data in
+            self.currentUser = data?.info ?? 0
+            self.percent = Double(self.currentUser) / 10000
+            if self.percent < 0.15 {
+                self.percent = 0.15
+            }
+        }
     }
 }
 
 struct CommunityView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityView()
+        CommunityView().environmentObject(ChattyVM())
     }
 }

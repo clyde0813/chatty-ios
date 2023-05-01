@@ -131,7 +131,7 @@ struct LoginView: View {
                         Text("아이디 또는 비밀번호가 일치하지 않습니다.")
                             .frame(width: 310, height: 40)
                             .foregroundColor(Color.white)
-                            .background(Color.gray)
+                            .background(Color("Error Background"))
                             .cornerRadius(16)
                             .padding(.top, 400)
                     }

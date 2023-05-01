@@ -86,6 +86,18 @@ struct MyPageView: View {
                         .shadow(color: Color("Shadow Button"), radius: 10, x: 8, y: 10)
                         VStack(alignment: .leading, spacing: 0){
                             HStack{
+                                Button(action:{
+                                    UIPasteboard.general.string = "chatty.kr/\(chattyVM.profileModel?.username ?? "")"
+                                }){
+                                    Text("내 링크 복사하기")
+                                        .font(Font.system(size: 16, weight: .none))
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(Font.system(size: 16, weight: .none))
+                                }
+                            }
+                            .frame(height: 48)
+                            HStack{
                                 Text("고객 지원")
                                     .font(Font.system(size: 16, weight: .none))
                                 Spacer()

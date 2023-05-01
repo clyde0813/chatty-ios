@@ -55,6 +55,8 @@ struct ProfileView: View {
     
     @State var questionPostSuccess : Bool = false
     
+    @State var copyButtonPressed : Bool = false
+    
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
@@ -171,19 +173,21 @@ struct ProfileView: View {
                                         Spacer()
                                         ZStack{
                                             if !isOwner{
-                                                Text("팔로우")
-                                                    .fontWeight(.bold)
-                                                    .frame(width: 80, height: 40)
-                                                    .foregroundColor(Color("Main Secondary"))
-                                                    .background(Color.white)
-                                                    .cornerRadius(16)
+
                                             } else {
-                                                Image(systemName: "doc.on.doc")
-                                                    .fontWeight(.bold)
-                                                    .frame(width: 80, height: 40)
-                                                    .foregroundColor(Color.white)
-                                                    .background(Color("Main Secondary"))
-                                                    .cornerRadius(16)
+                                                Button(action:{
+                                                    chattyVM.profileEditPressed.send()
+                                                }){
+                                                    Text("프로필 수정")
+                                                        .font(.system(size:14, weight: .bold))
+                                                        .frame(height: 40)
+                                                        .frame(width: 90)
+                                                        .foregroundColor(Color("Pink Main"))
+                                                        .background(
+                                                            Capsule()
+                                                                .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                        )
+                                                }
                                             }
                                         }
                                     }
@@ -388,20 +392,20 @@ struct ProfileView: View {
                                     if !self.questionList.isEmpty {
                                         ForEach(self.questionList, id:\.pk) { questiondata in
                                             if self.currentPostTab == .responsedTab {
-                                                ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image)
+                                                ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image, background_image: self.background_image)
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
                                             }
                                             if self.currentPostTab == .arrivedTab {
-                                                ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image)
+                                                ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image, background_image: self.background_image)
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
 
                                                     }
                                             }
                                             if self.currentPostTab == .refusedTab {
-                                                RefusedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image)
+                                                RefusedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image, background_image: self.background_image)
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
@@ -409,11 +413,32 @@ struct ProfileView: View {
                                         }
                                     } else if self.questionEmpty{
                                         VStack(alignment: .center){
-                                            Text("아직 받은 질문이 없어요!")
-                                                .font(.system(size: 16, weight: .none))
-                                            Image("EmptyImage")
+                                            VStack(spacing: 0){
+                                                Text("아직 받은 질문이 없어요!")
+                                                    .font(.system(size: 16, weight: .none))
+                                                    .padding(.bottom, 13)
+                                                Button(action:{
+                                                    UIPasteboard.general.string = "chatty.kr/\(username)"
+                                                    self.copyButtonPressed = true
+                                                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                                                        self.copyButtonPressed = false
+                                                    }
+                                                }){
+                                                    Text("프로필 링크 복사하기")
+                                                        .font(.system(size:16, weight: .bold))
+                                                        .frame(height: 40)
+                                                        .frame(width: 194)
+                                                        .foregroundColor(Color.white)
+                                                        .background(
+                                                            Capsule()
+                                                                .fill( LinearGradient(gradient: Gradient(colors: [Color("MainGradient1"), Color("MainGradient2"),Color("MainGradient3")]), startPoint: .trailing, endPoint: .leading))
+                                                        )
+                                                }
+                                            }
+                                            .padding(.top, 80)
                                         }
-                                        .frame(width: proxy.size.width, height: 300)
+                                        .frame(width: proxy.size.width)
+                                        .frame(maxHeight: .infinity)
                                     } else {
                                         VStack(alignment: .center){
                                             Spacer()
@@ -446,6 +471,22 @@ struct ProfileView: View {
                         HStack{
                             Spacer()
                             Text("질문 보내기 성공!")
+                                .frame(width: 310, height: 40)
+                                .foregroundColor(Color.white)
+                                .background(Color("Error Background"))
+                                .cornerRadius(16)
+                                .padding(.bottom, 50)
+                            Spacer()
+                        }
+                    }
+                }
+                
+                if copyButtonPressed {
+                    VStack{
+                        Spacer()
+                        HStack{
+                            Spacer()
+                            Text("복사 완료!")
                                 .frame(width: 310, height: 40)
                                 .foregroundColor(Color.white)
                                 .background(Color("Error Background"))
@@ -488,18 +529,25 @@ struct ProfileView: View {
                     self.questionPostSuccess = false
                 }
             }
-            .sheet(isPresented: $questionEditorStatus){
+            .sheet(isPresented: $questionEditorStatus, onDismiss: {
+                questionEditorStatus = false
+            }){
                 QuestionEditor(username: username)
                     .presentationDetents([.fraction(0.45)])
             }
-            .sheet(isPresented: .constant(chattyVM.answerEditorStatus)){
-                AnswerEditor(question_id: chattyVM.answerEditorQuestionId)
+            .sheet(isPresented: .constant(chattyVM.answerEditorStatus), onDismiss: {
+                chattyVM.answerEditorStatus = false
+            }){
+                AnswerEditor(questiondata: chattyVM.questiondata!)
                     .presentationDetents([.fraction(0.45)])
                     .onDisappear{
                         self.initProfileView()
                     }
             }
-            .sheet(isPresented: .constant(chattyVM.questionOptionStatus)){
+            .sheet(isPresented: .constant(chattyVM.questionOptionStatus), onDismiss: {
+                print("dismissed")
+                chattyVM.questionOptionStatus = false
+            }) {
                 QuestionOption()
                     .presentationDetents([.fraction(0.4)])
             }

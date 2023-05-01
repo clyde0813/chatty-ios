@@ -4,6 +4,10 @@
 <dict>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3017845272648516~4689155011</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>SUIT-Heavy.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

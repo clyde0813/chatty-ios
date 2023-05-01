@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2EE6CB2E2952F4F300E281A0"
-               BuildableName = "Chatty_Swift.app"
-               BlueprintName = "Chatty_Swift"
-               ReferencedContainer = "container:Chatty_Swift.xcodeproj">
+               BuildableName = "Chatty.app"
+               BlueprintName = "Chatty"
+               ReferencedContainer = "container:Chatty.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,9 +34,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2EE6CB3E2952F4F400E281A0"
-               BuildableName = "Chatty_SwiftTests.xctest"
-               BlueprintName = "Chatty_SwiftTests"
-               ReferencedContainer = "container:Chatty_Swift.xcodeproj">
+               BuildableName = "ChattyTests.xctest"
+               BlueprintName = "ChattyTests"
+               ReferencedContainer = "container:Chatty.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -45,9 +45,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2EE6CB482952F4F500E281A0"
-               BuildableName = "Chatty_SwiftUITests.xctest"
-               BlueprintName = "Chatty_SwiftUITests"
-               ReferencedContainer = "container:Chatty_Swift.xcodeproj">
+               BuildableName = "ChattyUITests.xctest"
+               BlueprintName = "ChattyUITests"
+               ReferencedContainer = "container:Chatty.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -67,9 +67,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2EE6CB2E2952F4F300E281A0"
-            BuildableName = "Chatty_Swift.app"
-            BlueprintName = "Chatty_Swift"
-            ReferencedContainer = "container:Chatty_Swift.xcodeproj">
+            BuildableName = "Chatty.app"
+            BlueprintName = "Chatty"
+            ReferencedContainer = "container:Chatty.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -84,9 +84,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2EE6CB2E2952F4F300E281A0"
-            BuildableName = "Chatty_Swift.app"
-            BlueprintName = "Chatty_Swift"
-            ReferencedContainer = "container:Chatty_Swift.xcodeproj">
+            BuildableName = "Chatty.app"
+            BlueprintName = "Chatty"
+            ReferencedContainer = "container:Chatty.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

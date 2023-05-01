@@ -44,11 +44,6 @@ struct RankingCell: View {
             .padding([.leading, .trailing], 28)
         }
         .frame(height: 70)
-        .onTapGesture {
-            chattyVM.username = self.ranking.username
-            print("Ranking Cell : ",chattyVM.username)
-            chattyVM.profilePressed.send()
-        }
     }
 }
 

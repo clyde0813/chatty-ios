@@ -100,10 +100,6 @@ struct RankingView: View {
                                             .padding(.top, 100)
                                             .padding(.leading, 32)
                                             .frame(width:proxy.size.width*0.3, height: 200)
-                                            .onTapGesture {
-                                                chattyVM.username = rankingList[1].username
-                                                chattyVM.profilePressed.send()
-                                            }
                                             VStack{
                                                 ZStack{
                                                     KFImage(URL(string: "\(rankingList[0].profileImage)"))
@@ -132,10 +128,6 @@ struct RankingView: View {
                                                     .cornerRadius(16)
                                             }
                                             .frame(width:proxy.size.width*0.4, height: 270)
-                                            .onTapGesture {
-                                                chattyVM.username = rankingList[0].username
-                                                chattyVM.profilePressed.send()
-                                            }
                                             VStack{
                                                 ZStack{
                                                     KFImage(URL(string: "\(rankingList[2].profileImage)"))
@@ -166,10 +158,6 @@ struct RankingView: View {
                                             .padding(.top, 100)
                                             .padding(.trailing, 32)
                                             .frame(width:proxy.size.width*0.3, height: 200)
-                                            .onTapGesture {
-                                                chattyVM.username = rankingList[2].username
-                                                chattyVM.profilePressed.send()
-                                            }
                                         }
                                     }
                                     .padding(.bottom, 30)

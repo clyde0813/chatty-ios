@@ -11,15 +11,15 @@ import Kingfisher
 struct ChattyShareView: View {
     @Environment(\.presentationMode) var presentationMode
         
-    @State var username : String = ""
+    @Binding var username : String
     
-    @State var profile_name : String = ""
+    @Binding var profile_name : String
     
-    @State var profile_image : String = ""
+    @Binding var profile_image : String
     
-    @State var background_image : String = "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default_background.png"
+    @Binding var background_image : String
     
-    @State var questiondata : ResultDetail? = nil
+    @Binding var questiondata : ResultDetail?
     
     @State private var hideButton = false
     
@@ -125,16 +125,16 @@ struct ChattyShareView: View {
                     HStack(spacing:0){
                         Spacer()
                         VStack(alignment: .trailing,spacing: 16){
-                            Text("공유")
-                                .font(.system(size:16, weight: .semibold))
-                                .frame(width: 60, height: 25)
-                                .foregroundColor(Color.white)
-                                .padding(.vertical,10)
-                                .padding(.horizontal)
-                                .background(
-                                    Capsule()
-                                        .fill(Color("Card Share Background"))
-                                )
+//                            Text("공유")
+//                                .font(.system(size:16, weight: .semibold))
+//                                .frame(width: 60, height: 25)
+//                                .foregroundColor(Color.white)
+//                                .padding(.vertical,10)
+//                                .padding(.horizontal)
+//                                .background(
+//                                    Capsule()
+//                                        .fill(Color("Card Share Background"))
+//                                )
                             Button(action: {
                                 self.hideButton = true
                             }){

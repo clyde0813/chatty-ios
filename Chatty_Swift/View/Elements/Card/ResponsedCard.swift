@@ -17,7 +17,7 @@ struct ResponsedCard: View {
     
     @State var username : String = ""
     
-    @State var profile_name : String = ""
+    @State var profile_name : String
     
     @State var profile_image : String = ""
     
@@ -79,11 +79,8 @@ struct ResponsedCard: View {
                         .padding(.trailing, 8)
                     VStack(alignment: .leading, spacing: 0){
                         HStack(spacing: 4){
-                            Text("\(username)")
+                            Text("\(profile_name)")
                                 .font(Font.system(size: 16, weight: .bold))
-                            Text("...")
-                                .font(Font.system(size: 12, weight: .semibold))
-                                .foregroundColor(Color.gray)
                             Text("•")
                                 .font(Font.system(size: 12, weight: .semibold))
                                 .foregroundColor(Color.gray)
@@ -125,6 +122,6 @@ struct ResponsedCard: View {
 
 struct ResponsedCard_Previews: PreviewProvider {
     static var previews: some View {
-        ResponsedCard(width: 320, questiondata: ResultDetail(pk: 2, content: "Question Content", createdDate: "2023-03-26T22:01:42.000000", answerContent: "Answer Content"), username: "Username", profile_image: "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default.png")
+        ResponsedCard(width: 320, questiondata: ResultDetail(pk: 2, content: "Question Content", createdDate: "2023-03-26T22:01:42.000000", answerContent: "Answer Content"), username: "Username", profile_name: "김봉팔", profile_image: "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default.png")
     }
 }

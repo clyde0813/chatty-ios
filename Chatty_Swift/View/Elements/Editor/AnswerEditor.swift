@@ -14,10 +14,9 @@ struct AnswerEditor: View {
     @State private var content: String = ""
     @State var username: String = ""
     @State var anonymous: Bool = false
-    @State var question_id : Int = 0
-    @State var question_date : String = ""
-    @State var question_content : String = ""
     
+    @State var questiondata : ResultDetail
+
     var body: some View {
         ZStack{
             Color.white
@@ -28,7 +27,6 @@ struct AnswerEditor: View {
                     Spacer()
                     Button(action: {
                         chattyVM.answerEditorStatus = false
-                        chattyVM.answerEditorQuestionId = 0
                         dismiss()
                     }){
                         ZStack{
@@ -44,20 +42,20 @@ struct AnswerEditor: View {
                 HStack(spacing: 0){
                     Text("From @")
                         .font(.system(size:12))
-                    Text("Username")
+                    Text("익명")
                         .font(.system(size:12, weight: .bold))
-                        .padding(.trailing, 4)
+                        .padding(.trailing, 8)
                     Text("•")
                         .font(Font.system(size: 12, weight: .semibold))
                         .foregroundColor(Color.gray)
-                        .padding(.trailing, 4)
-                    Text("21시간")
+                        .padding(.trailing, 8)
+                    Text("\(elapsedtime(time: questiondata.createdDate))")
                         .font(Font.system(size: 12, weight: .semibold))
                         .foregroundColor(Color.gray)
                 }
                 .foregroundColor(Color("Main Primary"))
                 .padding(.bottom, 4)
-                Text("\(question_content)")
+                Text("\(questiondata.content)")
                     .font(Font.system(size: 16, weight: .none))
                     .padding(.bottom, 20)
                 //질문 입력창
@@ -72,9 +70,8 @@ struct AnswerEditor: View {
                 }
                 //완료 버튼
                 Button(action:{
-                    chattyVM.answerPost(question_id: question_id, content: content)
+                    chattyVM.answerPost(question_id: questiondata.pk, content: content)
                     chattyVM.answerEditorStatus = false
-                    chattyVM.answerEditorQuestionId = 0
                     dismiss()
                 }){
                     Text("완료")
@@ -97,8 +94,8 @@ struct AnswerEditor: View {
     }
 }
 
-struct AnswerEditor_Previews: PreviewProvider {
-    static var previews: some View {
-        AnswerEditor(question_content: "그럿개 살지마셈 ㅋ--^").environmentObject(ChattyVM())
-    }
-}
+//struct AnswerEditor_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AnswerEditor(question_content: "그럿개 살지마셈 ㅋ--^").environmentObject(ChattyVM())
+//    }
+//}

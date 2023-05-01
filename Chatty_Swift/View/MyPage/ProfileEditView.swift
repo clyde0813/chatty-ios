@@ -18,7 +18,6 @@ struct ProfileEditView: View {
     @State var profile_name : String = ""
     
     @State var profile_message : String = ""
-    @State var backgroundImage : String = ""
     
     @State private var selectedBackgroundImageItem: PhotosPickerItem?
     @State private var selectedBackgroundUIImage : UIImage?
@@ -32,6 +31,9 @@ struct ProfileEditView: View {
     @State private var usernameVerify : Bool = false
     
     @State private var usernameError : Bool = false
+    
+    @State private var profileEditProgress : Bool = false
+    @State private var profileEditSuccess : Bool = false
     
     var body: some View {
         GeometryReader{ proxy in
@@ -49,8 +51,9 @@ struct ProfileEditView: View {
                             .foregroundColor(Color.black)
                     }
                     Spacer()
-                    if self.username.isEmpty || self.usernameVerify{
+                    if (self.username.isEmpty || self.usernameVerify) && self.profile_name.count <= 20 && self.profile_message.count <= 20{
                         Button(action:{
+                            self.profileEditProgress = true
                             chattyVM.profileEdit(username: username, profile_name: profile_name, profile_message: profile_message, profile_image: selectedProfileUIImage, background_image: selectedBackgroundUIImage)
                         }){
                             Text("저장하기")
@@ -70,13 +73,12 @@ struct ProfileEditView: View {
                     Color.white
                     VStack(spacing: 0){
                         ZStack{
-                            //                            KFImage(URL(string: "\(chattyVM.profileModel?.backgroundImage ?? "")"))
                             ZStack{
                                 if selectedBackgroundImage == nil{
                                     PhotosPicker(selection: $selectedBackgroundImageItem,
                                                  matching: .images,
                                                  photoLibrary: .shared()){
-                                        KFImage(URL(string : "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default_background.png"))
+                                        KFImage(URL(string: "\(chattyVM.profileModel?.backgroundImage ?? "")"))
                                             .resizable()
                                             .scaledToFill()
                                             .frame(width:proxy.size.width, height: 160)
@@ -114,13 +116,12 @@ struct ProfileEditView: View {
                                     .scaledToFill()
                                     .frame(width: 20, height: 20)
                             }
-                            //                            KFImage(URL(string: "\(chattyVM.profileModel?.profileImage ?? "")"))
                             ZStack{
                                 if selectedProfileImage == nil {
                                     PhotosPicker(selection: $selectedProfileImageItem,
                                                  matching: .images,
                                                  photoLibrary: .shared()){
-                                        KFImage(URL(string: "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default.png"))
+                                        KFImage(URL(string: "\(chattyVM.profileModel?.profileImage ?? "")"))
                                             .resizable()
                                             .scaledToFill()
                                             .frame(width: 110, height: 110)
@@ -266,15 +267,42 @@ struct ProfileEditView: View {
                                 .padding(.bottom, 30)
                         }
                     }
+                    
+                    if self.profileEditProgress{
+                        VStack{
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                    }
+                    
+                    if self.profileEditSuccess{
+                        VStack{
+                            Spacer()
+                            Text("수정이 완료되었습니다!")
+                                .frame(width: 310, height: 40)
+                                .foregroundColor(Color.white)
+                                .background(Color("Error Background"))
+                                .cornerRadius(16)
+                                .padding(.bottom, 100)
+                        }
+                    }
                 }
                 .frame(width: proxy.size.width)
                 .onTapGesture {
                     endEditing()
                 }
             }
-            .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .navigationBarHidden(true)
+        .onReceive(chattyVM.profileEditSuccess){
+            chattyVM.fetchUserInfo(username: KeyChain.read(key: "username")!)
+            self.profileEditProgress = false
+            self.profileEditSuccess = true
+            Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                self.profileEditSuccess = false
+            }
+        }
     }
 }
 

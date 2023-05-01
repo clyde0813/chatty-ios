@@ -25,9 +25,10 @@ class ChattyVM: ObservableObject {
     
     @Published var rankingModel : RankingModel? = nil
     
+    @Published var currentUserModel : CurrentUserModel? = nil
+    
     // 답변 등록
     @Published var answerEditorStatus : Bool = false
-    @Published var answerEditorQuestionId : Int = 0
     
     //질문 옵션 변수
     @Published var questionOptionStatus : Bool = false
@@ -41,10 +42,10 @@ class ChattyVM: ObservableObject {
     @Published var background_image : String = ""
     
     @Published var questiondata : ResultDetail? = ResultDetail(pk: 0, content: "", createdDate: "", answerContent: "")
-
-    //
     
     var profileEditPressed = PassthroughSubject<(), Never>()
+    
+    var profileEditSuccess = PassthroughSubject<(), Never>()
     
     var profilePressed = PassthroughSubject<(), Never>()
     
@@ -73,6 +74,22 @@ class ChattyVM: ObservableObject {
     var registerError = PassthroughSubject<(), Never>()
     
     var questionPostSuccess = PassthroughSubject<(), Never>()
+    
+    func currentUser() {
+        let url = "https://chatty.kr/api/v1/user/current"
+        
+        AF.request(url,
+                   method: .get,
+                   encoding: JSONEncoding.default,
+                   headers: ["Content-Type":"application/json", "Accept":"application/json"])
+        .responseDecodable(of: CurrentUserModel.self){ response in
+            switch response.result {
+            case .success(let data):
+                self.currentUserModel = data
+            case .failure(_):
+                print("Current User Get : Failed")            }
+        }
+    }
     
     func apnsTokenInitialize(completion: @escaping (Bool) -> Void) {
         let url = "https://chatty.kr/api/v1/user/FCM/ios"
@@ -220,11 +237,10 @@ class ChattyVM: ObservableObject {
         }
     }
     
-    func verifyEmail(username: String, email: String){
+    func verifyEmail(email: String){
         let url = "https://chatty.kr/api/v1/user/email/verify"
         
         let params: [String: Any] = [
-            "username" : username,
             "email": email
         ]
         
@@ -324,6 +340,7 @@ class ChattyVM: ObservableObject {
         headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let parameters: [String: Any] = [
+            "username" : username,
             "profile_name": profile_name,
             "profile_message": profile_message
         ]
@@ -333,23 +350,35 @@ class ChattyVM: ObservableObject {
                 for (key, value) in parameters {
                     multipartFormData.append("\(value)".data(using: .utf8)!, withName: key)
                 }
-                if let image = profile_image?.pngData() {
-                    multipartFormData.append(image, withName: "profile_image", fileName: "\(username).jpg", mimeType: "image/jpg")
+                if let profile_image_data = profile_image?.jpegData(compressionQuality: 1) {
+                    multipartFormData.append(profile_image_data, withName: "profile_image", fileName: "\(username).jpg", mimeType: "image/jpg")
                 }
-                if let image = background_image?.pngData() {
-                    multipartFormData.append(image, withName: "background_image", fileName: "\(username).jpg", mimeType: "image/jpg")
+                if let background_image_data = background_image?.jpegData(compressionQuality: 1) {
+                    multipartFormData.append(background_image_data, withName: "background_image", fileName: "\(username).jpg", mimeType: "image/jpg")
                 }
             },
             to: url,
             method: .put,
             headers: headers
         )
-        .responseString { (response) in
-            switch response.result {
-            case .success:
-                self.questionPostSuccess.send()
-            case .failure(let error):
-                print("error : \(error.errorDescription!)")
+        .response { response in
+            switch response.response?.statusCode {
+            case 200:
+                if username != "" {
+                    KeyChain.delete(key: "username")
+                    KeyChain.create(key: "username", value: username)
+                }
+                self.profileEditSuccess.send()
+            case 401:
+                self.refreshToken() { success in
+                    if success {
+                        self.profileEdit(username: username, profile_name: profile_name, profile_message: profile_message, profile_image: profile_image, background_image: background_image)
+                    } else {
+                        print("Error with no model")
+                    }
+                }
+            default:
+                print("Profile Edit Failed")
             }
         }
     }

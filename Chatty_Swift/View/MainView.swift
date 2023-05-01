@@ -31,6 +31,14 @@ struct MainView: View {
     @State private var profileView : Bool = false
     
     @State private var username : String = ""
+    
+    @State private var profile_name : String = ""
+    
+    @State private var profile_image : String = ""
+    
+    @State private var background_image : String = ""
+    
+    @State private var questiondata : ResultDetail?
         
     init(){
         UITabBar.appearance().backgroundColor = .white
@@ -67,6 +75,11 @@ struct MainView: View {
                     self.logoutStatus = true
                 }
                 .onReceive(chattyVM.shareViewPass){
+                    self.username = chattyVM.username
+                    self.profile_name = chattyVM.profile_name
+                    self.profile_image = chattyVM.profile_image
+                    self.background_image = chattyVM.background_image
+                    self.questiondata = chattyVM.questiondata
                     self.shareView = true
                 }
                 .onReceive(chattyVM.profilePressed){
@@ -79,7 +92,7 @@ struct MainView: View {
                 .accentColor(Color.black)
                 .navigationBarHidden(true)
                 .navigationDestination(isPresented: $shareView) {
-                    ChattyShareView(username: chattyVM.username, profile_name: chattyVM.profile_name, profile_image: chattyVM.profile_image, questiondata: chattyVM.questiondata!)
+                    ChattyShareView(username: self.$username, profile_name: self.$profile_name, profile_image: self.$profile_image, background_image: self.$background_image, questiondata: self.$questiondata)
                 }
                 .navigationDestination(isPresented: $profileView) {
                     if KeyChain.read(key: "username")! == self.username{
