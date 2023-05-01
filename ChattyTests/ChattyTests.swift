@@ -6,9 +6,9 @@
 //
 
 import XCTest
-@testable import Chatty_Swift
+@testable import Chatty
 
-final class Chatty_SwiftTests: XCTestCase {
+final class ChattyTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

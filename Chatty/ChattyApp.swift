@@ -12,7 +12,7 @@ import UserNotifications
 import GoogleMobileAds
 
 @main
-struct Chatty_SwiftApp: App {
+struct ChattyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {

@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_Chatty_Swift_Chatty_SwiftUITestsVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_Chatty_Swift_Chatty_SwiftUITestsVersionString[];
+FOUNDATION_EXPORT double Pods_Chatty_ChattyUITestsVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_Chatty_ChattyUITestsVersionString[];
 

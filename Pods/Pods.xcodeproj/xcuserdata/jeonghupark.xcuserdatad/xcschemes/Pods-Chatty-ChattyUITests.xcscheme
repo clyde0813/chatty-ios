@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "363A7F3B8A00FC35BC1A0F5D309716CE"
-               BuildableName = "Pods_Chatty_Swift.framework"
-               BlueprintName = "Pods-Chatty_Swift"
+               BlueprintIdentifier = "6F6E6AB73AE1EF5577945092B48414FB"
+               BuildableName = "Pods_Chatty_ChattyUITests.framework"
+               BlueprintName = "Pods-Chatty-ChattyUITests"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

@@ -64,17 +64,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Chatty_Swift-Chatty_SwiftUITests.xcscheme</key>
+		<key>Pods-Chatty-ChattyUITests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Chatty_Swift.xcscheme</key>
+		<key>Pods-Chatty.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Chatty_SwiftTests.xcscheme</key>
+		<key>Pods-ChattyTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
