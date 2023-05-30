@@ -10,26 +10,20 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @EnvironmentObject var chattyVM: ChattyVM
-    
+    @StateObject var loginVM = LoginVM()
     @Environment(\.dismiss) var dismiss
-    
-    @State
-    private var username = ""
-    
-    @State
-    private var password = ""
-    
     @Environment(\.presentationMode) var presentationMode
     
+    //MARK: - 뷰상태 관련 프로퍼티
     @State private var loginPressed = false
         
     @State private var loginSuccess = false
     
-    @State private var loginError = false
+    @State private var ErrorShow = false
     
-    @State private var togglePassword = true
+    @State private var isShowPassword = true
     
+    //MARK: - 메인뷰
     var body: some View {
         if self.loginSuccess || UserDefaults.standard.bool(forKey: "isLoggedIn"){
             MainView()
@@ -56,11 +50,12 @@ struct LoginView: View {
                                 }
                             }
                             .foregroundColor(Color.black)
+                            
                             VStack(alignment: .leading){
                                 Text("아이디")
                                     .font(.system(size:12))
                                     .fontWeight(.light)
-                                TextField("아이디를 입력해 주세요.", text: $username)
+                                TextField("아이디를 입력해 주세요.", text: $loginVM.username)
                                     .frame(height: 25)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
@@ -70,27 +65,27 @@ struct LoginView: View {
                                     .font(.system(size:12))
                                     .fontWeight(.light)
                                 ZStack(alignment: .trailing){
-                                    if togglePassword == true {
-                                        SecureField("비밀번호", text: $password)
+                                    if isShowPassword {
+                                        SecureField("비밀번호", text: $loginVM.password)
                                             .frame(height: 25)
                                             .padding()
                                             .background(Color(uiColor: .secondarySystemBackground))
                                             .mask(RoundedRectangle(cornerRadius: 16))
                                             .padding(.bottom, 20)
                                     } else {
-                                        TextField("비밀번호", text: $password)
+                                        TextField("비밀번호", text: $loginVM.password)
                                             .frame(height: 25)
                                             .padding()
                                             .background(Color(uiColor: .secondarySystemBackground))
                                             .mask(RoundedRectangle(cornerRadius: 16))
                                             .padding(.bottom, 20)
                                     }
-                                    Image(systemName: self.togglePassword ? "eye.fill": "eye.slash.fill")
+                                    Image(systemName: isShowPassword ? "eye.fill": "eye.slash.fill")
                                         .foregroundColor(Color(.lightGray))
                                         .font(Font.system(size: 20))
                                         .padding([.bottom, .trailing], 18)
                                         .onTapGesture(perform: {
-                                            togglePassword.toggle()
+                                            isShowPassword.toggle()
                                         })
                                 }
                             }
@@ -108,7 +103,7 @@ struct LoginView: View {
                             Button(action: {
                                 endEditing()
                                 self.loginPressed = true
-                                chattyVM.login(username: username, password: password)
+                                loginVM.login()
                             }){
                                 Text("로그인")
                                     .fontWeight(.bold)
@@ -117,36 +112,33 @@ struct LoginView: View {
                                            maxWidth: .infinity
                                     )
                                     .foregroundColor(Color.white)
-                                    .background(self.username.isEmpty || self.password.isEmpty ? Color("Grey500") : Color("Main Primary"))
+                                    .background(loginVM.username.isEmpty || loginVM.password.isEmpty ? Color("Grey500") : Color("Main Primary"))
                                     .cornerRadius(16)
                                     .padding(.bottom, 20)
                             }
-                            .disabled(self.username.isEmpty || self.password.isEmpty ? true : false)
+                            .disabled(loginVM.username.isEmpty || loginVM.password.isEmpty ? true : false)
                         }
                         .padding([.leading, .trailing], 20)
                     }
                     .navigationBarHidden(true)
                     
-                    if self.loginError{
-                        Text("아이디 또는 비밀번호가 일치하지 않습니다.")
-                            .frame(width: 310, height: 40)
-                            .foregroundColor(Color.white)
-                            .background(Color("Error Background"))
-                            .cornerRadius(16)
-                            .padding(.top, 400)
+                    if ErrorShow{
+                       ErrorView(message: "아이디 또는 비밀번호가 일치하지 않습니다.")
                     }
                     
                 }
-                .onReceive(chattyVM.loginSuccess, perform: {
-                    self.loginSuccess = true
-                })
-                .onReceive(chattyVM.loginError) {
-                    self.loginError = true
-                    self.loginPressed = false
-                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
-                        self.loginError = false
+                .onReceive(loginVM.isLoginSuccess, perform: { result in
+                    if result {
+                        loginSuccess = true
+                    }else{
+                        loginPressed = false
+                        ErrorShow = true
+                        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                            ErrorShow = false
+                        }
                     }
-                }
+                    
+                })
                 .onTapGesture {
                     endEditing()
                 }
@@ -159,8 +151,6 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView().environmentObject(ChattyVM())
+        LoginView()
     }
 }
-
-

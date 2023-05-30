@@ -35,9 +35,9 @@ struct QuestionOption: View {
                     chattyVM.shareViewPass.send()
                 }){
                     HStack(spacing: 8){
-                        Image(systemName: "paperplane.fill")
+                        Image(systemName: "photo.fill")
                             .font(Font.system(size: 16, weight: .bold))
-                        Text("공유하기")
+                        Text("이미지 저장")
                             .font(.system(size: 16, weight: .bold))
                     }
                     .frame(height: 60)
@@ -51,13 +51,14 @@ struct QuestionOption: View {
                 }
                 
                 Button(action:{
+                    chattyVM.questionReport(question_id: chattyVM.questiondata?.pk ?? -1)
                     chattyVM.questionOptionStatus = false
                     dismiss()
                 }){
                     HStack(spacing: 8){
                         Image(systemName: "light.beacon.max")
                             .font(Font.system(size: 16, weight: .bold))
-                        Text("신고하기 (준비중)")
+                        Text("신고 & 차단하기")
                             .font(.system(size: 16, weight: .bold))
                     }
                     .frame(height: 60)
@@ -71,14 +72,16 @@ struct QuestionOption: View {
                             .stroke(Color("Pink Dark"), lineWidth: 2)
                     )
                 }
+                .padding([.leading, .trailing, .bottom], 3)
                 Button(action:{
+                    chattyVM.questionDelete(question_id: chattyVM.questiondata?.pk ?? -1)
                     chattyVM.questionOptionStatus = false
                     dismiss()
                 }){
                     HStack(spacing: 8){
                         Image(systemName: "trash.fill")
                             .font(Font.system(size: 16, weight: .bold))
-                        Text("삭제하기 (준비중)")
+                        Text("삭제하기")
                             .font(.system(size: 16, weight: .bold))
                     }
                     .frame(height: 60)

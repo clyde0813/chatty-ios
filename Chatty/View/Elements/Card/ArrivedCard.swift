@@ -96,10 +96,11 @@ struct ArrivedCard: View {
                     }
                 }
             }
-            .padding(16)
+            .padding([.leading, .trailing, .bottom], 16)
+            .padding(.top, 12)
         }
         .frame(width: width)
-        .frame(minHeight: 130)
+        .frame(minHeight: 0)
         .fixedSize(horizontal: false, vertical: true)
         .mask(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)

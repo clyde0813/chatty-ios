@@ -11,6 +11,10 @@ import Kingfisher
 struct MyPageView: View {
     @EnvironmentObject var chattyVM: ChattyVM
     
+    @State var copyButtonPressed : Bool = false
+    
+    @State private var profilePrivacyEditView : Bool = false
+    
     var body: some View {
         GeometryReader{ proxy in
             ZStack{
@@ -88,6 +92,10 @@ struct MyPageView: View {
                             HStack{
                                 Button(action:{
                                     UIPasteboard.general.string = "chatty.kr/\(chattyVM.profileModel?.username ?? "")"
+                                    self.copyButtonPressed = true
+                                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                                        self.copyButtonPressed = false
+                                    }
                                 }){
                                     Text("내 링크 복사하기")
                                         .font(Font.system(size: 16, weight: .none))
@@ -97,74 +105,102 @@ struct MyPageView: View {
                                 }
                             }
                             .frame(height: 48)
+                            
                             HStack{
-                                Text("고객 지원")
-                                    .font(Font.system(size: 16, weight: .none))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 16, weight: .none))
+                                Button(action:{
+                                    self.profilePrivacyEditView = true
+                                }){
+                                    Text("개인정보 수정")
+                                        .font(Font.system(size: 16, weight: .none))
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(Font.system(size: 16, weight: .none))
+                                }
                             }
                             .frame(height: 48)
+                            
                             HStack{
-                                Text("공지사항")
-                                    .font(Font.system(size: 16, weight: .none))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 16, weight: .none))
+                                Button(action:{
+                                    if let url = URL(string: "mailto:clyde_dev@icloud.com") {
+                                        UIApplication.shared.open(url)
+                                    }
+                                }){
+                                    Text("문의하기")
+                                        .font(Font.system(size: 16, weight: .none))
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(Font.system(size: 16, weight: .none))
+                                }
                             }
                             .frame(height: 48)
-                            HStack{
-                                Text("FAQ")
-                                    .font(Font.system(size: 16, weight: .none))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 16, weight: .none))
-                            }
-                            .frame(height: 48)
-                            HStack{
-                                Text("차단된 IP 및 계정 목록")
-                                    .font(Font.system(size: 16, weight: .none))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 16, weight: .none))
-                            }
-                            .frame(height: 48)
-                            HStack{
-                                Text("신고 기록 및 처리 상태 확인")
-                                    .font(Font.system(size: 16, weight: .none))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 16, weight: .none))
-                            }
-                            .frame(height: 48)
+//                            HStack{
+//                                Text("고객 지원")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                            }
+//                            .frame(height: 48)
+//                            HStack{
+//                                Text("공지사항")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                            }
+//                            .frame(height: 48)
+//                            HStack{
+//                                Text("FAQ")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                            }
+//                            .frame(height: 48)
+//                            HStack{
+//                                Text("차단된 IP 및 계정 목록")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                            }
+//                            .frame(height: 48)
+//                            HStack{
+//                                Text("신고 기록 및 처리 상태 확인")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                            }
+//                            .frame(height: 48)
                         }
                         .padding(.top, 40)
                         .padding([.leading, .trailing], 20)
                         .frame(width: proxy.size.width)
                         
                         VStack(alignment: .leading, spacing: 0){
-                            HStack{
-                                Text("회원 정보")
-                                    .font(Font.system(size: 14, weight: .none))
-                                    .foregroundColor(Color.gray)
-                                Spacer()
-                            }
-                            HStack{
-                                Text("통계")
-                                    .font(Font.system(size: 16, weight: .none))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 16, weight: .none))
-                            }
-                            .frame(height: 48)
-                            HStack{
-                                Text("개인정보 수정")
-                                    .font(Font.system(size: 16, weight: .none))
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 16, weight: .none))
-                            }
-                            .frame(height: 48)
+//                            HStack{
+//                                Text("회원 정보")
+//                                    .font(Font.system(size: 14, weight: .none))
+//                                    .foregroundColor(Color.gray)
+//                                Spacer()
+//                            }
+//                            HStack{
+//                                Text("통계")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                            }
+//                            .frame(height: 48)
+//                            HStack{
+//                                Text("개인정보 수정")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                                Spacer()
+//                                Image(systemName: "chevron.right")
+//                                    .font(Font.system(size: 16, weight: .none))
+//                            }
+//                            .frame(height: 48)
                             HStack{
                                 Text("로그아웃")
                                     .font(Font.system(size: 16, weight: .none))
@@ -176,20 +212,38 @@ struct MyPageView: View {
                             .onTapGesture {
                                 chattyVM.logout()
                             }
-                            
                         }
-                        .padding(.top, 32)
                         .padding([.leading, .trailing], 20)
                         Spacer()
                     }
                     .background(Color.clear)
                 }
+                
+                if copyButtonPressed {
+                    VStack{
+                        Spacer()
+                        HStack{
+                            Spacer()
+                            Text("복사 완료!")
+                                .frame(width: 310, height: 40)
+                                .foregroundColor(Color.white)
+                                .background(Color("Error Background"))
+                                .cornerRadius(16)
+                                .padding(.bottom, 50)
+                            Spacer()
+                        }
+                    }
+                }
+                
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .onAppear{
             chattyVM.profileModel = nil
-            chattyVM.fetchUserInfo(username: KeyChain.read(key: "username")!)
+            chattyVM.fetchUserInfo(username: KeyChain.read(key: "username") ?? "")
+        }
+        .navigationDestination(isPresented: $profilePrivacyEditView){
+            PrivacyEditView()
         }
     }
 }

@@ -15,6 +15,7 @@ struct ProfileModel: Codable {
     let backgroundImage: String
     let profileMessage: String?
     let follower, following: Int
+    let views: Int
 
     enum CodingKeys: String, CodingKey {
         case username = "username"
@@ -26,6 +27,7 @@ struct ProfileModel: Codable {
         case backgroundImage = "background_image"
         case profileMessage = "profile_message"
         case follower, following
+        case views
     }
 }
 

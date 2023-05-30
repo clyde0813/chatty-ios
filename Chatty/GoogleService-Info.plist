@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>585897521689-u3k7b06fsku4b45n4298ko2vvvut2odh.apps.googleusercontent.com</string>
+	<string>585897521689-mtgigbbohla7sdfbn9trfnu5jhglhlro.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.585897521689-u3k7b06fsku4b45n4298ko2vvvut2odh</string>
+	<string>com.googleusercontent.apps.585897521689-mtgigbbohla7sdfbn9trfnu5jhglhlro</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBv4FYn4PQnroSoRpJa_wc0l6QEtm2uIwc</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>Chatty.Chatty-Swift</string>
+	<string>Chatty.Chatty</string>
 	<key>PROJECT_ID</key>
 	<string>chatty-sns</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:585897521689:ios:21774c960a41856a927088</string>
+	<string>1:585897521689:ios:41ba934a2e2fe37b927088</string>
 </dict>
 </plist>

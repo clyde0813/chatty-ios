@@ -67,7 +67,8 @@ struct RefusedCard: View {
                     .font(Font.system(size: 16, weight: .none))
                     .padding(.trailing, 15)
             }
-            .padding(16)
+            .padding([.leading, .trailing, .bottom], 16)
+            .padding(.top, 12)
         }
         .frame(width: width)
         .fixedSize(horizontal: false, vertical: true)

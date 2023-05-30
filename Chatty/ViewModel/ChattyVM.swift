@@ -44,7 +44,7 @@ class ChattyVM: ObservableObject {
     @Published var questiondata : ResultDetail? = ResultDetail(pk: 0, content: "", createdDate: "", answerContent: "")
     
     var profileEditPressed = PassthroughSubject<(), Never>()
-    
+        
     var profileEditSuccess = PassthroughSubject<(), Never>()
     
     var profilePressed = PassthroughSubject<(), Never>()
@@ -73,7 +73,15 @@ class ChattyVM: ObservableObject {
     
     var registerError = PassthroughSubject<(), Never>()
     
+    var unregisterSuccess = PassthroughSubject<(), Never>()
+    
+    var unregisterError = PassthroughSubject<(), Never>()
+    
     var questionPostSuccess = PassthroughSubject<(), Never>()
+    
+    var reportSuccess = PassthroughSubject<(), Never>()
+    
+    var deleteSuccess = PassthroughSubject<(), Never>()
     
     func currentUser() {
         let url = "https://chatty.kr/api/v1/user/current"
@@ -216,6 +224,31 @@ class ChattyVM: ObservableObject {
                 }
             }
         }
+    }
+    
+    func unregister(){
+        let url = "https://chatty.kr/api/v1/user/register"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        AF.request(url,
+                   method: .delete,
+                   encoding: JSONEncoding.default,
+                   headers: headers)
+        .response { response in
+            switch response.response?.statusCode {
+            case 200:
+                self.unregisterSuccess.send()
+            case 401:
+                self.unregisterError.send()
+            default:
+                self.unregisterError.send()
+            }
+            
+        }
+        
     }
     
     func verifyUsername(username: String){
@@ -456,6 +489,56 @@ class ChattyVM: ObservableObject {
             switch response.result {
             case .success:
                 self.questionPostSuccess.send()
+            case .failure(let error):
+                print("error : \(error.errorDescription!)")
+            }
+        }
+    }
+    
+    func questionReport(question_id: Int) {
+        let url = "https://chatty.kr/api/v1/chatty"
+        var headers : HTTPHeaders = []
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let params: Parameters = [
+            "question_id" : question_id
+        ]
+        
+        AF.request(url,
+                   method: .delete,
+                   parameters: params,
+                   encoding: JSONEncoding(options: []),
+                   headers: headers)
+        .responseData { response in
+            switch response.result {
+            case .success:
+                print("Report & Delete 성공")
+                self.reportSuccess.send()
+            case .failure(let error):
+                print("error : \(error.errorDescription!)")
+            }
+        }
+    }
+    
+    func questionDelete(question_id: Int) {
+        let url = "https://chatty.kr/api/v1/chatty"
+        var headers : HTTPHeaders = []
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let params: Parameters = [
+            "question_id" : question_id
+        ]
+        
+        AF.request(url,
+                   method: .delete,
+                   parameters: params,
+                   encoding: JSONEncoding(options: []),
+                   headers: headers)
+        .responseData { response in
+            switch response.result {
+            case .success:
+                print("DELETE 성공")
+                self.deleteSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
             }

@@ -23,7 +23,7 @@ struct AnswerEditor: View {
             VStack(alignment: .leading, spacing: 0){
                 HStack(spacing: 0){
                     Text("답변 작성")
-                        .font(Font.system(size: 20, weight: .bold))
+                        .font(Font.system(size: 20, weight: .semibold))
                     Spacer()
                     Button(action: {
                         chattyVM.answerEditorStatus = false
@@ -38,7 +38,7 @@ struct AnswerEditor: View {
                         .frame(width: 20, height: 20)
                     }
                 }
-                .padding(.bottom, 16)
+                .padding(.bottom, 10)
                 HStack(spacing: 0){
                     Text("From @")
                         .font(.system(size:12))
@@ -57,15 +57,14 @@ struct AnswerEditor: View {
                 .padding(.bottom, 4)
                 Text("\(questiondata.content)")
                     .font(Font.system(size: 16, weight: .none))
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 12)
                 //질문 입력창
                 ZStack(alignment: .topLeading){
-                    Text("@\(username)에게 답변 쓰기")
+                    Text("@익명에게 답변 쓰기")
                         .foregroundColor(Color.gray)
                         .font(.system(size:16, weight: .bold))
                     TextEditor(text: $content)
-                        .frame(height: 120)
-                        .font(.system(size:16, weight: .none))
+                        .frame(minHeight: 120)                        .font(.system(size:16, weight: .none))
                         .opacity(content.isEmpty ? 0.1 : 1)
                 }
                 //완료 버튼

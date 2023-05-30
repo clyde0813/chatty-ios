@@ -27,7 +27,7 @@ struct ResponsedCard: View {
         ZStack{
             Color.white
             VStack(alignment: .leading, spacing: 0){
-                HStack{
+                HStack(spacing: 0){
                     HStack(spacing: 0){
                         Text("From @")
                             .font(.system(size:12))
@@ -94,26 +94,27 @@ struct ResponsedCard: View {
                             .padding(.trailing, 5)
                     }
                 }
-                .padding(.bottom, 16)
-                HStack(spacing: 0){
-                    Image(systemName: "heart")
-                        .fontWeight(.semibold)
-                        .font(Font.system(size: 16, weight: .bold))
-                        .frame(width: (width-32) / 3)
-                    Image(systemName: "bookmark")
-                        .fontWeight(.semibold)
-                        .font(Font.system(size: 16, weight: .bold))
-                        .frame(width: (width-32) / 3)
-                    Image(systemName: "square.and.arrow.up")
-                        .fontWeight(.semibold)
-                        .font(Font.system(size: 16, weight: .bold))
-                        .frame(width: (width-32) / 3)
-                }
+//                .padding(.bottom, 16)
+//                HStack(spacing: 0){
+//                    Image(systemName: "heart")
+//                        .fontWeight(.semibold)
+//                        .font(Font.system(size: 16, weight: .bold))
+//                        .frame(width: (width-32) / 3)
+//                    Image(systemName: "bookmark")
+//                        .fontWeight(.semibold)
+//                        .font(Font.system(size: 16, weight: .bold))
+//                        .frame(width: (width-32) / 3)
+//                    Image(systemName: "square.and.arrow.up")
+//                        .fontWeight(.semibold)
+//                        .font(Font.system(size: 16, weight: .bold))
+//                        .frame(width: (width-32) / 3)
+//                }
             }
-            .padding(16)
+            .padding([.leading, .trailing, .bottom], 16)
+            .padding(.top, 12)
         }
         .frame(width: width)
-        .frame(minHeight: 170)
+        .frame(minHeight: 0)
         .fixedSize(horizontal: false, vertical: true)
         .mask(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)

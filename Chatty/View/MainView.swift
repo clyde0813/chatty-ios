@@ -28,6 +28,8 @@ struct MainView: View {
     
     @State private var profileEditView : Bool = false
     
+    @State private var profilePrivacyEditView : Bool = false
+    
     @State private var profileView : Bool = false
     
     @State private var username : String = ""
@@ -55,16 +57,16 @@ struct MainView: View {
                         .tabItem{
                             Image(systemName: "house.fill")
                             Text("홈")}
-                    CommunityView()
-                        .tag(BottomTab.community)
-                        .tabItem{
-                            Image(systemName: "message.fill")
-                            Text("커뮤니티")}
-                    RankingView()
-                        .tag(BottomTab.ranking)
-                        .tabItem{
-                            Image(systemName: "trophy.fill")
-                            Text("랭킹")}
+//                    CommunityView()
+//                        .tag(BottomTab.community)
+//                        .tabItem{
+//                            Image(systemName: "message.fill")
+//                            Text("커뮤니티")}
+//                    RankingView()
+//                        .tag(BottomTab.ranking)
+//                        .tabItem{
+//                            Image(systemName: "trophy.fill")
+//                            Text("랭킹")}
                     MyPageView()
                         .tag(BottomTab.mypage)
                         .tabItem{
@@ -93,13 +95,6 @@ struct MainView: View {
                 .navigationBarHidden(true)
                 .navigationDestination(isPresented: $shareView) {
                     ChattyShareView(username: self.$username, profile_name: self.$profile_name, profile_image: self.$profile_image, background_image: self.$background_image, questiondata: self.$questiondata)
-                }
-                .navigationDestination(isPresented: $profileView) {
-                    if KeyChain.read(key: "username")! == self.username{
-                        ProfileView(username: self.$username, isOwner: true, currentTab: .constant(currentTab))
-                    } else {
-                        ProfileView(username: self.$username, isOwner: false, currentTab: .constant(currentTab))
-                    }
                 }
                 .navigationDestination(isPresented: $profileEditView){
                     ProfileEditView()

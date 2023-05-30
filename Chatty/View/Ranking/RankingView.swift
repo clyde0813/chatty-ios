@@ -17,19 +17,11 @@ struct RankingView: View {
         
     var body: some View {
         GeometryReader{ proxy in
-            if self.rankingList.isEmpty {
+            if self.rankingList.isEmpty || self.rankingList.count < 3{
                 ZStack{
                     Color.white
                     ProgressView("불러오는중...")
                         .foregroundColor(Color.black)
-                }
-                .ignoresSafeArea(.all)
-            } else if self.rankingList.count < 4 {
-                ZStack{
-                    Color.white
-                    Text("아직 이용자가 부족합니다!")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(Color("Pink Main"))
                 }
                 .ignoresSafeArea(.all)
             } else {
@@ -61,9 +53,9 @@ struct RankingView: View {
 //                                            .padding([.leading, .trailing], 16)
 //                                            .padding(.bottom, -45)
                                         Text("Chatty")
-                                            .font(.system(size: 26, weight: .heavy))
+                                            .font(.custom("SUIT-Heavy", size: 32))
                                             .foregroundColor(Color.white)
-                                            .padding(.top, 40)
+                                            .padding(.top, 25)
                                             .padding(.bottom, -45)
                                         HStack(spacing: 0){
                                             VStack{
@@ -163,7 +155,7 @@ struct RankingView: View {
                                     .padding(.bottom, 30)
                                 }
                                     .clipped()
-                                // Stretchy Header...
+                                // Stretchy Header
                                     .frame(height: minY > 0 ? 430 + minY : nil)
                                     .offset(y: minY > 0 ? -minY : -minY < 0 ? 0 : -minY - 0)
                             )}
@@ -195,6 +187,7 @@ struct RankingView: View {
         }
         .onReceive(chattyVM.$rankingModel){ data in
             self.rankingList += data?.ranking ?? []
+            print(self.rankingList.count)
         }
     }
 }

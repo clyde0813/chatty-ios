@@ -23,7 +23,6 @@ struct ProfileView: View {
     
     @Binding var currentTab : BottomTab
     
-    
     @State var offset: CGFloat = 0
     
     @State var tabBarOffset: CGFloat = 0
@@ -40,6 +39,7 @@ struct ProfileView: View {
     @State var profile_message: String? = ""
     @State var follower: Int = 0
     @State var following: Int = 0
+    @State var views: Int = 0
     
     @State var currentPostTab : PostTab = .responsedTab
     
@@ -56,6 +56,10 @@ struct ProfileView: View {
     @State var questionPostSuccess : Bool = false
     
     @State var copyButtonPressed : Bool = false
+    
+    @State var reportSuccess : Bool = false
+    
+    @State var deleteSuccess : Bool = false
     
     var body: some View {
         GeometryReader { proxy in
@@ -86,48 +90,49 @@ struct ProfileView: View {
                                             width: size.width,
                                             height: minY > 0 ? 180 + minY : 180, alignment: .center
                                             )
-                                    HStack(spacing: 0) {
-                                        Button(action:{
-                                            if self.currentTab == BottomTab.home {
-                                                
-                                            } else if self.currentTab == BottomTab.ranking {
-                                                presentationMode.wrappedValue.dismiss()
-                                            }
-                                        }){
-                                            Image(systemName: "arrow.left")
-                                                .font(.system(size:16, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .background(
-                                                    Circle()
-                                                        .fill(Color("Card Share Background"))
-                                                        .frame(width: 32, height: 32)
-                                                )
-                                                .padding(.leading, 25)
-                                                .padding(.bottom, 40)
-                                        }
-                                        Spacer()
-                                    }
+//                                    HStack(spacing: 0) {
+//                                        Button(action:{
+//                                            if self.currentTab == BottomTab.home {
+//
+//                                            } else if self.currentTab == BottomTab.ranking {
+//                                                presentationMode.wrappedValue.dismiss()
+//                                            }
+//                                        }){
+//                                            Image(systemName: "arrow.left")
+//                                                .font(.system(size:16, weight: .bold))
+//                                                .foregroundColor(Color.white)
+//                                                .background(
+//                                                    Circle()
+//                                                        .fill(Color("Card Share Background"))
+//                                                        .frame(width: 32, height: 32)
+//                                                )
+//                                                .padding(.leading, 25)
+//                                                .padding(.bottom, 40)
+//                                        }
+//                                        Spacer()
+//                                    }
                                     BlurView()
                                         .opacity(blurViewOpacity())
                                     HStack{
-                                        Button(action:{
-                                            if self.currentTab == BottomTab.home {
-                                                
-                                            } else if self.currentTab == BottomTab.ranking {
-                                                presentationMode.wrappedValue.dismiss()
-                                            }
-                                        }){
-                                            Image(systemName: "arrow.left")
-                                                .font(.system(size:16, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .background(
-                                                    Circle()
-                                                        .fill(Color("Card Share Background"))
-                                                        .frame(width: 32, height: 32)
-                                                )
-                                                .padding([.leading, .trailing], 25)
-                                                .padding(.bottom, 10)
-                                        }
+//                                        Button(action:{
+//                                            if self.currentTab == BottomTab.home {
+//
+//                                            } else if self.currentTab == BottomTab.ranking {
+//                                                presentationMode.wrappedValue.dismiss()
+//                                            }
+//                                        }){
+//                                            Image(systemName: "arrow.left")
+//                                                .font(.system(size:16, weight: .bold))
+//                                                .foregroundColor(Color.white)
+//                                                .background(
+//                                                    Circle()
+//                                                        .fill(Color("Card Share Background"))
+//                                                        .frame(width: 32, height: 32)
+//                                                )
+//                                                .padding([.leading, .trailing], 25)
+//                                                .padding(.bottom, 10)
+//                                        }
+                                        Spacer()
                                         VStack(alignment: .leading, spacing: 8){
                                             Text("\(profile_name)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -200,17 +205,17 @@ struct ProfileView: View {
                                         Text("\(profile_message ?? "")")
                                             .font(Font.system(size: 16, weight: .light))
                                     }
-                                    HStack{
-                                        Text("\(follower)")
-                                            .font(Font.system(size: 18, weight: .bold))
-                                        Text("팔로워")
-                                            .font(Font.system(size: 14, weight: .light))
-                                            .padding(.trailing, 20)
-                                        Text("\(following)")
-                                            .font(Font.system(size: 18, weight: .bold))
-                                        Text("팔로잉")
-                                            .font(Font.system(size: 14, weight: .light))
-                                    }
+//                                    HStack{
+//                                        Text("\(follower)")
+//                                            .font(Font.system(size: 18, weight: .bold))
+//                                        Text("팔로워")
+//                                            .font(Font.system(size: 14, weight: .light))
+//                                            .padding(.trailing, 20)
+//                                        Text("\(following)")
+//                                            .font(Font.system(size: 18, weight: .bold))
+//                                        Text("팔로잉")
+//                                            .font(Font.system(size: 14, weight: .light))
+//                                    }
                                 }
                                 .padding([.leading, .trailing], 16)
                                 HStack(spacing: 0) {
@@ -232,7 +237,7 @@ struct ProfileView: View {
                                     .frame(width: widthFix)
                                     Spacer()
                                     VStack (alignment: .center) {
-                                        Text("345")
+                                        Text("\(views)")
                                             .font(Font.system(size: 20, weight: .semibold))
                                         Text("오늘 방문자 수")
                                             .font(Font.system(size: 14, weight: .ultraLight))
@@ -241,7 +246,7 @@ struct ProfileView: View {
                                     Spacer()
                                 }
                                 .frame(width: proxy.size.width)
-                                .padding(.top, 16)
+                                .padding(.top, 10)
                             }
                             .overlay(
                                 
@@ -360,7 +365,7 @@ struct ProfileView: View {
                                     .frame(width: widthFix)
                                 }
                             }
-                            .padding(.top, 32)
+                            .padding(.top, 30)
                             .frame(width: proxy.size.width)
                             .background(Color.white)
                             .offset(y: tabBarOffset < 90 ? -tabBarOffset + 90 : 0)
@@ -496,6 +501,38 @@ struct ProfileView: View {
                         }
                     }
                 }
+                
+                if reportSuccess {
+                    VStack{
+                        Spacer()
+                        HStack{
+                            Spacer()
+                            Text("신고가 접수되었습니다!")
+                                .frame(width: 310, height: 40)
+                                .foregroundColor(Color.white)
+                                .background(Color("Error Background"))
+                                .cornerRadius(16)
+                                .padding(.bottom, 50)
+                            Spacer()
+                        }
+                    }
+                }
+                
+                if deleteSuccess {
+                    VStack{
+                        Spacer()
+                        HStack{
+                            Spacer()
+                            Text("삭제가 완료되었습니다!")
+                                .frame(width: 310, height: 40)
+                                .foregroundColor(Color.white)
+                                .background(Color("Error Background"))
+                                .cornerRadius(16)
+                                .padding(.bottom, 50)
+                            Spacer()
+                        }
+                    }
+                }
             }
             .ignoresSafeArea(.all, edges: .top)
             .onAppear(perform: {
@@ -513,6 +550,7 @@ struct ProfileView: View {
                 self.answered = user.questionCount.answered
                 self.unanswered = user.questionCount.unanswered
                 self.rejected = user.questionCount.rejected
+                self.views = user.views
             }
             .onReceive(chattyVM.$questionModel) { data in
                 self.questionList += data?.results ?? []
@@ -522,6 +560,20 @@ struct ProfileView: View {
             }
             .onReceive(chattyVM.refuseComplete) {
                 self.initProfileView()
+            }
+            .onReceive(chattyVM.reportSuccess) {
+                self.initProfileView()
+                self.reportSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.reportSuccess = false
+                }
+            }
+            .onReceive(chattyVM.deleteSuccess) {
+                self.initProfileView()
+                self.deleteSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.deleteSuccess = false
+                }
             }
             .onReceive(chattyVM.questionPostSuccess){
                 self.questionPostSuccess = true
