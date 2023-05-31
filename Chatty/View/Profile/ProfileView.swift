@@ -86,10 +86,11 @@ struct ProfileView: View {
                                     KFImage(URL(string:"\(background_image)"))
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(
-                                            width: size.width,
-                                            height: minY > 0 ? 180 + minY : 180, alignment: .center
-                                            )
+                                        .frame(width: size.width,height: minY > 0 ? 180 + minY : 180)
+                                        //2023.05.31 신현호
+                                        .offset(y: minY >= 0 ? 0 : -170)
+                                        .clipped()
+                                        
 //                                    HStack(spacing: 0) {
 //                                        Button(action:{
 //                                            if self.currentTab == BottomTab.home {
@@ -149,11 +150,10 @@ struct ProfileView: View {
                                     .offset(y: titleOffset > 100 ? 0 : -getTitleTextOffset())
                                     .opacity(titleOffset < 100 ? 1 : 0)
                                 }
-                                    .clipped()
+                                    
                                 // Stretchy Header...
                                     .frame(height: minY > 0 ? 180 + minY : nil)
                                     .offset(y: minY > 0 ? -minY : -minY < 80 ? 0 : -minY - 80)
-                                
                             )}
                         .frame(height: 180)
                         .zIndex(1)
