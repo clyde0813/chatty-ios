@@ -1,4 +1,6 @@
 import SwiftUI
+import Kingfisher
+
 
 enum Timeline_Hot_Tab {
     case timeline,hotQuestion
@@ -7,9 +9,14 @@ enum Timeline_Hot_Tab {
 struct TimelineView: View {
     
     @State var currentTab : Timeline_Hot_Tab =  .timeline
+    @EnvironmentObject var chattyVM: ChattyVM
     
+    @State var profile_image = ""
+    
+//    @Binding var currentTab : BottomTab
     var body: some View {
         VStack{
+            //MARK: - 상단 navBar & Tabbar  -2023.06.06 신현호-
             VStack{
                 navBar
                 tabChangeBar
@@ -18,20 +25,45 @@ struct TimelineView: View {
                 .fill(Color.white)
                 .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
             )
-            
-            Spacer()
+            ScrollView{
+                LazyVStack(spacing: 16){
+                    Text("카드들을 넣어야하는데 유저정보가 필요해 슈밤")
+                    Text("그런데 지금이건 새로만든거라 뷰모델을 건드리기쫌 그래")
+                    Text("그럼 그냥 MainView에서 EnviromentObject로")
+                }
+            }
+            .background(Color("Background inner"))
         }
-        
-        
+//        .onReceive(chattyVM.$profileModel) { userInfo in
+//            guard let user = userInfo else { return }
+//            self.profile_image = user.profileImage
+//        }
+//
         
     }
+    
+    
+    
 }
+
 
 extension TimelineView {
     var navBar : some View {
         HStack{
-            Circle()
-                .frame(width: 32,height: 32)
+            
+            NavigationLink {
+                //, currentTab: .constant(currentTab)
+                ProfileView(username: .constant(KeyChain.read(key: "username")!), isOwner: true)
+            } label: {
+                //URL(string:"\(profile_image)")
+                KFImage(URL(string: "https://chatty-s3-bucket.s3.ap-northeast-2.amazonaws.com/profile/Test111-time1683859759.jpeg"))
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(Circle())
+                    .frame(width: 40,height: 40)
+            }
+
+            
             Spacer()
             Image("Logo Small")
                 .resizable()
@@ -46,6 +78,7 @@ extension TimelineView {
         .padding(.horizontal, 16)
         .frame(height: 60)
     }
+    
     var tabChangeBar : some View {
         HStack(spacing: 20){
             Spacer()
