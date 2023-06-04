@@ -557,11 +557,11 @@
 			};
 			buildConfigurationList = 2EE6CB2A2952F4F300E281A0 /* Build configuration list for PBXProject "Chatty" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				ko,
 			);
 			mainGroup = 2EE6CB262952F4F300E281A0;
 			productRefGroup = 2EE6CB302952F4F300E281A0 /* Products */;

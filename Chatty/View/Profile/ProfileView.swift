@@ -90,54 +90,15 @@ struct ProfileView: View {
                                             width: size.width,
                                             height: minY > 0 ? 180 + minY : 180, alignment: .center
                                             )
-//                                    HStack(spacing: 0) {
-//                                        Button(action:{
-//                                            if self.currentTab == BottomTab.home {
-//
-//                                            } else if self.currentTab == BottomTab.ranking {
-//                                                presentationMode.wrappedValue.dismiss()
-//                                            }
-//                                        }){
-//                                            Image(systemName: "arrow.left")
-//                                                .font(.system(size:16, weight: .bold))
-//                                                .foregroundColor(Color.white)
-//                                                .background(
-//                                                    Circle()
-//                                                        .fill(Color("Card Share Background"))
-//                                                        .frame(width: 32, height: 32)
-//                                                )
-//                                                .padding(.leading, 25)
-//                                                .padding(.bottom, 40)
-//                                        }
-//                                        Spacer()
-//                                    }
                                     BlurView()
                                         .opacity(blurViewOpacity())
                                     HStack{
-//                                        Button(action:{
-//                                            if self.currentTab == BottomTab.home {
-//
-//                                            } else if self.currentTab == BottomTab.ranking {
-//                                                presentationMode.wrappedValue.dismiss()
-//                                            }
-//                                        }){
-//                                            Image(systemName: "arrow.left")
-//                                                .font(.system(size:16, weight: .bold))
-//                                                .foregroundColor(Color.white)
-//                                                .background(
-//                                                    Circle()
-//                                                        .fill(Color("Card Share Background"))
-//                                                        .frame(width: 32, height: 32)
-//                                                )
-//                                                .padding([.leading, .trailing], 25)
-//                                                .padding(.bottom, 10)
-//                                        }
                                         Spacer()
                                         VStack(alignment: .leading, spacing: 8){
                                             Text("\(profile_name)")
                                                 .font(Font.system(size: 18, weight: .bold))
                                                 .foregroundColor(Color.white)
-                                            
+
                                             Text("답변완료 \(answered)개")
                                                 .font(Font.system(size: 14, weight: .bold))
                                                 .foregroundColor(Color.white)
@@ -150,6 +111,7 @@ struct ProfileView: View {
                                     .opacity(titleOffset < 100 ? 1 : 0)
                                 }
                                     .clipped()
+                                    .allowsHitTesting(false)
                                 // Stretchy Header...
                                     .frame(height: minY > 0 ? 180 + minY : nil)
                                     .offset(y: minY > 0 ? -minY : -minY < 80 ? 0 : -minY - 80)
@@ -606,6 +568,9 @@ struct ProfileView: View {
             .refreshable {
                 self.initProfileView()
             }
+            .onChange(of: self.offset) {_ in
+                print(self.offset)
+            }
         }
         .navigationBarHidden(true)
     }
@@ -665,6 +630,6 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(username: .constant("clyde0813"), isOwner: true, currentTab: .constant(BottomTab.home)).environmentObject(ChattyVM())
+        ProfileView(username: .constant("TestAccount1"), isOwner: true, currentTab: .constant(BottomTab.home)).environmentObject(ChattyVM())
     }
 }
