@@ -9,7 +9,8 @@ enum Timeline_Hot_Tab {
 struct TimelineView: View {
     
     @State var currentTab : Timeline_Hot_Tab =  .timeline
-    @EnvironmentObject var chattyVM: ChattyVM
+    @StateObject var profileVM = ProfileVM()
+    
     
     @State var profile_image = ""
     
@@ -34,15 +35,19 @@ struct TimelineView: View {
             }
             .background(Color("Background inner"))
         }
-//        .onReceive(chattyVM.$profileModel) { userInfo in
-//            guard let user = userInfo else { return }
-//            self.profile_image = user.profileImage
-//        }
-//
+        .onAppear(perform: {
+            self.initTimelineView()
+        })        .onReceive(profileVM.$profileModel) { userInfo in
+            guard let user = userInfo else { return }
+            self.profile_image = user.profileImage
+        }
+
         
     }
     
-    
+    func initTimelineView() {
+        profileVM.profileGet(username: KeyChain.read(key: "username")!)
+    }
     
 }
 
@@ -50,20 +55,16 @@ struct TimelineView: View {
 extension TimelineView {
     var navBar : some View {
         HStack{
-            
             NavigationLink {
-                //, currentTab: .constant(currentTab)
                 ProfileView(username: .constant(KeyChain.read(key: "username")!), isOwner: true)
             } label: {
                 //URL(string:"\(profile_image)")
-                KFImage(URL(string: "https://chatty-s3-bucket.s3.ap-northeast-2.amazonaws.com/profile/Test111-time1683859759.jpeg"))
+                KFImage(URL(string: self.profile_image))
                     .resizable()
                     .scaledToFill()
                     .clipShape(Circle())
                     .frame(width: 40,height: 40)
             }
-
-            
             Spacer()
             Image("Logo Small")
                 .resizable()

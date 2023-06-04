@@ -10,7 +10,7 @@ import SwiftUI
 
 
 enum BottomTab {
-    case home, community, ranking, mypage, timeline
+    case home, community, ranking, mypage
 }
 
 struct MainView: View {
@@ -52,7 +52,7 @@ struct MainView: View {
         } else {
             NavigationStack{
                 TabView (selection: $currentTab) {
-                    ProfileView(username: .constant(KeyChain.read(key: "username")!), isOwner: true, currentTab: .constant(currentTab))
+                    TimelineView()
                         .tag(BottomTab.home)
                         .tabItem{
                             Image(systemName: "house.fill")
@@ -72,12 +72,6 @@ struct MainView: View {
                         .tabItem{
                             Image(systemName: "person.crop.circle.fill")
                             Text("마이페이지")}
-                    //MARK: - 테스트 확인용으로 대충 해봄 -2023.06.06 신현호-
-                    TimelineView()
-                        .tag(BottomTab.timeline)
-                        .tabItem{
-                            Image(systemName: "person.crop.circle.fill")
-                            Text("타임라인")}
                 }
                 .onReceive(chattyVM.logoutSuccess){
                     self.logoutStatus = true

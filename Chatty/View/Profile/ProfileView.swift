@@ -14,15 +14,14 @@ enum PostTab {
 
 struct ProfileView: View {
     @EnvironmentObject var chattyVM: ChattyVM
+    @StateObject var profileVM = ProfileVM()
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
 
     @Binding var username: String
     
     @State var isOwner: Bool
-    
-    @Binding var currentTab : BottomTab
-    
+        
     @State var offset: CGFloat = 0
     
     @State var tabBarOffset: CGFloat = 0
@@ -90,11 +89,58 @@ struct ProfileView: View {
                                             width: size.width,
                                             height: minY > 0 ? 180 + minY : 180, alignment: .center
                                             )
+                                    HStack(spacing: 0) {
+                                        Button(action:{
+                                            dismiss()
+                                            print("dismiss()")
+                                        }){
+                                            Image(systemName: "arrow.left")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                        }
+                                        .padding(.leading, 25)
+                                        .padding(.bottom, 40)
+                                        Spacer()
+                                        Button(action:{
+                                            dismiss()
+                                        }){
+                                            Image(systemName: "ellipsis")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .rotationEffect(.degrees(-90))
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                        }
+                                        .padding(.trailing, 25)
+                                        .padding(.bottom, 40)
+                                    }
                                     BlurView()
                                         .opacity(blurViewOpacity())
                                     HStack{
+                                        Button(action:{
+                                            dismiss()
+                                        }){
+                                            Image(systemName: "arrow.left")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                        }
+                                        .padding(.leading, 25)
+                                        .padding(.bottom, 10)
                                         Spacer()
-                                        VStack(alignment: .leading, spacing: 8){
+                                        VStack(alignment: .center, spacing: 8){
                                             Text("\(profile_name)")
                                                 .font(Font.system(size: 18, weight: .bold))
                                                 .foregroundColor(Color.white)
@@ -104,6 +150,21 @@ struct ProfileView: View {
                                                 .foregroundColor(Color.white)
                                         }
                                         Spacer()
+                                        Button(action:{
+                                            dismiss()
+                                        }){
+                                            Image(systemName: "ellipsis")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .rotationEffect(.degrees(-90))
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                        }
+                                        .padding(.trailing, 25)
+                                        .padding(.bottom, 10)
                                     }
                                     // to slide from bottom added extra 60..
                                     .offset(y: 120)
@@ -111,7 +172,8 @@ struct ProfileView: View {
                                     .opacity(titleOffset < 100 ? 1 : 0)
                                 }
                                     .clipped()
-                                    .allowsHitTesting(false)
+                                //offset이 -80 이하일 경우 background image 상단 dismiss 버튼 허용
+                                    .allowsHitTesting(-offset > 80 ? false : true)
                                 // Stretchy Header...
                                     .frame(height: minY > 0 ? 180 + minY : nil)
                                     .offset(y: minY > 0 ? -minY : -minY < 80 ? 0 : -minY - 80)
@@ -500,7 +562,7 @@ struct ProfileView: View {
             .onAppear(perform: {
                 self.initProfileView()
             })
-            .onReceive(chattyVM.$profileModel) { userInfo in
+            .onReceive(profileVM.$profileModel) { userInfo in
                 guard let user = userInfo else { return }
                 self.profile_name = user.profile_name
                 self.profile_message = user.profileMessage
@@ -622,7 +684,7 @@ struct ProfileView: View {
         self.questionEmpty = false
         self.questionList.removeAll()
         self.currentQuestionPage = 1
-        chattyVM.fetchUserInfo(username: username)
+        profileVM.profileGet(username: username)
         chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
     }
 }
@@ -630,6 +692,6 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(username: .constant("TestAccount1"), isOwner: true, currentTab: .constant(BottomTab.home)).environmentObject(ChattyVM())
+        ProfileView(username: .constant("TestAccount1"), isOwner: true).environmentObject(ChattyVM())
     }
 }

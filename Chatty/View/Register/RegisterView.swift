@@ -9,8 +9,6 @@ import SwiftUI
 
 struct RegisterView: View {
     
-    @EnvironmentObject var chattyVM: ChattyVM
-    
     //2023.05.15 신현호
     @StateObject var registerVM = RegisterVM()
     

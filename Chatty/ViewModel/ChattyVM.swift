@@ -83,21 +83,6 @@ class ChattyVM: ObservableObject {
     
     var deleteSuccess = PassthroughSubject<(), Never>()
     
-    func currentUser() {
-        let url = "https://chatty.kr/api/v1/user/current"
-        
-        AF.request(url,
-                   method: .get,
-                   encoding: JSONEncoding.default,
-                   headers: ["Content-Type":"application/json", "Accept":"application/json"])
-        .responseDecodable(of: CurrentUserModel.self){ response in
-            switch response.result {
-            case .success(let data):
-                self.currentUserModel = data
-            case .failure(_):
-                print("Current User Get : Failed")            }
-        }
-    }
     
     func apnsTokenInitialize(completion: @escaping (Bool) -> Void) {
         let url = "https://chatty.kr/api/v1/user/FCM/ios"
@@ -343,7 +328,7 @@ class ChattyVM: ObservableObject {
         }
     }
     
-    func fetchUserInfo(username: String){
+    func profileGet(username: String){
         let url = "https://chatty.kr/api/v1/user/profile/\(username)"
         
         AF.request(url,

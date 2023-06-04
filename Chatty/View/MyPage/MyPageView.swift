@@ -240,7 +240,7 @@ struct MyPageView: View {
         }
         .onAppear{
             chattyVM.profileModel = nil
-            chattyVM.fetchUserInfo(username: KeyChain.read(key: "username") ?? "")
+            chattyVM.profileGet(username: KeyChain.read(key: "username") ?? "")
         }
         .navigationDestination(isPresented: $profilePrivacyEditView){
             PrivacyEditView()

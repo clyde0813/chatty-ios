@@ -296,7 +296,7 @@ struct ProfileEditView: View {
         }
         .navigationBarHidden(true)
         .onReceive(chattyVM.profileEditSuccess){
-            chattyVM.fetchUserInfo(username: KeyChain.read(key: "username")!)
+            chattyVM.profileGet(username: KeyChain.read(key: "username")!)
             self.profileEditProgress = false
             self.profileEditSuccess = true
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in

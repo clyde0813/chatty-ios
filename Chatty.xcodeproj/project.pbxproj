@@ -23,6 +23,9 @@
 		2E71BD4629F4C6E300D17200 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E71BD4529F4C6E300D17200 /* TestView.swift */; };
 		2E71BD4B29F55FF100D17200 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E71BD4A29F55FF100D17200 /* ProfileEditView.swift */; };
 		2E71BD4D29F579F900D17200 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E71BD4C29F579F900D17200 /* Test.swift */; };
+		2E7E275B2A2C60B200651366 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7E275A2A2C60B200651366 /* TimelineView.swift */; };
+		2E7E275D2A2C632300651366 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7E275C2A2C632300651366 /* ProfileVM.swift */; };
+		2E7E27602A2C6DC400651366 /* TokenVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7E275F2A2C6DC400651366 /* TokenVM.swift */; };
 		2E80F33929E1DA5A002280D5 /* ArrivedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E80F33829E1DA5A002280D5 /* ArrivedCard.swift */; };
 		2E80F33B29E2D665002280D5 /* RefusedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E80F33A29E2D665002280D5 /* RefusedCard.swift */; };
 		2E80F33F29E2E70B002280D5 /* NewQuestionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E80F33E29E2E70B002280D5 /* NewQuestionButton.swift */; };
@@ -96,6 +99,9 @@
 		2E71BD4529F4C6E300D17200 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		2E71BD4A29F55FF100D17200 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		2E71BD4C29F579F900D17200 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		2E7E275A2A2C60B200651366 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		2E7E275C2A2C632300651366 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
+		2E7E275F2A2C6DC400651366 /* TokenVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenVM.swift; sourceTree = "<group>"; };
 		2E80F33829E1DA5A002280D5 /* ArrivedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivedCard.swift; sourceTree = "<group>"; };
 		2E80F33A29E2D665002280D5 /* RefusedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefusedCard.swift; sourceTree = "<group>"; };
 		2E80F33E29E2E70B002280D5 /* NewQuestionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewQuestionButton.swift; sourceTree = "<group>"; };
@@ -192,6 +198,8 @@
 				2E0B996B297F5CB700BDC534 /* ChattyVM.swift */,
 				2EB068992A262551002E9D7A /* LoginVM.swift */,
 				2EB0689B2A2626B0002E9D7A /* RegisterVM.swift */,
+				2E7E275C2A2C632300651366 /* ProfileVM.swift */,
+				2E7E275F2A2C6DC400651366 /* TokenVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -252,6 +260,14 @@
 				2EB0689D2A26280E002E9D7A /* ErrorView.swift */,
 			);
 			path = Error;
+			sourceTree = "<group>";
+		};
+		2E7E27592A2C60B200651366 /* Timeline */ = {
+			isa = PBXGroup;
+			children = (
+				2E7E275A2A2C60B200651366 /* TimelineView.swift */,
+			);
+			path = Timeline;
 			sourceTree = "<group>";
 		};
 		2E80F33729E1DA25002280D5 /* Card */ = {
@@ -315,6 +331,7 @@
 		2ED68B08295304BF007F5EA7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2E7E27592A2C60B200651366 /* Timeline */,
 				2E9D03A429A691FD0042F0AE /* MainView.swift */,
 				2E71BD4929F55FD100D17200 /* MyPage */,
 				2E71BD4829F55FC600D17200 /* Ranking */,
@@ -717,6 +734,7 @@
 				2E9D03A729A6A27A0042F0AE /* ProfileView.swift in Sources */,
 				2E9D03A529A691FD0042F0AE /* MainView.swift in Sources */,
 				2E5F21FD29AD615F003B2A14 /* Keychain.swift in Sources */,
+				2E7E275D2A2C632300651366 /* ProfileVM.swift in Sources */,
 				2EDF750B29EE5947006D7257 /* ChattyShareView.swift in Sources */,
 				2E80F34129E2F65A002280D5 /* QuestionEditor.swift in Sources */,
 				2EB1AEAE29D09247007EA12E /* TimeExtensions.swift in Sources */,
@@ -726,6 +744,7 @@
 				2E71BD4129F2281A00D17200 /* MessageBoxShape.swift in Sources */,
 				2E0B996C297F5CB700BDC534 /* ChattyVM.swift in Sources */,
 				2E80F33F29E2E70B002280D5 /* NewQuestionButton.swift in Sources */,
+				2E7E275B2A2C60B200651366 /* TimelineView.swift in Sources */,
 				2E3114DC2A08CB930052B309 /* PrivacyEditView.swift in Sources */,
 				2E5F21F429AD4D31003B2A14 /* TokenModel.swift in Sources */,
 				2E80F33B29E2D665002280D5 /* RefusedCard.swift in Sources */,
@@ -736,6 +755,7 @@
 				2E23386A29EB50E500DF6E2F /* AnswerEditor.swift in Sources */,
 				2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */,
 				2E0B9958297F507000BDC534 /* UserData.swift in Sources */,
+				2E7E27602A2C6DC400651366 /* TokenVM.swift in Sources */,
 				2EB0689E2A26280E002E9D7A /* ErrorView.swift in Sources */,
 				2EDF751029F033D1006D7257 /* RankingCell.swift in Sources */,
 				2E3114DA2A08A5870052B309 /* EULAView.swift in Sources */,
