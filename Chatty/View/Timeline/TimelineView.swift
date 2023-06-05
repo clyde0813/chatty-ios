@@ -10,38 +10,47 @@ struct TimelineView: View {
     
     @State var currentTab : Timeline_Hot_Tab =  .timeline
     @StateObject var profileVM = ProfileVM()
-    
-    
     @State var profile_image = ""
-    
-//    @Binding var currentTab : BottomTab
+    @State var isClickedQuestion = false
+    //    @Binding var currentTab : BottomTab
     var body: some View {
-        VStack{
-            //MARK: - 상단 navBar & Tabbar  -2023.06.06 신현호-
+        ZStack(alignment: .bottomTrailing){
             VStack{
-                navBar
-                tabChangeBar
-            }
-            .background(Rectangle()
-                .fill(Color.white)
-                .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
-            )
-            ScrollView{
-                LazyVStack(spacing: 16){
-                    Text("카드들을 넣어야하는데 유저정보가 필요해 슈밤")
-                    Text("그런데 지금이건 새로만든거라 뷰모델을 건드리기쫌 그래")
-                    Text("그럼 그냥 MainView에서 EnviromentObject로")
+                //MARK: - 상단 navBar & Tabbar  -2023.06.03 신현호-
+                VStack{
+                    navBar
+                    tabChangeBar
+                        .background(Rectangle()
+                            .fill(Color.white)
+                            .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
+                        )
+                    timelineLazyVstack
                 }
+                .blur(radius: isClickedQuestion ? 2 : 0)
             }
-            .background(Color("Background inner"))
+
+            if isClickedQuestion {
+                BlurView()
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        isClickedQuestion.toggle()
+                    }
+                    .background(Color("Background Overlay"))
+                    .opacity(0.7)
+                    .toolbar(.hidden ,for: .tabBar)
+            }
+            questionButton
+            
+                
         }
         .onAppear(perform: {
             self.initTimelineView()
-        })        .onReceive(profileVM.$profileModel) { userInfo in
+        })
+        .onReceive(profileVM.$profileModel) { userInfo in
             guard let user = userInfo else { return }
             self.profile_image = user.profileImage
         }
-
+        
         
     }
     
@@ -58,8 +67,7 @@ extension TimelineView {
             NavigationLink {
                 ProfileView(username: .constant(KeyChain.read(key: "username")!), isOwner: true)
             } label: {
-                //URL(string:"\(profile_image)")
-                KFImage(URL(string: self.profile_image))
+                KFImage(URL(string: profile_image))
                     .resizable()
                     .scaledToFill()
                     .clipShape(Circle())
@@ -133,6 +141,72 @@ extension TimelineView {
             Spacer()
         }
         .padding(.top,10)
+    }
+    
+    var timelineLazyVstack : some View {
+        ScrollView{
+            LazyVStack(spacing: 16){
+                Text("!!")
+                Text("!!")
+                Text("!!")
+                Text("!!")
+                Text("!!")
+                Text("!!")
+                Text("!!")
+                Text("!!")
+                Text("!!")
+            }
+        }
+        .background(Color("Background inner"))
+    }
+    
+    var questionButton : some View {
+        VStack(alignment: .trailing){
+            if isClickedQuestion {
+                VStack(alignment: .trailing){
+                    Button {
+                        print("!!")
+                    } label: {
+                        HStack{
+                            Image(systemName: "plus")
+                            Text("다른 친구에게")
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical,14)
+                        .background(.white)
+                        .foregroundColor(Color("Main Primary"))
+                        .clipShape(RoundedRectangle(cornerRadius: 99))
+                        .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
+                        .font(Font.system(size: 16, weight: .bold))
+                    }
+                    Button {
+                        print("!!")
+                    } label: {
+                        HStack{
+                            Image(systemName: "plus")
+                            Text("최근 질문한 친구에게")
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical,14)
+                        .background(Color("Main Primary"))
+                        .foregroundColor(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 99))
+                        .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
+                        .font(Font.system(size: 16, weight: .bold))
+                    }
+                }
+                .padding([.bottom, .trailing], 16)
+            }else{
+                Button {
+                    withAnimation {
+                        isClickedQuestion = true
+                    }
+                } label: {
+                    NewQuestionButton()
+                        .padding([.bottom, .trailing], 16)
+                }
+            }
+        }
     }
 }
 
