@@ -28,17 +28,6 @@ struct ProfileView: View {
     
     @State var titleOffset: CGFloat = 0
     
-    @State var profile_name: String = ""
-    @State var response_rate: Int = 0
-    @State var answered: Int = 0
-    @State var unanswered: Int = 0
-    @State var rejected: Int = 0
-    @State var profile_image: String = ""
-    @State var background_image: String = ""
-    @State var profile_message: String? = ""
-    @State var follower: Int = 0
-    @State var following: Int = 0
-    @State var views: Int = 0
     
     @State var currentPostTab : PostTab = .responsedTab
     
@@ -71,18 +60,18 @@ struct ProfileView: View {
                         
                         
                         GeometryReader { proxy -> AnyView in
-                            
+
                             // Sticky Header...
                             let minY = proxy.frame(in: .global).minY
-                            
+
                             DispatchQueue.main.async {
-                                
+
                                 self.offset = minY
                             }
-                            
+
                             return AnyView(
                                 ZStack{
-                                    KFImage(URL(string:"\(background_image)"))
+                                    KFImage(URL(string: profileVM.profileModel?.backgroundImage ?? ""))
                                         .resizable()
                                         .scaledToFill()
                                         .frame(
@@ -141,11 +130,11 @@ struct ProfileView: View {
                                         .padding(.bottom, 10)
                                         Spacer()
                                         VStack(alignment: .center, spacing: 8){
-                                            Text("\(profile_name)")
+                                            Text("\(profileVM.profileModel?.profile_name ?? "")")
                                                 .font(Font.system(size: 18, weight: .bold))
                                                 .foregroundColor(Color.white)
 
-                                            Text("답변완료 \(answered)개")
+                                            Text("답변완료 \(profileVM.profileModel?.questionCount.answered ?? 0)개")
                                                 .font(Font.system(size: 14, weight: .bold))
                                                 .foregroundColor(Color.white)
                                         }
@@ -177,7 +166,7 @@ struct ProfileView: View {
                                 // Stretchy Header...
                                     .frame(height: minY > 0 ? 180 + minY : nil)
                                     .offset(y: minY > 0 ? -minY : -minY < 80 ? 0 : -minY - 80)
-                                
+
                             )}
                         .frame(height: 180)
                         .zIndex(1)
@@ -190,7 +179,7 @@ struct ProfileView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack(spacing: 0){
-                                        KFImage(URL(string:"\(profile_image)"))
+                                        KFImage(URL(string: profileVM.profileModel?.profileImage ?? ""))
                                                 .resizable()
                                                 .scaledToFill()
                                                 .frame(width: 110, height: 110)
@@ -220,13 +209,13 @@ struct ProfileView: View {
                                             }
                                         }
                                     }
-                                    Text("\(profile_name)")
+                                    Text(profileVM.profileModel?.profile_name ?? "")
                                         .font(Font.system(size: 20, weight: .semibold))
                                         .padding(.bottom, -4)
-                                    Text("@\(username)")
+                                    Text("@\(profileVM.profileModel?.username ?? "")")
                                         .font(Font.system(size:12, weight: .ultraLight))
-                                    if self.profile_message != nil {
-                                        Text("\(profile_message ?? "")")
+                                    if profileVM.profileModel?.profileMessage != nil {
+                                        Text(profileVM.profileModel?.profileMessage ?? "")
                                             .font(Font.system(size: 16, weight: .light))
                                     }
 //                                    HStack{
@@ -245,7 +234,7 @@ struct ProfileView: View {
                                 HStack(spacing: 0) {
                                     Spacer()
                                     VStack (alignment: .center) {
-                                        Text("\(answered + unanswered + rejected)")
+                                        Text("\(profileVM.SumOfQuestion())")
                                             .font(Font.system(size: 20, weight: .semibold))
                                         Text("받은 질문 수")
                                             .font(Font.system(size: 14, weight: .ultraLight))
@@ -253,7 +242,7 @@ struct ProfileView: View {
                                     .frame(width: widthFix)
                                     Spacer()
                                     VStack (alignment: .center) {
-                                        Text("\(response_rate)%")
+                                        Text("\(profileVM.profileModel?.responseRate ?? 0)%")
                                             .font(Font.system(size: 20, weight: .semibold))
                                         Text("답변률")
                                             .font(Font.system(size: 14, weight: .ultraLight))
@@ -261,7 +250,7 @@ struct ProfileView: View {
                                     .frame(width: widthFix)
                                     Spacer()
                                     VStack (alignment: .center) {
-                                        Text("\(views)")
+                                        Text("\(profileVM.profileModel?.views ?? 0)")
                                             .font(Font.system(size: 20, weight: .semibold))
                                         Text("오늘 방문자 수")
                                             .font(Font.system(size: 14, weight: .ultraLight))
@@ -273,18 +262,18 @@ struct ProfileView: View {
                                 .padding(.top, 10)
                             }
                             .overlay(
-                                
+
                                 GeometryReader{proxy -> Color in
-                                    
+
                                     let minY = proxy.frame(in: .global).minY
-                                    
+
                                     DispatchQueue.main.async {
                                         self.titleOffset = minY
                                     }
                                     return Color.clear
                                 }
                                     .frame(width: 0, height: 0)
-                                
+
                                 ,alignment: .top
                             )
                             //프로필 정보 영역 end
@@ -394,19 +383,19 @@ struct ProfileView: View {
                             .background(Color.white)
                             .offset(y: tabBarOffset < 90 ? -tabBarOffset + 90 : 0)
                             .overlay(
-                                
+
                                 GeometryReader{reader -> Color in
-                                    
+
                                     let minY = reader.frame(in: .global).minY
-                                    
+
                                     DispatchQueue.main.async {
                                         self.tabBarOffset = minY
                                     }
-                                    
+
                                     return Color.clear
                                 }
                                     .frame(width: 0, height: 0)
-                                
+
                                 ,alignment: .top
                             )
                             .zIndex(1)
@@ -421,20 +410,32 @@ struct ProfileView: View {
                                     if !self.questionList.isEmpty {
                                         ForEach(self.questionList, id:\.pk) { questiondata in
                                             if self.currentPostTab == .responsedTab {
-                                                ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image, background_image: self.background_image)
+                                                ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata,
+                                                              username: profileVM.profileModel?.username ?? "",
+                                                              profile_name: profileVM.profileModel?.profile_name ?? "",
+                                                              profile_image: profileVM.profileModel?.profileImage ?? "",
+                                                              background_image: profileVM.profileModel?.backgroundImage ?? "")
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
                                             }
                                             if self.currentPostTab == .arrivedTab {
-                                                ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image, background_image: self.background_image)
+                                                ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata,
+                                                            username: profileVM.profileModel?.username ?? "",
+                                                            profile_name: profileVM.profileModel?.profile_name ?? "",
+                                                            profile_image: profileVM.profileModel?.profileImage ?? "",
+                                                            background_image: profileVM.profileModel?.backgroundImage ?? "")
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
 
                                                     }
                                             }
                                             if self.currentPostTab == .refusedTab {
-                                                RefusedCard(width: proxy.size.width - 32, questiondata: questiondata, username: self.username, profile_name: self.profile_name, profile_image: self.profile_image, background_image: self.background_image)
+                                                RefusedCard(width: proxy.size.width - 32, questiondata: questiondata,
+                                                            username: profileVM.profileModel?.username ?? "",
+                                                            profile_name: profileVM.profileModel?.profile_name ?? "",
+                                                            profile_image: profileVM.profileModel?.profileImage ?? "",
+                                                            background_image: profileVM.profileModel?.backgroundImage ?? "")
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
@@ -447,7 +448,7 @@ struct ProfileView: View {
                                                     .font(.system(size: 16, weight: .none))
                                                     .padding(.bottom, 13)
                                                 Button(action:{
-                                                    UIPasteboard.general.string = "chatty.kr/\(username)"
+                                                    UIPasteboard.general.string = "chatty.kr/\(profileVM.profileModel?.username ?? "")"
                                                     self.copyButtonPressed = true
                                                     Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                                                         self.copyButtonPressed = false
@@ -562,20 +563,6 @@ struct ProfileView: View {
             .onAppear(perform: {
                 self.initProfileView()
             })
-            .onReceive(profileVM.$profileModel) { userInfo in
-                guard let user = userInfo else { return }
-                self.profile_name = user.profile_name
-                self.profile_message = user.profileMessage
-                self.profile_image = user.profileImage
-                self.background_image = user.backgroundImage
-                self.response_rate = user.responseRate
-                self.follower = user.follower
-                self.following = user.following
-                self.answered = user.questionCount.answered
-                self.unanswered = user.questionCount.unanswered
-                self.rejected = user.questionCount.rejected
-                self.views = user.views
-            }
             .onReceive(chattyVM.$questionModel) { data in
                 self.questionList += data?.results ?? []
                 if self.questionList.isEmpty{
