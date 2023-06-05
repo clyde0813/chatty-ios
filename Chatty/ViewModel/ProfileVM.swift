@@ -87,4 +87,8 @@ class ProfileVM : ObservableObject {
             }
         }
     }
+    
+    func SumOfQuestion() -> Int{
+        return (profileModel?.questionCount.answered ?? 0) + (profileModel?.questionCount.unanswered ?? 0) + (profileModel?.questionCount.rejected ?? 0)
+    }
 }
