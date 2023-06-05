@@ -9,7 +9,9 @@ import Foundation
 
 struct QuestionModel: Codable {
     let next, previous: Int?
-    let results: [ResultDetail]
+    let profile : profile
+    var results: [ResultDetail]
+    
 }
 
 struct ResultDetail: Codable {
@@ -21,5 +23,17 @@ struct ResultDetail: Codable {
         case pk, content
         case createdDate = "created_date"
         case answerContent = "answer_content"
+    }
+}
+
+struct profile : Codable {
+    let username : String
+    let profileImage: String
+    let backgroundImage: String
+    
+    enum CodingKeys: String, CodingKey {
+        case username = "username"
+        case profileImage = "profile_image"
+        case backgroundImage = "background_image"
     }
 }

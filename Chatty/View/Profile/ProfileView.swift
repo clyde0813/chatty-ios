@@ -35,7 +35,7 @@ struct ProfileView: View {
     
     @State var currentQuestionPage : Int = 1
     
-    @State var questionList = [ResultDetail]()
+    @State var isQuestionEmpty = false
     
     @State var questionEditorStatus : Bool = false
     
@@ -383,7 +383,6 @@ struct ProfileView: View {
                             .background(Color.white)
                             .offset(y: tabBarOffset < 90 ? -tabBarOffset + 90 : 0)
                             .overlay(
-
                                 GeometryReader{reader -> Color in
 
                                     let minY = reader.frame(in: .global).minY
@@ -406,42 +405,46 @@ struct ProfileView: View {
                                     .frame(minHeight: 500,
                                            maxHeight: .infinity
                                            )
+                                //MARK: - lazyVstack
                                 LazyVStack(spacing: 16){
-                                    if !self.questionList.isEmpty {
-                                        ForEach(self.questionList, id:\.pk) { questiondata in
-                                            if self.currentPostTab == .responsedTab {
-                                                ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata,
-                                                              username: profileVM.profileModel?.username ?? "",
-                                                              profile_name: profileVM.profileModel?.profile_name ?? "",
-                                                              profile_image: profileVM.profileModel?.profileImage ?? "",
-                                                              background_image: profileVM.profileModel?.backgroundImage ?? "")
+                                    if isQuestionEmpty == true{
+                                        if let questionlist = profileVM.questionModel?.results {
+                                            ForEach(questionlist, id:\.pk){ questiondata in
+                                                if self.currentPostTab == .responsedTab {
+                                                    ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata,
+                                                                  username: profileVM.profileModel?.username ?? "",
+                                                                  profile_name: profileVM.profileModel?.profile_name ?? "",
+                                                                  profile_image: profileVM.profileModel?.profileImage ?? "",
+                                                                  background_image: profileVM.profileModel?.backgroundImage ?? "")
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
-                                            }
-                                            if self.currentPostTab == .arrivedTab {
-                                                ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata,
-                                                            username: profileVM.profileModel?.username ?? "",
-                                                            profile_name: profileVM.profileModel?.profile_name ?? "",
-                                                            profile_image: profileVM.profileModel?.profileImage ?? "",
-                                                            background_image: profileVM.profileModel?.backgroundImage ?? "")
-                                                    .onAppear{
-                                                        callNextQuestion(questiondata: questiondata)
-
-                                                    }
-                                            }
-                                            if self.currentPostTab == .refusedTab {
-                                                RefusedCard(width: proxy.size.width - 32, questiondata: questiondata,
-                                                            username: profileVM.profileModel?.username ?? "",
-                                                            profile_name: profileVM.profileModel?.profile_name ?? "",
-                                                            profile_image: profileVM.profileModel?.profileImage ?? "",
-                                                            background_image: profileVM.profileModel?.backgroundImage ?? "")
+                                                }
+                                                else if self.currentPostTab == .arrivedTab {
+                                                    ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata,
+                                                                username: profileVM.profileModel?.username ?? "",
+                                                                profile_name: profileVM.profileModel?.profile_name ?? "",
+                                                                profile_image: profileVM.profileModel?.profileImage ?? "",
+                                                                background_image: profileVM.profileModel?.backgroundImage ?? "")
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
+                                                }
+                                                else if self.currentPostTab == .refusedTab {
+                                                    RefusedCard(width: proxy.size.width - 32, questiondata: questiondata,
+                                                                username: profileVM.profileModel?.username ?? "",
+                                                                profile_name: profileVM.profileModel?.profile_name ?? "",
+                                                                profile_image: profileVM.profileModel?.profileImage ?? "",
+                                                                background_image: profileVM.profileModel?.backgroundImage ?? "")
+                                                    .onAppear{
+                                                        callNextQuestion(questiondata: questiondata)
+                                                    }
+                                                }
                                             }
+                                            
                                         }
-                                    } else if self.questionEmpty{
+                                    }else if isQuestionEmpty == false {
+                                        
                                         VStack(alignment: .center){
                                             VStack(spacing: 0){
                                                 Text("아직 받은 질문이 없어요!")
@@ -469,7 +472,9 @@ struct ProfileView: View {
                                         }
                                         .frame(width: proxy.size.width)
                                         .frame(maxHeight: .infinity)
-                                    } else {
+                                        
+                                    }
+                                    else {
                                         VStack(alignment: .center){
                                             Spacer()
                                             ProgressView()
@@ -479,6 +484,7 @@ struct ProfileView: View {
                                     }
                                 }
                                 .padding([.top, .bottom])
+
                             }
                             .zIndex(0)
                         }
@@ -563,30 +569,31 @@ struct ProfileView: View {
             .onAppear(perform: {
                 self.initProfileView()
             })
-            .onReceive(chattyVM.$questionModel) { data in
-                self.questionList += data?.results ?? []
-                if self.questionList.isEmpty{
-                    self.questionEmpty = true
+            .onReceive(profileVM.isSuccessGetQuestion){ result in
+                if result {
+                    isQuestionEmpty = true
+                }else {
+                    isQuestionEmpty = false
                 }
             }
-            .onReceive(chattyVM.refuseComplete) {
+            .onReceive(profileVM.refuseComplete) {
                 self.initProfileView()
             }
-            .onReceive(chattyVM.reportSuccess) {
+            .onReceive(profileVM.reportSuccess) {
                 self.initProfileView()
                 self.reportSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.reportSuccess = false
                 }
             }
-            .onReceive(chattyVM.deleteSuccess) {
+            .onReceive(profileVM.deleteSuccess) {
                 self.initProfileView()
                 self.deleteSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.deleteSuccess = false
                 }
             }
-            .onReceive(chattyVM.questionPostSuccess){
+            .onReceive(profileVM.questionPostSuccess){
                 self.questionPostSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.questionPostSuccess = false
@@ -661,18 +668,21 @@ struct ProfileView: View {
     }
     
     func callNextQuestion(questiondata: ResultDetail){
-        if !questionList.isEmpty && chattyVM.questionModel?.next != nil && questiondata.pk == questionList.last?.pk{
+        print("callNextQuestion() - run")
+        print(questiondata)
+        if profileVM.questionModel?.results.isEmpty == false && profileVM.questionModel?.next != nil && questiondata.pk == profileVM.questionModel?.results.last?.pk{
             self.currentQuestionPage += 1
-            chattyVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
+            profileVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
         }
+        
     }
     
     func initProfileView() {
         self.questionEmpty = false
-        self.questionList.removeAll()
+        profileVM.questionModel?.results.removeAll()
         self.currentQuestionPage = 1
         profileVM.profileGet(username: username)
-        chattyVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+        profileVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
     }
 }
 
