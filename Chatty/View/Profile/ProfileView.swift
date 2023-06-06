@@ -407,7 +407,7 @@ struct ProfileView: View {
                                            )
                                 //MARK: - lazyVstack
                                 LazyVStack(spacing: 16){
-                                    if isQuestionEmpty == true{
+                                    if isQuestionEmpty == false{
                                         if let questionlist = profileVM.questionModel?.results {
                                             ForEach(questionlist, id:\.pk){ questiondata in
                                                 if self.currentPostTab == .responsedTab {
@@ -443,7 +443,8 @@ struct ProfileView: View {
                                             }
                                             
                                         }
-                                    }else if isQuestionEmpty == false {
+                                    }
+                                    else if isQuestionEmpty == true {
                                         
                                         VStack(alignment: .center){
                                             VStack(spacing: 0){
@@ -571,9 +572,11 @@ struct ProfileView: View {
             })
             .onReceive(profileVM.isSuccessGetQuestion){ result in
                 if result {
-                    isQuestionEmpty = true
+                    print("!")
+                    self.isQuestionEmpty = false
                 }else {
-                    isQuestionEmpty = false
+                    print("!!")
+                    self.isQuestionEmpty = true
                 }
             }
             .onReceive(profileVM.refuseComplete) {
@@ -678,6 +681,7 @@ struct ProfileView: View {
     }
     
     func initProfileView() {
+        print("run itit")
         self.questionEmpty = false
         profileVM.questionModel?.results.removeAll()
         self.currentQuestionPage = 1
