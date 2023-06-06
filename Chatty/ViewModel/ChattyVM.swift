@@ -41,7 +41,7 @@ class ChattyVM: ObservableObject {
     
     @Published var background_image : String = ""
     
-    @Published var questiondata : ResultDetail? = ResultDetail(pk: 0, content: "", createdDate: "", answerContent: "")
+    @Published var questiondata : ResultDetail? 
     
     var profileEditPressed = PassthroughSubject<(), Never>()
         

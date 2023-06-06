@@ -8,31 +8,36 @@
 import Foundation
 
 struct QuestionModel: Codable {
-    let next, previous: Int?
-    let profile : profile
+    var next, previous: Int?
     var results: [ResultDetail]
     
 }
 
 struct ResultDetail: Codable {
     let pk: Int
-    let content, createdDate: String
-    let answerContent : String?
+    let createdDate: String
+    let answeredDate: String?
+    let profile: Profile
+    let author: Profile?
+    let content: String
+    let answerContent: String?
 
     enum CodingKeys: String, CodingKey {
-        case pk, content
+        case pk
         case createdDate = "created_date"
+        case answeredDate = "answered_date"
+        case profile, author, content
         case answerContent = "answer_content"
     }
 }
 
-struct profile : Codable {
-    let username : String
-    let profileImage: String
-    let backgroundImage: String
-    
+struct Profile: Codable {
+    let username, profileName: String
+    let profileImage, backgroundImage: String
+
     enum CodingKeys: String, CodingKey {
-        case username = "username"
+        case username
+        case profileName = "profile_name"
         case profileImage = "profile_image"
         case backgroundImage = "background_image"
     }

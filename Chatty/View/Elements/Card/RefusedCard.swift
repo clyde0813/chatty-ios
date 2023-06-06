@@ -77,8 +77,8 @@ struct RefusedCard: View {
     }
 }
 
-struct RefusedCard_Previews: PreviewProvider {
-    static var previews: some View {
-        RefusedCard(questiondata: ResultDetail(pk: 2, content: "야 나랑 놀자 밤늦게까지 함께 손뼉 치면서 나랑 마셔 너와 나의 몸이 녹아 내리면 나랑 걷자 저 멀리까지가다 지쳐 누우면 나랑 자자 두 눈 꼭 감고 나랑 입 맞추자", createdDate: "2023-03-26T22:01:42.000000", answerContent: "안녕안녕"))
-    }
-}
+//struct RefusedCard_Previews: PreviewProvider {
+//    static var previews: some View {
+//        RefusedCard(questiondata: ResultDetail(pk: 2, content: "야 나랑 놀자 밤늦게까지 함께 손뼉 치면서 나랑 마셔 너와 나의 몸이 녹아 내리면 나랑 걷자 저 멀리까지가다 지쳐 누우면 나랑 자자 두 눈 꼭 감고 나랑 입 맞추자", createdDate: "2023-03-26T22:01:42.000000", answerContent: "안녕안녕"))
+//    }
+//}

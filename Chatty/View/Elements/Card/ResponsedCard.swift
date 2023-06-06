@@ -120,9 +120,9 @@ struct ResponsedCard: View {
         .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
     }
 }
-
-struct ResponsedCard_Previews: PreviewProvider {
-    static var previews: some View {
-        ResponsedCard(width: 320, questiondata: ResultDetail(pk: 2, content: "Question Content", createdDate: "2023-03-26T22:01:42.000000", answerContent: "Answer Content"), username: "Username", profile_name: "김봉팔", profile_image: "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default.png")
-    }
-}
+//
+//struct ResponsedCard_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResponsedCard(width: 320, questiondata: ResultDetail(pk: 2, content: "Question Content", createdDate: "2023-03-26T22:01:42.000000", answerContent: "Answer Content"), username: "Username", profile_name: "김봉팔", profile_image: "https://chatty-s3-dev.s3.ap-northeast-2.amazonaws.com/default.png")
+//    }
+//}

@@ -146,6 +146,7 @@ class ProfileVM : ObservableObject {
         .responseDecodable(of: QuestionModel.self){ response in
             switch response.result {
             case .success(let data):
+                print("questionGet() - success")
                 if self.questionModel == nil {
                     self.questionModel = data
                 }else{
@@ -253,7 +254,7 @@ class ProfileVM : ObservableObject {
         }
     }
     
-    func questionReject(question_id: Int) {
+    func questionRefuse(question_id: Int) {
         let url = "https://chatty.kr/api/v1/chatty/refused"
         var headers : HTTPHeaders = []
         headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
@@ -271,7 +272,7 @@ class ProfileVM : ObservableObject {
             switch response.result {
             case .success:
                 print("POST 성공")
-                self.refuseComplete.send()
+                ChattyVM().refuseComplete.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
             }

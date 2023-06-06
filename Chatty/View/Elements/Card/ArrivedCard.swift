@@ -10,7 +10,7 @@ import Combine
 
 struct ArrivedCard: View {
     @EnvironmentObject var chattyVM: ChattyVM
-    
+    @StateObject var profileVM = ProfileVM()
     @State var width : CGFloat = 0.0
 
     @State var questiondata : ResultDetail
@@ -71,7 +71,7 @@ struct ArrivedCard: View {
                     .padding(.trailing, 15)
                 HStack(spacing: 0){
                     Button(action:{
-                        chattyVM.questionReject(question_id: questiondata.pk)
+                        profileVM.questionRefuse(question_id: questiondata.pk)
                     }){
                         Text("거절하기")
                             .font(.system(size: 16, weight: .bold))
@@ -107,8 +107,8 @@ struct ArrivedCard: View {
     }
 }
 
-struct ArrivedCard_Previews: PreviewProvider {
-    static var previews: some View {
-        ArrivedCard(questiondata: ResultDetail(pk: 2, content: "안녕안녕", createdDate: "2023-03-26T22:01:42.000000", answerContent: "안녕안녕")).environmentObject(ChattyVM())
-    }
-}
+//struct ArrivedCard_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ArrivedCard(questiondata: ResultDetail(pk: 2, content: "안녕안녕", createdDate: "2023-03-26T22:01:42.000000", answerContent: "안녕안녕")).environmentObject(ChattyVM())
+//    }
+//}
