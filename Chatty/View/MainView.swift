@@ -98,8 +98,10 @@ struct MainView: View {
                 }
                 .navigationDestination(isPresented: $profileEditView){
                     ProfileEditView()
-                }
+                }        
+                
             }
+            
         }
     }
 }
