@@ -9,6 +9,10 @@ import Foundation
 
 struct QuestionModel: Codable {
     var next, previous: Int?
+<<<<<<< HEAD
+=======
+    var profile : profile
+>>>>>>> 6cfd2ca (1)
     var results: [ResultDetail]
     
 }

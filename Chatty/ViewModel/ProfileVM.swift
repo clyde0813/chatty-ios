@@ -155,8 +155,10 @@ class ProfileVM : ObservableObject {
                     self.questionModel?.previous = data.previous
                 }
                 if data.results.isEmpty{
+                    print("데이터가 비어있어")
                     self.isSuccessGetQuestion.send(false)
                 }else{
+                    print("데이터가 들어있어")
                     self.isSuccessGetQuestion.send(true)
                 }
                 
