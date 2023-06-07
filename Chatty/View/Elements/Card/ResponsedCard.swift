@@ -74,25 +74,14 @@ struct ResponsedCard: View {
                         chattyVM.questiondata = self.questiondata
                         chattyVM.questionOptionStatus = true
                     }){
-                        if questiondata.author == nil {
-                            ZStack{
-                                Image(systemName: "ellipsis")
-                                    .foregroundColor(.black)
-                                    .rotationEffect(.degrees(-90))
-                                    .font(Font.system(size: 16, weight: .bold))
-                            }
-                            .frame(width: 20, height: 20)
-                        }else {
-                            ZStack{
-                                Image(systemName: "ellipsis")
-                                    .foregroundColor(.black)
-                                    .rotationEffect(.degrees(-90))
-                                    .font(Font.system(size: 16, weight: .bold))
-                            }
-                            .frame(width: 20, height: 20)
-                            .padding(.bottom,10)
+                        ZStack{
+                            Image(systemName: "ellipsis")
+                                .foregroundColor(.black)
+                                .rotationEffect(.degrees(-90))
+                                .font(Font.system(size: 16, weight: .bold))
                         }
-                        
+                        .frame(width: 20, height: 20)
+                        .padding(questiondata.author == nil ? 0 : 10)
                     }
                 }
                 .padding(.bottom, 4)
@@ -139,6 +128,7 @@ struct ResponsedCard: View {
                             .padding(.trailing, 5)
                     }
                 }
+                .padding(.top, questiondata.author == nil ? 0 : 21)
 //                .padding(.bottom, 16)
 //                HStack(spacing: 0){
 //                    Image(systemName: "heart")
