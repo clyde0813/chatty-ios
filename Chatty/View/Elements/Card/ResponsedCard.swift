@@ -51,7 +51,7 @@ struct ResponsedCard: View {
                                         .foregroundColor(Color.gray)
                                 }
                                 .padding(.bottom, 8)
-                                Text("\(questiondata.content ?? "")")
+                                Text(questiondata.content)
                                     .font(Font.system(size: 16, weight: .none))
                                     .padding(.trailing, 5)
                             }

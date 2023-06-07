@@ -34,92 +34,95 @@ struct LoginView: View {
                     if self.loginPressed {
                         ProgressView("로그인 중...")
                     }
-                    VStack{
-                        VStack(alignment: .leading) {
-                            HStack{
-                                Button(action:{
-                                    presentationMode.wrappedValue.dismiss()
-                                    
-                                }) {
-                                    Image(systemName: "chevron.backward")
-                                        .font(Font.system(size: 20, weight: .bold))
-                                    Text("로그인")
-                                        .font(.system(size: 20))
-                                        .fontWeight(.bold)
-                                        .padding()
-                                }
-                            }
-                            .foregroundColor(Color.black)
-                            
-                            VStack(alignment: .leading){
-                                Text("아이디")
-                                    .font(.system(size:12))
-                                    .fontWeight(.light)
-                                TextField("아이디를 입력해 주세요.", text: $loginVM.username)
-                                    .frame(height: 25)
-                                    .padding()
-                                    .background(Color(uiColor: .secondarySystemBackground))
-                                    .mask(RoundedRectangle(cornerRadius: 16))
-                                    .padding(.bottom, 20)
-                                Text("비밀번호")
-                                    .font(.system(size:12))
-                                    .fontWeight(.light)
-                                ZStack(alignment: .trailing){
-                                    if isShowPassword {
-                                        SecureField("비밀번호", text: $loginVM.password)
-                                            .frame(height: 25)
+                    ScrollView{
+                        VStack{
+                            VStack(alignment: .leading) {
+                                HStack{
+                                    Button(action:{
+                                        presentationMode.wrappedValue.dismiss()
+                                        
+                                    }) {
+                                        Image(systemName: "chevron.backward")
+                                            .font(Font.system(size: 20, weight: .bold))
+                                        Text("로그인")
+                                            .font(.system(size: 20))
+                                            .fontWeight(.bold)
                                             .padding()
-                                            .background(Color(uiColor: .secondarySystemBackground))
-                                            .mask(RoundedRectangle(cornerRadius: 16))
-                                            .padding(.bottom, 20)
-                                    } else {
-                                        TextField("비밀번호", text: $loginVM.password)
-                                            .frame(height: 25)
-                                            .padding()
-                                            .background(Color(uiColor: .secondarySystemBackground))
-                                            .mask(RoundedRectangle(cornerRadius: 16))
-                                            .padding(.bottom, 20)
                                     }
-                                    Image(systemName: isShowPassword ? "eye.fill": "eye.slash.fill")
-                                        .foregroundColor(Color(.lightGray))
-                                        .font(Font.system(size: 20))
-                                        .padding([.bottom, .trailing], 18)
-                                        .onTapGesture(perform: {
-                                            isShowPassword.toggle()
-                                        })
+                                }
+                                .foregroundColor(Color.black)
+                                
+                                VStack(alignment: .leading){
+                                    Text("아이디")
+                                        .font(.system(size:12))
+                                        .fontWeight(.light)
+                                    TextField("아이디를 입력해 주세요.", text: $loginVM.username)
+                                        .frame(height: 25)
+                                        .padding()
+                                        .background(Color(uiColor: .secondarySystemBackground))
+                                        .mask(RoundedRectangle(cornerRadius: 16))
+                                        .padding(.bottom, 20)
+                                    Text("비밀번호")
+                                        .font(.system(size:12))
+                                        .fontWeight(.light)
+                                    ZStack(alignment: .trailing){
+                                        if isShowPassword {
+                                            SecureField("비밀번호", text: $loginVM.password)
+                                                .frame(height: 25)
+                                                .padding()
+                                                .background(Color(uiColor: .secondarySystemBackground))
+                                                .mask(RoundedRectangle(cornerRadius: 16))
+                                                .padding(.bottom, 20)
+                                        } else {
+                                            TextField("비밀번호", text: $loginVM.password)
+                                                .frame(height: 25)
+                                                .padding()
+                                                .background(Color(uiColor: .secondarySystemBackground))
+                                                .mask(RoundedRectangle(cornerRadius: 16))
+                                                .padding(.bottom, 20)
+                                        }
+                                        Image(systemName: isShowPassword ? "eye.fill": "eye.slash.fill")
+                                            .foregroundColor(Color(.lightGray))
+                                            .font(Font.system(size: 20))
+                                            .padding([.bottom, .trailing], 18)
+                                            .onTapGesture(perform: {
+                                                isShowPassword.toggle()
+                                            })
+                                    }
                                 }
                             }
-                        }
-                        .padding([.leading, .trailing], 20)
-                        Spacer()
-                        VStack {
-//                            HStack {
-//                                Text("계정 정보 찾기")
-//                                    .font(.system(size: 16))
-//                                Image(systemName: "chevron.forward")
-//                                    .font(Font.system(size: 16))
-//                            }
-//                            .padding(16)
-                            Button(action: {
-                                endEditing()
-                                self.loginPressed = true
-                                loginVM.login()
-                            }){
-                                Text("로그인")
-                                    .fontWeight(.bold)
-                                    .frame(height: 60)
-                                    .frame(minWidth: 0,
-                                           maxWidth: .infinity
-                                    )
-                                    .foregroundColor(Color.white)
-                                    .background(loginVM.username.isEmpty || loginVM.password.isEmpty ? Color("Grey500") : Color("Main Primary"))
-                                    .cornerRadius(16)
-                                    .padding(.bottom, 20)
+                            .padding([.leading, .trailing], 20)
+                            Spacer()
+                            VStack {
+    //                            HStack {
+    //                                Text("계정 정보 찾기")
+    //                                    .font(.system(size: 16))
+    //                                Image(systemName: "chevron.forward")
+    //                                    .font(Font.system(size: 16))
+    //                            }
+    //                            .padding(16)
+                                Button(action: {
+                                    endEditing()
+                                    self.loginPressed = true
+                                    loginVM.login()
+                                }){
+                                    Text("로그인")
+                                        .fontWeight(.bold)
+                                        .frame(height: 60)
+                                        .frame(minWidth: 0,
+                                               maxWidth: .infinity
+                                        )
+                                        .foregroundColor(Color.white)
+                                        .background(loginVM.username.isEmpty || loginVM.password.isEmpty ? Color("Grey500") : Color("Main Primary"))
+                                        .cornerRadius(16)
+                                        .padding(.bottom, 20)
+                                }
+                                .disabled(loginVM.username.isEmpty || loginVM.password.isEmpty ? true : false)
                             }
-                            .disabled(loginVM.username.isEmpty || loginVM.password.isEmpty ? true : false)
+                            .padding([.leading, .trailing], 20)
                         }
-                        .padding([.leading, .trailing], 20)
                     }
+                    
                     .navigationBarHidden(true)
                     
                     if ErrorShow{
