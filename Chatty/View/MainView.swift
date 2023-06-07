@@ -96,9 +96,9 @@ struct MainView: View {
                 .navigationDestination(isPresented: $shareView) {
                     ChattyShareView(username: self.$username, profile_name: self.$profile_name, profile_image: self.$profile_image, background_image: self.$background_image, questiondata: self.$questiondata)
                 }
-                .navigationDestination(isPresented: $profileEditView){
-                    ProfileEditView()
-                }        
+//                .navigationDestination(isPresented: $profileEditView){
+//                    ProfileEditView()
+//                }
                 
             }
             

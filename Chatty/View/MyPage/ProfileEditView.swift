@@ -13,6 +13,8 @@ struct ProfileEditView: View {
     @EnvironmentObject var chattyVM: ChattyVM
     
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var profileVM : ProfileVM
+    
     
     @State var username : String = ""
     @State var profile_name : String = ""
@@ -54,7 +56,8 @@ struct ProfileEditView: View {
                     if (self.username.isEmpty || self.usernameVerify) && self.profile_name.count <= 20 && self.profile_message.count <= 20{
                         Button(action:{
                             self.profileEditProgress = true
-                            chattyVM.profileEdit(username: username, profile_name: profile_name, profile_message: profile_message, profile_image: selectedProfileUIImage, background_image: selectedBackgroundUIImage)
+                            
+                            profileVM.profileEdit(username: username, profile_name: profile_name, profile_message: profile_message, profile_image: selectedProfileUIImage, background_image: selectedBackgroundUIImage)
                         }){
                             Text("저장하기")
                                 .font(.system(size: 18, weight: .medium))
@@ -79,7 +82,7 @@ struct ProfileEditView: View {
                                         PhotosPicker(selection: $selectedBackgroundImageItem,
                                                      matching: .images,
                                                      photoLibrary: .shared()){
-                                            KFImage(URL(string: "\(chattyVM.profileModel?.backgroundImage ?? "")"))
+                                            KFImage(URL(string: profileVM.profileModel?.backgroundImage ?? ""))
                                                 .resizable()
                                                 .scaledToFill()
                                                 .frame(width:proxy.size.width, height: 160)
@@ -122,7 +125,7 @@ struct ProfileEditView: View {
                                         PhotosPicker(selection: $selectedProfileImageItem,
                                                      matching: .images,
                                                      photoLibrary: .shared()){
-                                            KFImage(URL(string: "\(chattyVM.profileModel?.profileImage ?? "")"))
+                                            KFImage(URL(string: profileVM.profileModel?.profileImage ?? ""))
                                                 .resizable()
                                                 .scaledToFill()
                                                 .frame(width: 110, height: 110)
@@ -174,7 +177,7 @@ struct ProfileEditView: View {
                                 }
                                 .padding(.leading, 5)
                                 ZStack(alignment: .trailing){
-                                    TextField("아이디 4글자 이상 20글자 이하", text: $username)
+                                    TextField("\(profileVM.profileModel?.username ?? "")", text: $username)
                                         .padding()
                                         .background(Color(uiColor: .secondarySystemBackground))
                                         .mask(RoundedRectangle(cornerRadius: 16))
@@ -230,7 +233,7 @@ struct ProfileEditView: View {
                                     Spacer()
                                 }
                                 .padding(.leading, 5)
-                                TextField("닉네임 1글자 이상 20글자 이하", text: $profile_name)
+                                TextField("\(profileVM.profileModel?.profile_name ?? "")", text: $profile_name)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
                                     .mask(RoundedRectangle(cornerRadius: 16))
@@ -246,7 +249,7 @@ struct ProfileEditView: View {
                                     Spacer()
                                 }
                                 .padding(.leading, 5)
-                                TextField("bio", text: $profile_message)
+                                TextField("\(profileVM.profileModel?.profileMessage ?? "")", text: $profile_message)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
                                     .mask(RoundedRectangle(cornerRadius: 16))
@@ -298,8 +301,8 @@ struct ProfileEditView: View {
             }
         }
         .navigationBarHidden(true)
-        .onReceive(chattyVM.profileEditSuccess){
-            chattyVM.profileGet(username: KeyChain.read(key: "username")!)
+        .onReceive(profileVM.profileEditSuccess) {
+            profileVM.profileGet(username: KeyChain.read(key: "username")!)
             self.profileEditProgress = false
             self.profileEditSuccess = true
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
@@ -309,8 +312,8 @@ struct ProfileEditView: View {
     }
 }
 
-struct ProfileEditView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileEditView().environmentObject(ChattyVM())
-    }
-}
+//struct ProfileEditView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileEditView().environmentObject(ChattyVM())
+//    }
+//}
