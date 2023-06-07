@@ -56,156 +56,159 @@ struct RegisterView: View {
                             }
                         }
                         .foregroundColor(Color.black)
-                        VStack(alignment: .leading){
-                            
-                            VStack(alignment: .leading, spacing: 0){
-                                Text("아이디")
-                                    .font(.system(size:12))
-                                    .fontWeight(.light)
-                                    .padding(.bottom, 10)
-                                ZStack(alignment: .trailing){
-                                    TextField("아이디 4글자 이상 20글자 이하", text: $registerVM.username)
-                                        .frame(minWidth: 0,
-                                               maxWidth: .infinity
-                                        )
-                                        .padding()
-                                        .background(Color(uiColor: .secondarySystemBackground))
-                                        .mask(RoundedRectangle(cornerRadius: 16))
-                                        .disabled(registerVM.usernameVerify)
-                                    Button(action: {
-                                        registerVM.verifyUsername()
-                                    }){
-                                        if registerVM.usernameVerify {
-                                            Image(systemName: "checkmark.seal.fill")
-                                                .font(.system(size:13, weight: .semibold))
-                                                .frame(width: 60, height: 15)
-                                                .foregroundColor(Color.white)
-                                                .padding(.vertical,10)
-                                                .padding(.horizontal)
-                                                .background(
-                                                    Capsule()
-                                                        .fill(Color("MainGradient2"))
-                                                )
-                                                .padding(.trailing, 16)
-                                        } else {
-                                            Text("중복확인")
-                                                .font(.system(size:13, weight: .semibold))
-                                                .frame(width: 60, height: 15)
-                                                .foregroundColor(Color.white)
-                                                .padding(.vertical,10)
-                                                .padding(.horizontal)
-                                                .background(
-                                                    Capsule()
-                                                        .fill(Color("Pink Main"))
-                                                )
-                                                .padding(.trailing, 16)
-                                        }
-                                    }
-                                    .disabled(registerVM.usernameVerify || registerVM.username.count < 4 || registerVM.username.count > 15)
-                                    
-                                }
-                            }
-                            .padding(.bottom, 20)
-                            
-                            
-                            VStack(alignment: .leading, spacing: 0){
-                                Text("닉네임")
-                                    .font(.system(size:12))
-                                    .fontWeight(.light)
-                                    .padding(.bottom, 10)
-                                TextField("닉네임 1글자 이상 20글자 이하", text: $registerVM.profile_name)
-                                    .padding()
-                                    .background(Color(uiColor: .secondarySystemBackground))
-                                    .mask(RoundedRectangle(cornerRadius: 16))
-                            }
-                            .padding(.bottom, 20)
-                            
-                            VStack(alignment: .leading, spacing: 0){
-                                Text("이메일")
-                                    .font(.system(size:12))
-                                    .fontWeight(.light)
-                                    .padding(.bottom, 10)
-                                ZStack(alignment: .trailing) {
-                                    TextField("이메일", text: $registerVM.email)
-                                        .padding()
-                                        .background(Color(uiColor: .secondarySystemBackground))
-                                        .mask(RoundedRectangle(cornerRadius: 16))
-                                        .disabled(registerVM.emailVerify)
-                                    Button(action: {
-                                        registerVM.verifyEmail()
-                                    }){
-                                        if registerVM.emailVerify {
-                                            Image(systemName: "checkmark.seal.fill")
-                                                .font(.system(size:13, weight: .semibold))
-                                                .frame(width: 60, height: 15)
-                                                .foregroundColor(Color.white)
-                                                .padding(.vertical,10)
-                                                .padding(.horizontal)
-                                                .background(
-                                                    Capsule()
-                                                        .fill(Color("MainGradient2"))
-                                                )
-                                                .padding(.trailing, 16)
-                                        } else {
-                                            Text("이메일 확인")
-                                                .font(.system(size:13, weight: .semibold))
-                                                .frame(width: 60, height: 15)
-                                                .foregroundColor(Color.white)
-                                                .padding(.vertical,10)
-                                                .padding(.horizontal)
-                                                .background(
-                                                    Capsule()
-                                                        .fill(Color("Pink Main"))
-                                                )
-                                                .padding(.trailing, 16)
-                                        }
-                                    }
-                                    .disabled(registerVM.emailVerify || registerVM.email.count < 1)
-                                }
-                            }
-                            .padding(.bottom, 20)
-                            
-                            VStack(alignment: .leading, spacing: 0){
-                                Text("비밀번호")
-                                    .font(.system(size:12))
-                                    .fontWeight(.light)
-                                    .padding(.bottom, 10)
-                                ZStack(alignment: .trailing){
-                                    if togglePassword == true {
-                                        SecureField("비밀번호 4글자 이상 20글자 이하", text: $registerVM.password)
+                        ScrollView{
+                            VStack(alignment: .leading){
+                                
+                                VStack(alignment: .leading, spacing: 0){
+                                    Text("아이디")
+                                        .font(.system(size:12))
+                                        .fontWeight(.light)
+                                        .padding(.bottom, 10)
+                                    ZStack(alignment: .trailing){
+                                        TextField("아이디 4글자 이상 20글자 이하", text: $registerVM.username)
+                                            .frame(minWidth: 0,
+                                                   maxWidth: .infinity
+                                            )
                                             .padding()
                                             .background(Color(uiColor: .secondarySystemBackground))
                                             .mask(RoundedRectangle(cornerRadius: 16))
-                                    } else {
-                                        TextField("비밀번호 4글자 이상 20글자 이하", text: $registerVM.password)
-                                            .frame(height: 25)
+                                            .disabled(registerVM.usernameVerify)
+                                        Button(action: {
+                                            registerVM.verifyUsername()
+                                        }){
+                                            if registerVM.usernameVerify {
+                                                Image(systemName: "checkmark.seal.fill")
+                                                    .font(.system(size:13, weight: .semibold))
+                                                    .frame(width: 60, height: 15)
+                                                    .foregroundColor(Color.white)
+                                                    .padding(.vertical,10)
+                                                    .padding(.horizontal)
+                                                    .background(
+                                                        Capsule()
+                                                            .fill(Color("MainGradient2"))
+                                                    )
+                                                    .padding(.trailing, 16)
+                                            } else {
+                                                Text("중복확인")
+                                                    .font(.system(size:13, weight: .semibold))
+                                                    .frame(width: 60, height: 15)
+                                                    .foregroundColor(Color.white)
+                                                    .padding(.vertical,10)
+                                                    .padding(.horizontal)
+                                                    .background(
+                                                        Capsule()
+                                                            .fill(Color("Pink Main"))
+                                                    )
+                                                    .padding(.trailing, 16)
+                                            }
+                                        }
+                                        .disabled(registerVM.usernameVerify || registerVM.username.count < 4 || registerVM.username.count > 15)
+                                        
+                                    }
+                                }
+                                .padding(.bottom, 20)
+                                
+                                
+                                VStack(alignment: .leading, spacing: 0){
+                                    Text("닉네임")
+                                        .font(.system(size:12))
+                                        .fontWeight(.light)
+                                        .padding(.bottom, 10)
+                                    TextField("닉네임 1글자 이상 20글자 이하", text: $registerVM.profile_name)
+                                        .padding()
+                                        .background(Color(uiColor: .secondarySystemBackground))
+                                        .mask(RoundedRectangle(cornerRadius: 16))
+                                }
+                                .padding(.bottom, 20)
+                                
+                                VStack(alignment: .leading, spacing: 0){
+                                    Text("이메일")
+                                        .font(.system(size:12))
+                                        .fontWeight(.light)
+                                        .padding(.bottom, 10)
+                                    ZStack(alignment: .trailing) {
+                                        TextField("이메일", text: $registerVM.email)
                                             .padding()
                                             .background(Color(uiColor: .secondarySystemBackground))
                                             .mask(RoundedRectangle(cornerRadius: 16))
+                                            .disabled(registerVM.emailVerify)
+                                        Button(action: {
+                                            registerVM.verifyEmail()
+                                        }){
+                                            if registerVM.emailVerify {
+                                                Image(systemName: "checkmark.seal.fill")
+                                                    .font(.system(size:13, weight: .semibold))
+                                                    .frame(width: 60, height: 15)
+                                                    .foregroundColor(Color.white)
+                                                    .padding(.vertical,10)
+                                                    .padding(.horizontal)
+                                                    .background(
+                                                        Capsule()
+                                                            .fill(Color("MainGradient2"))
+                                                    )
+                                                    .padding(.trailing, 16)
+                                            } else {
+                                                Text("이메일 확인")
+                                                    .font(.system(size:13, weight: .semibold))
+                                                    .frame(width: 60, height: 15)
+                                                    .foregroundColor(Color.white)
+                                                    .padding(.vertical,10)
+                                                    .padding(.horizontal)
+                                                    .background(
+                                                        Capsule()
+                                                            .fill(Color("Pink Main"))
+                                                    )
+                                                    .padding(.trailing, 16)
+                                            }
+                                        }
+                                        .disabled(registerVM.emailVerify || registerVM.email.count < 1)
                                     }
-                                    Image(systemName: self.togglePassword ? "eye.fill": "eye.slash.fill")
-                                        .foregroundColor(Color(.lightGray))
-                                        .font(Font.system(size: 20))
-                                        .padding([.trailing], 18)
-                                        .onTapGesture(perform: {
-                                            togglePassword.toggle()
-                                        })
                                 }
-                            }
-                            .padding(.bottom, 20)
-                            
-                            VStack(alignment: .leading, spacing: 0){
-                                Text("비밀번호 확인")
-                                    .font(.system(size:12))
-                                    .fontWeight(.light)
-                                    .padding(.bottom, 10)
-                                SecureField("비밀번호 확인", text: $registerVM.password2)
-                                    .frame(height: 25)
-                                    .padding()
-                                    .background(Color(uiColor: .secondarySystemBackground))
-                                    .mask(RoundedRectangle(cornerRadius: 16))
+                                .padding(.bottom, 20)
+                                
+                                VStack(alignment: .leading, spacing: 0){
+                                    Text("비밀번호")
+                                        .font(.system(size:12))
+                                        .fontWeight(.light)
+                                        .padding(.bottom, 10)
+                                    ZStack(alignment: .trailing){
+                                        if togglePassword == true {
+                                            SecureField("비밀번호 4글자 이상 20글자 이하", text: $registerVM.password)
+                                                .padding()
+                                                .background(Color(uiColor: .secondarySystemBackground))
+                                                .mask(RoundedRectangle(cornerRadius: 16))
+                                        } else {
+                                            TextField("비밀번호 4글자 이상 20글자 이하", text: $registerVM.password)
+                                                .frame(height: 25)
+                                                .padding()
+                                                .background(Color(uiColor: .secondarySystemBackground))
+                                                .mask(RoundedRectangle(cornerRadius: 16))
+                                        }
+                                        Image(systemName: self.togglePassword ? "eye.fill": "eye.slash.fill")
+                                            .foregroundColor(Color(.lightGray))
+                                            .font(Font.system(size: 20))
+                                            .padding([.trailing], 18)
+                                            .onTapGesture(perform: {
+                                                togglePassword.toggle()
+                                            })
+                                    }
+                                }
+                                .padding(.bottom, 20)
+                                
+                                VStack(alignment: .leading, spacing: 0){
+                                    Text("비밀번호 확인")
+                                        .font(.system(size:12))
+                                        .fontWeight(.light)
+                                        .padding(.bottom, 10)
+                                    SecureField("비밀번호 확인", text: $registerVM.password2)
+                                        .frame(height: 25)
+                                        .padding()
+                                        .background(Color(uiColor: .secondarySystemBackground))
+                                        .mask(RoundedRectangle(cornerRadius: 16))
+                                }
                             }
                         }
+                        
                     }
                     Spacer()
                     VStack {
