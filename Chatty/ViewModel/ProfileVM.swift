@@ -46,6 +46,7 @@ class ProfileVM : ObservableObject {
                 self.profileModel = data
             case .failure(_):
                 print("Profile get : Failed")
+                print(response)
                 if let data = response.data,
                    let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
                     print("Error Data : ", errorModel)
@@ -321,5 +322,53 @@ class ProfileVM : ObservableObject {
         }
     }
     
+    
+    func timelineGet(){
+        let url : String = "https://chatty.kr/api/v1/chatty/timeline"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        print(KeyChain.read(key: "access_token")!)
+        AF.request(url,
+                   method: .get,
+                   encoding: URLEncoding.default,
+                   headers: headers)
+        .responseDecodable(of: QuestionModel.self){ response in
+            switch response.result {
+            case .success(let data):
+                print("TimeLine get : Success")
+                print("타임라인의 데이터는! \(data)")
+                if self.questionModel == nil {
+                    self.questionModel = data
+                }else{
+                    self.questionModel?.results += data.results
+                    self.questionModel?.next = data.next
+                    self.questionModel?.previous = data.previous
+                }
+                if data.results.isEmpty{
+                    print("timeline이  비어있어")
+                    self.isSuccessGetQuestion.send(false)
+                }else{
+                    print("timeline이 들어있어")
+                    self.isSuccessGetQuestion.send(true)
+                }
+            case .failure(_):
+                print("Profile get : Failed")
+                if let data = response.data,
+                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
+                    if errorModel.status_code == 401 {
+                        self.token.refreshToken() { success in
+                            if success {
+                                self.timelineGet()
+                            } else {
+                                print("Token Refresh Failed")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     
 }
