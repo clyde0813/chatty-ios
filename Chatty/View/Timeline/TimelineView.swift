@@ -7,12 +7,14 @@ enum Timeline_Hot_Tab {
 }
 
 struct TimelineView: View {
-    
+    @EnvironmentObject var chattyVM: ChattyVM
     @State var currentTab : Timeline_Hot_Tab =  .timeline
     @StateObject var profileVM = ProfileVM()
+    @StateObject var questionVM = QuestionVM()
     @State var profile_image = ""
     @State var isClickedQuestion = false
     @State var currentPage = 1
+    
     //    @Binding var currentTab : BottomTab
     var body: some View {
         ZStack(alignment: .bottomTrailing){
@@ -27,19 +29,22 @@ struct TimelineView: View {
                         )
                     GeometryReader{ proxy in
                         ScrollView(showsIndicators: false){
-                            LazyVStack{
-                                if let timelineList = profileVM.questionModel?.results{
-                                    ForEach(timelineList, id:\.pk){ data in
-                                        ResponsedCard(width:proxy.size.width-32, questiondata: data, profile_name: profileVM.profileModel?.profile_name ?? "" )
+                            LazyVStack(spacing: 16){
+                                if let timelineList = questionVM.questionModel?.results{
+                                    ForEach(timelineList, id:\.pk){ questiondata in
+                                        ResponsedCard(width:proxy.size.width-32, questiondata: questiondata)
+                                            .onAppear{
+                                                callNextTimeline(questiondata: questiondata)
+                                            }
                                     }
-    //                                .onAppear{
-    //                                    callNextTimeline()
-    //                                }
                                 }
                                 
                             }
                         }
                         .background(Color("Background inner"))
+                        // 2023.06.06 Clyde 높이 제한 추가
+                        .frame(height: proxy.size.height)
+                        .frame(maxHeight: .infinity)
                     }
                     
                 }
@@ -67,6 +72,13 @@ struct TimelineView: View {
             guard let user = userInfo else { return }
             self.profile_image = user.profileImage
         }
+        .sheet(isPresented: .constant(chattyVM.questionOptionStatus), onDismiss: {
+            print("dismissed")
+            chattyVM.questionOptionStatus = false
+        }) {
+            QuestionOption()
+                .presentationDetents([.fraction(0.4)])
+        }
         
         
     }
@@ -81,16 +93,18 @@ extension TimelineView {
     //MARK: - Methods
     
     func initTimelineView() {
+        questionVM.questionModel?.results.removeAll()
+        self.currentPage = 1
         profileVM.profileGet(username: KeyChain.read(key: "username")!)
-        profileVM.timelineGet()
+        questionVM.timelineGet(page: self.currentPage)
     }
     
-    func callNextTimeline(timelineData : ResultDetail){
+    func callNextTimeline(questiondata : ResultDetail){
         print("callNextQuestion() - run")
         
-        if profileVM.questionModel?.results.isEmpty == false && profileVM.questionModel?.next != nil && timelineData.pk == profileVM.questionModel?.results.last?.pk{
+        if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
             self.currentPage += 1
-            profileVM.timelineGet()
+            questionVM.timelineGet(page: self.currentPage)
         }
     }
 }
@@ -236,9 +250,9 @@ extension TimelineView {
     }
 }
 
-
-struct TimelineView_Previews: PreviewProvider {
-    static var previews: some View {
-        TimelineView()
-    }
-}
+//
+//struct TimelineView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TimelineView()
+//    }
+//}

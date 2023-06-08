@@ -530,29 +530,30 @@ class ChattyVM: ObservableObject {
         }
     }
     
-    func questionReject(question_id: Int) {
-        let url = "https://chatty.kr/api/v1/chatty/refused"
-        var headers : HTTPHeaders = []
-        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        let params: Parameters = [
-            "question_id" : question_id
-        ]
-        
-        AF.request(url,
-                   method: .post,
-                   parameters: params,
-                   encoding: JSONEncoding(options: []),
-                   headers: headers)
-        .responseData { response in
-            switch response.result {
-            case .success:
-                print("POST 성공")
-                self.refuseComplete.send()
-            case .failure(let error):
-                print("error : \(error.errorDescription!)")
-            }
-        }
+    func questionRefuse(question_id: Int) {
+        self.refuseComplete.send()
+//        let url = "https://chatty.kr/api/v1/chatty/refused"
+//        var headers : HTTPHeaders = []
+//        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+//
+//        let params: Parameters = [
+//            "question_id" : question_id
+//        ]
+//
+//        AF.request(url,
+//                   method: .post,
+//                   parameters: params,
+//                   encoding: JSONEncoding(options: []),
+//                   headers: headers)
+//        .responseData { response in
+//            switch response.result {
+//            case .success:
+//                print("POST 성공")
+//                self.refuseComplete.send()
+//            case .failure(let error):
+//                print("error : \(error.errorDescription!)")
+//            }
+//        }
     }
     
     func answerPost(question_id: Int, content: String) {

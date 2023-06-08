@@ -15,14 +15,6 @@ struct ResponsedCard: View {
     
     @State var questiondata : ResultDetail
     
-    @State var username : String = ""
-    
-    @State var profile_name : String
-    
-    @State var profile_image : String = ""
-    
-    @State var background_image : String = ""
-    
     var body: some View {
         ZStack{
             Color.white
@@ -56,7 +48,7 @@ struct ResponsedCard: View {
                                     .padding(.trailing, 5)
                             }
                         }
-                    }else{
+                    } else {
                         HStack(spacing: 0){
                             Text("From @")
                                 .font(.system(size:12))
@@ -67,10 +59,10 @@ struct ResponsedCard: View {
                     }
                     Spacer()
                     Button(action : {
-                        chattyVM.username = self.username
-                        chattyVM.profile_name = self.profile_name
-                        chattyVM.profile_image = self.profile_image
-                        chattyVM.background_image = self.background_image
+                        chattyVM.username = questiondata.profile.username
+                        chattyVM.profile_name = questiondata.profile.profileName
+                        chattyVM.profile_image = questiondata.profile.profileImage
+                        chattyVM.background_image = questiondata.profile.backgroundImage
                         chattyVM.questiondata = self.questiondata
                         chattyVM.questionOptionStatus = true
                     }){
@@ -81,7 +73,6 @@ struct ResponsedCard: View {
                                 .font(Font.system(size: 16, weight: .bold))
                         }
                         .frame(width: 20, height: 20)
-                        .padding(questiondata.author == nil ? 0 : 10)
                     }
                 }
                 .padding(.bottom, 4)

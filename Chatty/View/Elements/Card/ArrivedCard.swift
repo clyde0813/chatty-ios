@@ -11,17 +11,10 @@ import Combine
 struct ArrivedCard: View {
     @EnvironmentObject var chattyVM: ChattyVM
     @StateObject var profileVM = ProfileVM()
+    @StateObject var questionVM = QuestionVM()
     @State var width : CGFloat = 0.0
 
     @State var questiondata : ResultDetail
-    
-    @State var username : String = ""
-    
-    @State var profile_name : String = ""
-    
-    @State var profile_image : String = ""
-    
-    @State var background_image : String = ""
 
     
     var body: some View {
@@ -47,10 +40,10 @@ struct ArrivedCard: View {
                         .foregroundColor(Color("Main Primary"))
                         Spacer()
                         Button(action : {
-                            chattyVM.username = self.username
-                            chattyVM.profile_name = self.profile_name
-                            chattyVM.profile_image = self.profile_image
-                            chattyVM.background_image = self.background_image
+                            chattyVM.username = questiondata.profile.username
+                            chattyVM.profile_name = questiondata.profile.profileName
+                            chattyVM.profile_image = questiondata.profile.profileImage
+                            chattyVM.background_image = questiondata.profile.backgroundImage
                             chattyVM.questiondata = self.questiondata
                             chattyVM.questionOptionStatus = true
                         }){
@@ -71,7 +64,7 @@ struct ArrivedCard: View {
                     .padding(.trailing, 15)
                 HStack(spacing: 0){
                     Button(action:{
-                        profileVM.questionRefuse(question_id: questiondata.pk)
+                        questionVM.questionRefuse(question_id: questiondata.pk)
                     }){
                         Text("거절하기")
                             .font(.system(size: 16, weight: .bold))

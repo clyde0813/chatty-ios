@@ -14,14 +14,6 @@ struct RefusedCard: View {
     
     @State var questiondata : ResultDetail
     
-    @State var username : String = ""
-    
-    @State var profile_name : String = ""
-    
-    @State var profile_image : String = ""
-    
-    @State var background_image : String = ""
-    
     var body: some View {
         ZStack{
             Color.white
@@ -45,10 +37,10 @@ struct RefusedCard: View {
                         .foregroundColor(Color("Main Primary"))
                         Spacer()
                         Button(action : {
-                            chattyVM.username = self.username
-                            chattyVM.profile_name = self.profile_name
-                            chattyVM.profile_image = self.profile_image
-                            chattyVM.background_image = self.background_image
+                            chattyVM.username = questiondata.profile.username
+                            chattyVM.profile_name = questiondata.profile.profileName
+                            chattyVM.profile_image = questiondata.profile.profileImage
+                            chattyVM.background_image = questiondata.profile.backgroundImage
                             chattyVM.questiondata = self.questiondata
                             chattyVM.questionOptionStatus = true
                         }){
