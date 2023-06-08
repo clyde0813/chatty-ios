@@ -12,6 +12,7 @@ struct TimelineView: View {
     @StateObject var profileVM = ProfileVM()
     @State var profile_image = ""
     @State var isClickedQuestion = false
+    @State var currentPage = 1
     //    @Binding var currentTab : BottomTab
     var body: some View {
         ZStack(alignment: .bottomTrailing){
@@ -24,7 +25,23 @@ struct TimelineView: View {
                             .fill(Color.white)
                             .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
                         )
-                    timelineLazyVstack
+                    GeometryReader{ proxy in
+                        ScrollView(showsIndicators: false){
+                            LazyVStack{
+                                if let timelineList = profileVM.questionModel?.results{
+                                    ForEach(timelineList, id:\.pk){ data in
+                                        ResponsedCard(width:proxy.size.width-32, questiondata: data, profile_name: profileVM.profileModel?.profile_name ?? "" )
+                                    }
+    //                                .onAppear{
+    //                                    callNextTimeline()
+    //                                }
+                                }
+                                
+                            }
+                        }
+                        .background(Color("Background inner"))
+                    }
+                    
                 }
                 .blur(radius: isClickedQuestion ? 2 : 0)
             }
@@ -54,12 +71,29 @@ struct TimelineView: View {
         
     }
     
-    func initTimelineView() {
-        profileVM.profileGet(username: KeyChain.read(key: "username")!)
-    }
+    
+    
+    
     
 }
 
+extension TimelineView {
+    //MARK: - Methods
+    
+    func initTimelineView() {
+        profileVM.profileGet(username: KeyChain.read(key: "username")!)
+        profileVM.timelineGet()
+    }
+    
+    func callNextTimeline(timelineData : ResultDetail){
+        print("callNextQuestion() - run")
+        
+        if profileVM.questionModel?.results.isEmpty == false && profileVM.questionModel?.next != nil && timelineData.pk == profileVM.questionModel?.results.last?.pk{
+            self.currentPage += 1
+            profileVM.timelineGet()
+        }
+    }
+}
 
 extension TimelineView {
     var navBar : some View {
@@ -143,22 +177,14 @@ extension TimelineView {
         .padding(.top,10)
     }
     
-    var timelineLazyVstack : some View {
-        ScrollView{
-            LazyVStack(spacing: 16){
-                Text("!!")
-                Text("!!")
-                Text("!!")
-                Text("!!")
-                Text("!!")
-                Text("!!")
-                Text("!!")
-                Text("!!")
-                Text("!!")
-            }
-        }
-        .background(Color("Background inner"))
-    }
+//    var timelineLazyVstack : some View {
+//        ScrollView{
+//            LazyVStack(spacing: 16){
+//
+//            }
+//        }
+//        .background(Color("Background inner"))
+//    }
     
     var questionButton : some View {
         VStack(alignment: .trailing){

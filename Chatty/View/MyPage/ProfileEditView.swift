@@ -13,6 +13,8 @@ struct ProfileEditView: View {
     @EnvironmentObject var chattyVM: ChattyVM
     
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var profileVM : ProfileVM
+    
     
     @State var username : String = ""
     @State var profile_name : String = ""
@@ -54,7 +56,8 @@ struct ProfileEditView: View {
                     if (self.username.isEmpty || self.usernameVerify) && self.profile_name.count <= 20 && self.profile_message.count <= 20{
                         Button(action:{
                             self.profileEditProgress = true
-                            chattyVM.profileEdit(username: username, profile_name: profile_name, profile_message: profile_message, profile_image: selectedProfileUIImage, background_image: selectedBackgroundUIImage)
+                            
+                            profileVM.profileEdit(username: username, profile_name: profile_name, profile_message: profile_message, profile_image: selectedProfileUIImage, background_image: selectedBackgroundUIImage)
                         }){
                             Text("저장하기")
                                 .font(.system(size: 18, weight: .medium))
@@ -71,190 +74,193 @@ struct ProfileEditView: View {
                 .frame(height: 50)
                 ZStack(alignment: .top){
                     Color.white
-                    VStack(spacing: 0){
-                        ZStack{
+                    ScrollView{
+                        VStack(spacing: 0){
                             ZStack{
-                                if selectedBackgroundImage == nil{
-                                    PhotosPicker(selection: $selectedBackgroundImageItem,
-                                                 matching: .images,
-                                                 photoLibrary: .shared()){
-                                        KFImage(URL(string: "\(chattyVM.profileModel?.backgroundImage ?? "")"))
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width:proxy.size.width, height: 160)
-                                            .clipped()
-                                    }
-                                                 .onChange(of: selectedBackgroundImageItem) { newItem in
-                                                     Task {
-                                                         if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                                                             selectedBackgroundUIImage = UIImage(data: data)
-                                                             selectedBackgroundImage = Image(uiImage: selectedBackgroundUIImage!)
+                                ZStack{
+                                    if selectedBackgroundImage == nil{
+                                        PhotosPicker(selection: $selectedBackgroundImageItem,
+                                                     matching: .images,
+                                                     photoLibrary: .shared()){
+                                            KFImage(URL(string: profileVM.profileModel?.backgroundImage ?? ""))
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width:proxy.size.width, height: 160)
+                                                .clipped()
+                                        }
+                                                     .onChange(of: selectedBackgroundImageItem) { newItem in
+                                                         Task {
+                                                             if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                                                 selectedBackgroundUIImage = UIImage(data: data)
+                                                                 selectedBackgroundImage = Image(uiImage: selectedBackgroundUIImage!)
+                                                             }
                                                          }
                                                      }
-                                                 }
-                                } else {
-                                    PhotosPicker(selection: $selectedBackgroundImageItem,
-                                                 matching: .images,
-                                                 photoLibrary: .shared()){
-                                        selectedBackgroundImage!
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width:proxy.size.width, height: 160)
-                                            .clipped()
-                                    }
-                                                 .onChange(of: selectedBackgroundImageItem) { newItem in
-                                                     Task {
-                                                         if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                                                             selectedBackgroundUIImage = UIImage(data: data)
-                                                             selectedBackgroundImage = Image(uiImage: selectedBackgroundUIImage!)
+                                    } else {
+                                        PhotosPicker(selection: $selectedBackgroundImageItem,
+                                                     matching: .images,
+                                                     photoLibrary: .shared()){
+                                            selectedBackgroundImage!
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width:proxy.size.width, height: 160)
+                                                .clipped()
+                                        }
+                                                     .onChange(of: selectedBackgroundImageItem) { newItem in
+                                                         Task {
+                                                             if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                                                 selectedBackgroundUIImage = UIImage(data: data)
+                                                                 selectedBackgroundImage = Image(uiImage: selectedBackgroundUIImage!)
+                                                             }
                                                          }
                                                      }
-                                                 }
+                                    }
+                                    Image("ImagePicker")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 20, height: 20)
                                 }
-                                Image("ImagePicker")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 20, height: 20)
-                            }
-                            ZStack{
-                                if selectedProfileImage == nil {
-                                    PhotosPicker(selection: $selectedProfileImageItem,
-                                                 matching: .images,
-                                                 photoLibrary: .shared()){
-                                        KFImage(URL(string: "\(chattyVM.profileModel?.profileImage ?? "")"))
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 110, height: 110)
-                                            .clipShape(Circle())
-                                    }
-                                                 .onChange(of: selectedProfileImageItem) { newItem in
-                                                     Task {
-                                                         if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                                                             selectedProfileUIImage = UIImage(data: data)
-                                                             selectedProfileImage = Image(uiImage: selectedProfileUIImage!)
+                                ZStack{
+                                    if selectedProfileImage == nil {
+                                        PhotosPicker(selection: $selectedProfileImageItem,
+                                                     matching: .images,
+                                                     photoLibrary: .shared()){
+                                            KFImage(URL(string: profileVM.profileModel?.profileImage ?? ""))
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 110, height: 110)
+                                                .clipShape(Circle())
+                                        }
+                                                     .onChange(of: selectedProfileImageItem) { newItem in
+                                                         Task {
+                                                             if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                                                 selectedProfileUIImage = UIImage(data: data)
+                                                                 selectedProfileImage = Image(uiImage: selectedProfileUIImage!)
+                                                             }
                                                          }
                                                      }
-                                                 }
-                                } else {
-                                    PhotosPicker(selection: $selectedProfileImageItem,
-                                                 matching: .images,
-                                                 photoLibrary: .shared()){
-                                        selectedProfileImage!
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 110, height: 110)
-                                            .clipShape(Circle())
-                                    }
-                                                 .onChange(of: selectedProfileImageItem) { newItem in
-                                                     Task {
-                                                         if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                                                             selectedProfileUIImage = UIImage(data: data)
-                                                             selectedProfileImage = Image(uiImage: selectedProfileUIImage!)
+                                    } else {
+                                        PhotosPicker(selection: $selectedProfileImageItem,
+                                                     matching: .images,
+                                                     photoLibrary: .shared()){
+                                            selectedProfileImage!
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 110, height: 110)
+                                                .clipShape(Circle())
+                                        }
+                                                     .onChange(of: selectedProfileImageItem) { newItem in
+                                                         Task {
+                                                             if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                                                 selectedProfileUIImage = UIImage(data: data)
+                                                                 selectedProfileImage = Image(uiImage: selectedProfileUIImage!)
+                                                             }
                                                          }
                                                      }
-                                                 }
+                                    }
+                                    Image("ImagePicker")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 20, height: 20)
+                                        .offset(x: -2.5, y: -3)
+                                    
                                 }
-                                Image("ImagePicker")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 20, height: 20)
-                                    .offset(x: -2.5, y: -3)
-                                
+                                .offset(x: -(proxy.size.width / 2) + 75, y: 75)
                             }
-                            .offset(x: -(proxy.size.width / 2) + 75, y: 75)
-                        }
-                        
-                        VStack(spacing: 8){
-                            HStack{
-                                Text("아이디")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(Color("Grey700"))
-                                Spacer()
+                            
+                            VStack(spacing: 8){
+                                HStack{
+                                    Text("아이디")
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .foregroundColor(Color("Grey700"))
+                                    Spacer()
+                                }
+                                .padding(.leading, 5)
+                                ZStack(alignment: .trailing){
+                                    TextField("\(profileVM.profileModel?.username ?? "")", text: $username)
+                                        .padding()
+                                        .background(Color(uiColor: .secondarySystemBackground))
+                                        .mask(RoundedRectangle(cornerRadius: 16))
+                                    Button(action: {
+                                        chattyVM.verifyUsername(username: username)
+                                    }){
+                                        if usernameVerify {
+                                            Image(systemName: "checkmark.seal.fill")
+                                                .font(.system(size:13, weight: .semibold))
+                                                .frame(width: 60, height: 15)
+                                                .foregroundColor(Color.white)
+                                                .padding(.vertical,10)
+                                                .padding(.horizontal)
+                                                .background(
+                                                    Capsule()
+                                                        .fill(Color("Pink Main"))
+                                                )
+                                                .padding(.trailing, 16)
+                                        } else {
+                                            Text("중복확인")
+                                                .font(.system(size:13, weight: .semibold))
+                                                .frame(width: 60, height: 15)
+                                                .foregroundColor(Color.white)
+                                                .padding(.vertical,10)
+                                                .padding(.horizontal)
+                                                .background(
+                                                    Capsule()
+                                                        .fill(Color("Pink Main"))
+                                                )
+                                                .padding(.trailing, 16)
+                                        }
+                                    }
+                                    .onReceive(chattyVM.usernameAvailable){
+                                        usernameVerify.toggle()
+                                    }
+                                    .onReceive(chattyVM.usernameUnavailable){
+                                        self.usernameError = true
+                                        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                                            self.usernameError = false
+                                        }
+                                    }
+                                    .disabled(usernameVerify || self.username.isEmpty || self.username.count < 4 || self.username.count > 15)
+                                }
                             }
-                            .padding(.leading, 5)
-                            ZStack(alignment: .trailing){
-                                TextField("아이디 4글자 이상 20글자 이하", text: $username)
+                            .padding(.top, 70)
+                            .padding([.leading, .trailing], 16)
+                            
+                            VStack(spacing: 8){
+                                HStack{
+                                    Text("닉네임")
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .foregroundColor(Color("Grey700"))
+                                    Spacer()
+                                }
+                                .padding(.leading, 5)
+                                TextField("\(profileVM.profileModel?.profile_name ?? "")", text: $profile_name)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
                                     .mask(RoundedRectangle(cornerRadius: 16))
-                                Button(action: {
-                                    chattyVM.verifyUsername(username: username)
-                                }){
-                                    if usernameVerify {
-                                        Image(systemName: "checkmark.seal.fill")
-                                            .font(.system(size:13, weight: .semibold))
-                                            .frame(width: 60, height: 15)
-                                            .foregroundColor(Color.white)
-                                            .padding(.vertical,10)
-                                            .padding(.horizontal)
-                                            .background(
-                                                Capsule()
-                                                    .fill(Color("Pink Main"))
-                                            )
-                                            .padding(.trailing, 16)
-                                    } else {
-                                        Text("중복확인")
-                                            .font(.system(size:13, weight: .semibold))
-                                            .frame(width: 60, height: 15)
-                                            .foregroundColor(Color.white)
-                                            .padding(.vertical,10)
-                                            .padding(.horizontal)
-                                            .background(
-                                                Capsule()
-                                                    .fill(Color("Pink Main"))
-                                            )
-                                            .padding(.trailing, 16)
-                                    }
-                                }
-                                .onReceive(chattyVM.usernameAvailable){
-                                    usernameVerify.toggle()
-                                }
-                                .onReceive(chattyVM.usernameUnavailable){
-                                    self.usernameError = true
-                                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
-                                        self.usernameError = false
-                                    }
-                                }
-                                .disabled(usernameVerify || self.username.isEmpty || self.username.count < 4 || self.username.count > 15)
                             }
-                        }
-                        .padding(.top, 70)
-                        .padding([.leading, .trailing], 16)
-                        
-                        VStack(spacing: 8){
-                            HStack{
-                                Text("닉네임")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(Color("Grey700"))
+                            .padding(.top, 32)
+                            .padding([.leading, .trailing], 16)
+                            
+                            VStack(spacing: 8){
+                                HStack{
+                                    Text("자기소개")
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .foregroundColor(Color("Grey700"))
+                                    Spacer()
+                                }
+                                .padding(.leading, 5)
+                                TextField("\(profileVM.profileModel?.profileMessage ?? "")", text: $profile_message)
+                                    .padding()
+                                    .background(Color(uiColor: .secondarySystemBackground))
+                                    .mask(RoundedRectangle(cornerRadius: 16))
                                 Spacer()
                             }
-                            .padding(.leading, 5)
-                            TextField("닉네임 1글자 이상 20글자 이하", text: $profile_name)
-                                .padding()
-                                .background(Color(uiColor: .secondarySystemBackground))
-                                .mask(RoundedRectangle(cornerRadius: 16))
+                            .padding(.top, 32)
+                            .padding([.leading, .trailing], 16)
+                            .frame(height: 250)
                         }
-                        .padding(.top, 32)
-                        .padding([.leading, .trailing], 16)
-                        
-                        VStack(spacing: 8){
-                            HStack{
-                                Text("자기소개")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(Color("Grey700"))
-                                Spacer()
-                            }
-                            .padding(.leading, 5)
-                            TextField("bio", text: $profile_message)
-                                .padding()
-                                .background(Color(uiColor: .secondarySystemBackground))
-                                .mask(RoundedRectangle(cornerRadius: 16))
-                            Spacer()
-                        }
-                        .padding(.top, 32)
-                        .padding([.leading, .trailing], 16)
-                        .frame(height: 250)
                     }
+                    
                     
                     if self.usernameError{
                         VStack{
@@ -295,8 +301,8 @@ struct ProfileEditView: View {
             }
         }
         .navigationBarHidden(true)
-        .onReceive(chattyVM.profileEditSuccess){
-            chattyVM.profileGet(username: KeyChain.read(key: "username")!)
+        .onReceive(profileVM.profileEditSuccess) {
+            profileVM.profileGet(username: KeyChain.read(key: "username")!)
             self.profileEditProgress = false
             self.profileEditSuccess = true
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
@@ -306,8 +312,8 @@ struct ProfileEditView: View {
     }
 }
 
-struct ProfileEditView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileEditView().environmentObject(ChattyVM())
-    }
-}
+//struct ProfileEditView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileEditView().environmentObject(ChattyVM())
+//    }
+//}

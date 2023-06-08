@@ -17,7 +17,9 @@ struct ResultDetail: Codable {
     let pk: Int
     let createdDate: String
     let answeredDate: String?
+    //사용자
     let profile: Profile
+    //글질문한사람 -> nil일시 익명
     let author: Profile?
     let content: String
     let answerContent: String?

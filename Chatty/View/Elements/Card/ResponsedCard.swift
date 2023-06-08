@@ -28,13 +28,43 @@ struct ResponsedCard: View {
             Color.white
             VStack(alignment: .leading, spacing: 0){
                 HStack(spacing: 0){
-                    HStack(spacing: 0){
-                        Text("From @")
-                            .font(.system(size:12))
-                        Text("익명")
-                            .font(.system(size:12, weight: .bold))
+                    if questiondata.author != nil {
+                        HStack{
+                            KFImage(URL(string:"\(questiondata.author?.profileImage ?? "" )"))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 45, height: 45)
+                                .clipShape(Circle())
+                                .overlay(Circle()
+                                    .stroke(Color.white, lineWidth: 3))
+                                .clipped()
+                                .padding(.trailing, 8)
+                            VStack(alignment: .leading, spacing: 0){
+                                HStack(spacing: 4){
+                                    Text(questiondata.author?.profileName ?? "")
+                                        .font(Font.system(size: 16, weight: .bold))
+                                    Text("•")
+                                        .font(Font.system(size: 12, weight: .semibold))
+                                        .foregroundColor(Color.gray)
+                                    Text("\(elapsedtime(time: questiondata.createdDate))")
+                                        .font(Font.system(size: 12, weight: .semibold))
+                                        .foregroundColor(Color.gray)
+                                }
+                                .padding(.bottom, 8)
+                                Text(questiondata.content)
+                                    .font(Font.system(size: 16, weight: .none))
+                                    .padding(.trailing, 5)
+                            }
+                        }
+                    }else{
+                        HStack(spacing: 0){
+                            Text("From @")
+                                .font(.system(size:12))
+                            Text("익명")
+                                .font(.system(size:12, weight: .bold))
+                        }
+                        .foregroundColor(Color("Main Primary"))
                     }
-                    .foregroundColor(Color("Main Primary"))
                     Spacer()
                     Button(action : {
                         chattyVM.username = self.username
@@ -51,14 +81,18 @@ struct ResponsedCard: View {
                                 .font(Font.system(size: 16, weight: .bold))
                         }
                         .frame(width: 20, height: 20)
+                        .padding(questiondata.author == nil ? 0 : 10)
                     }
                 }
                 .padding(.bottom, 4)
                 //질문 내용
-                Text("\(questiondata.content)")
-                    .font(Font.system(size: 16, weight: .none))
-                    .padding(.bottom, 16)
-                    .padding(.trailing, 15)
+                if questiondata.author == nil {
+                    Text("\(questiondata.content)")
+                        .font(Font.system(size: 16, weight: .none))
+                        .padding(.bottom, 16)
+                        .padding(.trailing, 15)
+                }
+                
                 //딥변 영역
                 HStack(alignment: .top, spacing: 0){
                     //답변 표현 화살표
@@ -68,7 +102,7 @@ struct ResponsedCard: View {
                         .font(Font.system(size: 16, weight: .bold))
                         .padding([.top, .trailing], 4)
                     //Profile 사진
-                    KFImage(URL(string:"\(profile_image)"))
+                    KFImage(URL(string:"\(questiondata.profile.profileImage)"))
                         .resizable()
                         .scaledToFill()
                         .frame(width: 45, height: 45)
@@ -79,7 +113,7 @@ struct ResponsedCard: View {
                         .padding(.trailing, 8)
                     VStack(alignment: .leading, spacing: 0){
                         HStack(spacing: 4){
-                            Text("\(profile_name)")
+                            Text("\(questiondata.profile.profileName)")
                                 .font(Font.system(size: 16, weight: .bold))
                             Text("•")
                                 .font(Font.system(size: 12, weight: .semibold))
@@ -94,6 +128,7 @@ struct ResponsedCard: View {
                             .padding(.trailing, 5)
                     }
                 }
+                .padding(.top, questiondata.author == nil ? 0 : 21)
 //                .padding(.bottom, 16)
 //                HStack(spacing: 0){
 //                    Image(systemName: "heart")

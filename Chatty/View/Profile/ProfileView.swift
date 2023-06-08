@@ -193,9 +193,9 @@ struct ProfileView: View {
                                             if !isOwner{
 
                                             } else {
-                                                Button(action:{
-                                                    chattyVM.profileEditPressed.send()
-                                                }){
+                                                NavigationLink {
+                                                    ProfileEditView(profileVM: profileVM)
+                                                } label: {
                                                     Text("프로필 수정")
                                                         .font(.system(size:14, weight: .bold))
                                                         .frame(height: 40)
@@ -206,6 +206,20 @@ struct ProfileView: View {
                                                                 .strokeBorder(Color("Pink Main"), lineWidth: 1)
                                                         )
                                                 }
+
+//                                                Button(action:{
+//                                                    chattyVM.profileEditPressed.send()
+//                                                }){
+//                                                    Text("프로필 수정")
+//                                                        .font(.system(size:14, weight: .bold))
+//                                                        .frame(height: 40)
+//                                                        .frame(width: 90)
+//                                                        .foregroundColor(Color("Pink Main"))
+//                                                        .background(
+//                                                            Capsule()
+//                                                                .strokeBorder(Color("Pink Main"), lineWidth: 1)
+//                                                        )
+//                                                }
                                             }
                                         }
                                     }
