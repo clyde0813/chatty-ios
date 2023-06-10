@@ -29,7 +29,7 @@ struct ProfileModel: Codable {
         case profileMessage = "profile_message"
         case follower, following
         case views
-        case followState = "follow_state"
+        case followState = "follow_status"
     }
 }
 
