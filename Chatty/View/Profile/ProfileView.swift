@@ -233,17 +233,30 @@ struct ProfileView: View {
                                         Text(profileVM.profileModel?.profileMessage ?? "")
                                             .font(Font.system(size: 16, weight: .light))
                                     }
-//                                    HStack{
-//                                        Text("\(follower)")
-//                                            .font(Font.system(size: 18, weight: .bold))
-//                                        Text("팔로워")
-//                                            .font(Font.system(size: 14, weight: .light))
-//                                            .padding(.trailing, 20)
-//                                        Text("\(following)")
-//                                            .font(Font.system(size: 18, weight: .bold))
-//                                        Text("팔로잉")
-//                                            .font(Font.system(size: 14, weight: .light))
-//                                    }
+                                    HStack{
+                                        //2022.06.11 신현호
+                                        NavigationLink {
+                                            TestView()
+                                        } label: {
+                                            Text("\(profileVM.profileModel?.follower ?? 0)")
+                                                .font(Font.system(size: 18, weight: .bold))
+                                                .foregroundColor(.black)
+                                            Text("팔로워")
+                                                .font(Font.system(size: 14, weight: .light))
+                                                .padding(.trailing, 20)
+                                                .foregroundColor(.black)
+                                        }
+                                        NavigationLink {
+                                            TestView()
+                                        } label: {
+                                            Text("\(profileVM.profileModel?.following ?? 0)")
+                                                .font(Font.system(size: 18, weight: .bold))
+                                                .foregroundColor(.black)
+                                            Text("팔로잉")
+                                                .font(Font.system(size: 14, weight: .light))
+                                                .foregroundColor(.black)
+                                        }
+                                    }
                                 }
                                 .padding([.leading, .trailing], 16)
                                 HStack(spacing: 0) {
