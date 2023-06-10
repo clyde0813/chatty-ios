@@ -23,6 +23,8 @@ struct LoginView: View {
     
     @State private var isShowPassword = true
     
+    @GestureState private var dragOffset = CGSize.zero
+    
     //MARK: - 메인뷰
     var body: some View {
         if self.loginSuccess || UserDefaults.standard.bool(forKey: "isLoggedIn"){
@@ -145,10 +147,18 @@ struct LoginView: View {
                     }
                     
                 })
+                
                 .onTapGesture {
                     endEditing()
                 }
             }
+            
+            .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+                        if(value.startLocation.x < 20 && value.translation.width > 100) {
+                            dismiss()
+                        }
+                    }))
+            
         }
     }
 }

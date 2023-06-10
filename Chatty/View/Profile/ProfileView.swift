@@ -506,67 +506,19 @@ struct ProfileView: View {
                 }
                 
                 if questionPostSuccess {
-                    VStack{
-                        Spacer()
-                        HStack{
-                            Spacer()
-                            Text("질문 보내기 성공!")
-                                .frame(width: 310, height: 40)
-                                .foregroundColor(Color.white)
-                                .background(Color("Error Background"))
-                                .cornerRadius(16)
-                                .padding(.bottom, 50)
-                            Spacer()
-                        }
-                    }
+                    ProfileErrorView("질문 보내기 성공!")
                 }
                 
                 if copyButtonPressed {
-                    VStack{
-                        Spacer()
-                        HStack{
-                            Spacer()
-                            Text("복사 완료!")
-                                .frame(width: 310, height: 40)
-                                .foregroundColor(Color.white)
-                                .background(Color("Error Background"))
-                                .cornerRadius(16)
-                                .padding(.bottom, 50)
-                            Spacer()
-                        }
-                    }
+                    ProfileErrorView(msg: "복사 완료!")
                 }
                 
                 if reportSuccess {
-                    VStack{
-                        Spacer()
-                        HStack{
-                            Spacer()
-                            Text("신고가 접수되었습니다!")
-                                .frame(width: 310, height: 40)
-                                .foregroundColor(Color.white)
-                                .background(Color("Error Background"))
-                                .cornerRadius(16)
-                                .padding(.bottom, 50)
-                            Spacer()
-                        }
-                    }
+                    ProfileErrorView(msg: "신고가 접수되었습니다!")
                 }
                 
                 if deleteSuccess {
-                    VStack{
-                        Spacer()
-                        HStack{
-                            Spacer()
-                            Text("삭제가 완료되었습니다!")
-                                .frame(width: 310, height: 40)
-                                .foregroundColor(Color.white)
-                                .background(Color("Error Background"))
-                                .cornerRadius(16)
-                                .padding(.bottom, 50)
-                            Spacer()
-                        }
-                    }
+                    ProfileErrorView(msg: "삭제가 완료되었습니다!")
                 }
             }
             .ignoresSafeArea(.all, edges: .top)
@@ -691,6 +643,25 @@ struct ProfileView: View {
         self.currentQuestionPage = 1
         profileVM.profileGet(username: username)
         questionVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+    }
+}
+
+struct ProfileErrorView : View {
+    @State var msg : String
+    var body: some View{
+        VStack{
+            Spacer()
+            HStack{
+                Spacer()
+                Text(msg)
+                    .frame(width: 310, height: 40)
+                    .foregroundColor(Color.white)
+                    .background(Color("Error Background"))
+                    .cornerRadius(16)
+                    .padding(.bottom, 50)
+                Spacer()
+            }
+        }
     }
 }
 

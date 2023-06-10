@@ -7,13 +7,14 @@
 
 import SwiftUI
 import Kingfisher
-
+import Combine
 struct ResponsedCard: View {
     @EnvironmentObject var chattyVM: ChattyVM
     
     @State var width : CGFloat = 0.0
     
     @State var questiondata : ResultDetail
+    
     
     var body: some View {
         ZStack{
@@ -22,15 +23,20 @@ struct ResponsedCard: View {
                 HStack(spacing: 0){
                     if questiondata.author != nil {
                         HStack{
-                            KFImage(URL(string:"\(questiondata.author?.profileImage ?? "" )"))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 45, height: 45)
-                                .clipShape(Circle())
-                                .overlay(Circle()
-                                    .stroke(Color.white, lineWidth: 3))
-                                .clipped()
-                                .padding(.trailing, 8)
+                            NavigationLink {
+                                ProfileView(username: .constant(questiondata.author?.username ?? ""), isOwner: false)
+                            } label: {
+                                KFImage(URL(string:"\(questiondata.author?.profileImage ?? "" )"))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 45, height: 45)
+                                    .clipShape(Circle())
+                                    .overlay(Circle()
+                                        .stroke(Color.white, lineWidth: 3))
+                                    .clipped()
+                                    .padding(.trailing, 8)
+                            }
+                            
                             VStack(alignment: .leading, spacing: 0){
                                 HStack(spacing: 4){
                                     Text(questiondata.author?.profileName ?? "")
@@ -65,6 +71,7 @@ struct ResponsedCard: View {
                         chattyVM.background_image = questiondata.profile.backgroundImage
                         chattyVM.questiondata = self.questiondata
                         chattyVM.questionOptionStatus = true
+                        
                     }){
                         ZStack{
                             Image(systemName: "ellipsis")
@@ -93,15 +100,21 @@ struct ResponsedCard: View {
                         .font(Font.system(size: 16, weight: .bold))
                         .padding([.top, .trailing], 4)
                     //Profile 사진
-                    KFImage(URL(string:"\(questiondata.profile.profileImage)"))
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 45, height: 45)
-                        .clipShape(Circle())
-                        .overlay(Circle()
-                            .stroke(Color.white, lineWidth: 3))
-                        .clipped()
-                        .padding(.trailing, 8)
+                    NavigationLink {
+                        ProfileView(username: .constant(questiondata.profile.username), isOwner: false)
+                    } label: {
+                        KFImage(URL(string:"\(questiondata.profile.profileImage)"))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 45, height: 45)
+                            .clipShape(Circle())
+                            .overlay(Circle()
+                                .stroke(Color.white, lineWidth: 3))
+                            .clipped()
+                            .padding(.trailing, 8)
+                    }
+
+                    
                     VStack(alignment: .leading, spacing: 0){
                         HStack(spacing: 4){
                             Text("\(questiondata.profile.profileName)")
@@ -144,6 +157,7 @@ struct ResponsedCard: View {
         .fixedSize(horizontal: false, vertical: true)
         .mask(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
+        
     }
 }
 //
