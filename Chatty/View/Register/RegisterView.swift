@@ -32,6 +32,10 @@ struct RegisterView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @GestureState private var dragOffset = CGSize.zero
+
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         if registerVM.registerSuccess || UserDefaults.standard.bool(forKey: "isLoggedIn"){
             MainView()
@@ -230,8 +234,10 @@ struct RegisterView: View {
                         .disabled(registerVM.checkRegister())
                     }
                 }
+                
                 .padding([.leading, .trailing], 20)
                 .navigationBarHidden(true)
+                
                 if usernameError {
                     ErrorView(message: "사용할 수 없는 아이디입니다.")
                 }
@@ -245,6 +251,11 @@ struct RegisterView: View {
                 }
                 
             }
+            .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+                        if(value.startLocation.x < 20 && value.translation.width > 100) {
+                            dismiss()
+                        }
+                    }))
             .onTapGesture {
                 endEditing()
             }
