@@ -21,6 +21,8 @@ struct ProfileView: View {
 
     @Binding var username: String
     
+    @State var selectFollow : followTab = .follow
+    
     @State var isOwner: Bool
         
     @State var offset: CGFloat = 0
@@ -49,6 +51,7 @@ struct ProfileView: View {
     @State var reportSuccess : Bool = false
     
     @State var deleteSuccess : Bool = false
+    
     
     var body: some View {
         GeometryReader { proxy in
@@ -192,7 +195,34 @@ struct ProfileView: View {
                                         Spacer()
                                         ZStack{
                                             if !isOwner{
-
+                                                Button {
+                                                    print("onClick Follow!")
+                                                    profileVM.Follow(username: profileVM.profileModel?.username ?? "")
+                                                } label: {
+                                                    if let followState = profileVM.profileModel?.followState {
+                                                        if !followState {
+                                                            Text("팔로우")
+                                                                .font(.system(size:14, weight: .bold))
+                                                                .frame(height: 40)
+                                                                .frame(width: 90)
+                                                                .foregroundColor(Color("Pink Main"))
+                                                                .background(
+                                                                    Capsule()
+                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                                )
+                                                        }else{
+                                                            Text("언팔로우")
+                                                                .font(.system(size:14, weight: .bold))
+                                                                .frame(height: 40)
+                                                                .frame(width: 90)
+                                                                .foregroundColor(Color("Pink Main"))
+                                                                .background(
+                                                                    Capsule()
+                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                                )
+                                                        }
+                                                    }
+                                                }
                                             } else {
                                                 NavigationLink {
                                                     ProfileEditView(profileVM: profileVM)
@@ -233,17 +263,34 @@ struct ProfileView: View {
                                         Text(profileVM.profileModel?.profileMessage ?? "")
                                             .font(Font.system(size: 16, weight: .light))
                                     }
-//                                    HStack{
-//                                        Text("\(follower)")
-//                                            .font(Font.system(size: 18, weight: .bold))
-//                                        Text("팔로워")
-//                                            .font(Font.system(size: 14, weight: .light))
-//                                            .padding(.trailing, 20)
-//                                        Text("\(following)")
-//                                            .font(Font.system(size: 18, weight: .bold))
-//                                        Text("팔로잉")
-//                                            .font(Font.system(size: 14, weight: .light))
-//                                    }
+                                    
+                                    //MARK: - follow/following
+                                    HStack{
+                                        //2022.06.11 신현호
+                                        NavigationLink {
+                                            FollowView(username: $username, currentTab: $selectFollow )
+                                        } label: {
+                                            Text("\(profileVM.profileModel?.follower ?? 0)")
+                                                .font(Font.system(size: 18, weight: .bold))
+                                                .foregroundColor(.black)
+                                            Text("팔로워")
+                                                .font(Font.system(size: 14, weight: .light))
+                                                .padding(.trailing, 20)
+                                                .foregroundColor(.black)
+                                        }
+                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follow})
+                                        NavigationLink {
+                                            FollowView(username: $username, currentTab: $selectFollow)
+                                        } label: {
+                                            Text("\(profileVM.profileModel?.following ?? 0)")
+                                                .font(Font.system(size: 18, weight: .bold))
+                                                .foregroundColor(.black)
+                                            Text("팔로잉")
+                                                .font(Font.system(size: 14, weight: .light))
+                                                .foregroundColor(.black)
+                                        }
+                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .following})
+                                    }
                                 }
                                 .padding([.leading, .trailing], 16)
                                 HStack(spacing: 0) {
@@ -506,7 +553,7 @@ struct ProfileView: View {
                 }
                 
                 if questionPostSuccess {
-                    ProfileErrorView(msg: "질문 보내기 성공!")
+                    ProfileErrorView(msg:"질문 보내기 성공!")
                 }
                 
                 if copyButtonPressed {
@@ -524,13 +571,12 @@ struct ProfileView: View {
             .ignoresSafeArea(.all, edges: .top)
             .onAppear(perform: {
                 self.initProfileView()
+                
             })
             .onReceive(questionVM.isSuccessGetQuestion){ result in
                 if result {
-                    print("!")
                     self.isQuestionEmpty = false
                 } else {
-                    print("!!")
                     self.isQuestionEmpty = true
                 }
             }
@@ -588,6 +634,7 @@ struct ProfileView: View {
             }
         }
         .navigationBarHidden(true)
+        
     }
     
     func getOffset()->CGFloat{
@@ -666,8 +713,8 @@ struct ProfileErrorView : View {
 }
 
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView(username: .constant("TestAccount1"), isOwner: true).environmentObject(ChattyVM())
-    }
-}
+//struct ProfileView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileView(username: .constant("TestAccount1"), isOwner: true).environmentObject(ChattyVM())
+//    }
+//}
