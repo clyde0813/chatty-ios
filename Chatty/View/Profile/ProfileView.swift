@@ -52,6 +52,7 @@ struct ProfileView: View {
     
     @State var deleteSuccess : Bool = false
     
+    
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
@@ -194,7 +195,34 @@ struct ProfileView: View {
                                         Spacer()
                                         ZStack{
                                             if !isOwner{
-
+                                                Button {
+                                                    print("onClick Follow!")
+                                                    profileVM.Follow(username: profileVM.profileModel?.username ?? "")
+                                                } label: {
+                                                    if let followState = profileVM.profileModel?.followState {
+                                                        if !followState {
+                                                            Text("팔로우")
+                                                                .font(.system(size:14, weight: .bold))
+                                                                .frame(height: 40)
+                                                                .frame(width: 90)
+                                                                .foregroundColor(Color("Pink Main"))
+                                                                .background(
+                                                                    Capsule()
+                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                                )
+                                                        }else{
+                                                            Text("언팔로우")
+                                                                .font(.system(size:14, weight: .bold))
+                                                                .frame(height: 40)
+                                                                .frame(width: 90)
+                                                                .foregroundColor(Color("Pink Main"))
+                                                                .background(
+                                                                    Capsule()
+                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                                )
+                                                        }
+                                                    }
+                                                }
                                             } else {
                                                 NavigationLink {
                                                     ProfileEditView(profileVM: profileVM)
@@ -240,7 +268,7 @@ struct ProfileView: View {
                                     HStack{
                                         //2022.06.11 신현호
                                         NavigationLink {
-                                            FollowView(username: $username, currentTab: $selectFollow)
+                                            FollowView(username: $username, currentTab: $selectFollow )
                                         } label: {
                                             Text("\(profileVM.profileModel?.follower ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -543,13 +571,12 @@ struct ProfileView: View {
             .ignoresSafeArea(.all, edges: .top)
             .onAppear(perform: {
                 self.initProfileView()
+                
             })
             .onReceive(questionVM.isSuccessGetQuestion){ result in
                 if result {
-                    print("!")
                     self.isQuestionEmpty = false
                 } else {
-                    print("!!")
                     self.isQuestionEmpty = true
                 }
             }
@@ -607,6 +634,7 @@ struct ProfileView: View {
             }
         }
         .navigationBarHidden(true)
+        
     }
     
     func getOffset()->CGFloat{
