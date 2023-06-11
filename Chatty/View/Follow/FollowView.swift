@@ -18,7 +18,7 @@ struct FollowView: View {
     
     @State var currentPage = 1
     
-    @State var isFollowEmpty = false
+    @State var isProgressBar = true
     
     
     
@@ -142,88 +142,90 @@ extension FollowView {
         GeometryReader{ proxy in
             ScrollView(showsIndicators: false){
                 LazyVStack(spacing: 16){
-                    if let followList = followVM.followModel?.results {
-                        if self.currentTab == .follow {
-                            ForEach(followList,id:\.userID) { follow in
-                                HStack(spacing: 24){
-                                    NavigationLink {
-                                        ProfileView(username: .constant(follow.username),isOwner: false)
-                                    } label: {
-                                        KFImage(URL(string: follow.profileImage ))
+                    if isProgressBar {
+                        VStack{
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                    }
+                    else{
+                        if let followList = followVM.followModel?.results {
+                            if self.currentTab == .follow {
+                                ForEach(followList,id:\.userID) { follow in
+                                    HStack(spacing: 24){
+                                        NavigationLink {
+                                            ProfileView(username: .constant(follow.username),isOwner: false)
+                                        } label: {
+                                            KFImage(URL(string: follow.profileImage ))
+                                                .resizable()
+                                                .clipShape(Circle())
+                                                .scaledToFill()
+                                                .frame(width: 48, height: 48)
+                                                .clipped()
+                                        }
+                                        Text("\(follow.profile_name)")
+                                            .font(Font.system(size: 14, weight: .bold))
+                                        Spacer()
+                                        if follow.followState == false{
+                                            Button {
+                                                print("!!")
+                                            } label: {
+                                                Text("맞팔로잉")
+                                                    .font(Font.system(size: 14, weight: .bold))
+                                                    .foregroundColor(Color.white)
+                                                    .frame(width:80, height: 28)
+                                                    .background(Capsule()
+                                                        .foregroundColor(Color("Main Secondary"))
+                                                    )
+                                            }
+                                        }else{
+                                            Button {
+                                                print("!!")
+                                            } label: {
+                                                Text("팔로잉")
+                                                    .font(Font.system(size: 14, weight: .bold))
+                                                    .foregroundColor(Color.white)
+                                                    .frame(width:80, height: 28)
+                                                    .background(Capsule()
+                                                        .foregroundColor(Color("Grey300"))
+                                                    )
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, 32)
+                                    .padding(.vertical,5)
+                                    .onAppear{
+                                        callNextFollow(followData: follow)
+                                    }
+                                }
+                            }
+                            else if self.currentTab == .following {
+                                ForEach(followList,id:\.userID) { following in
+                                    HStack(spacing: 24){
+                                        KFImage(URL(string: following.profileImage ))
                                             .resizable()
                                             .clipShape(Circle())
                                             .scaledToFill()
                                             .frame(width: 48, height: 48)
                                             .clipped()
+                                        Text("\(following.profile_name)")
+                                            .font(Font.system(size: 14, weight: .bold))
+                                        Spacer()
+                                        Text("팔로잉")
+                                            .font(Font.system(size: 14, weight: .bold))
+                                            .foregroundColor(Color.white)
+                                            .frame(width:80, height: 28)
+                                            .background(Capsule()
+                                                .foregroundColor(Color("Grey300"))
+                                            )
                                     }
-                                    Text("\(follow.profile_name)")
-                                        .font(Font.system(size: 14, weight: .bold))
-                                    Spacer()
-                                    if follow.followState == false{
-                                        Button {
-                                            print("!!")
-                                        } label: {
-                                            Text("맞팔로잉")
-                                                .font(Font.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .frame(width:80, height: 28)
-                                                .background(Capsule()
-                                                    .foregroundColor(Color("Main Secondary"))
-                                                )
-                                        }
-                                    }else{
-                                        Button {
-                                            print("!!")
-                                        } label: {
-                                            Text("팔로잉")
-                                                .font(Font.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .frame(width:80, height: 28)
-                                                .background(Capsule()
-                                                    .foregroundColor(Color("Grey300"))
-                                                )
-                                        }
+                                    .padding(.horizontal, 32)
+                                    .padding(.vertical,5)
+                                    .onAppear{
+                                        callNextFollow(followData: following)
                                     }
                                 }
-                                .padding(.horizontal, 32)
-                                .padding(.vertical,5)
-                            }
-                        }
-                        else if self.currentTab == .following {
-                            ForEach(followList,id:\.userID) { following in
-                                HStack(spacing: 24){
-                                    KFImage(URL(string: following.profileImage ))
-                                        .resizable()
-                                        .clipShape(Circle())
-                                        .scaledToFill()
-                                        .frame(width: 48, height: 48)
-                                        .clipped()
-                                    Text("\(following.profile_name)")
-                                        .font(Font.system(size: 14, weight: .bold))
-                                    Spacer()
-                                    Text("팔로잉")
-                                        .font(Font.system(size: 14, weight: .bold))
-                                        .foregroundColor(Color.white)
-                                        .frame(width:80, height: 28)
-                                        .background(Capsule()
-                                            .foregroundColor(Color("Grey300"))
-                                        )
-                                }
-                                .padding(.horizontal, 32)
-                                .padding(.vertical,5)
-                            }
-                        }
-                    }
-                    else{
-                        if isFollowEmpty{
-                            VStack{
-                                Text("헤헤 병신~ 팔로우 팔로잉 없데여 ㅋㅋ")
-                            }
-                        }else{
-                            VStack{
-                                Spacer()
-                                ProgressView()
-                                Spacer()
                             }
                         }
                     }
@@ -233,8 +235,8 @@ extension FollowView {
             .frame(height: proxy.size.height)
             .frame(maxHeight: .infinity)
         }
-        .onReceive(followVM.isEmptyList){
-            isFollowEmpty = true
+        .onReceive(followVM.isGetFollowSuccess){
+            isProgressBar = false
         }
         
     }
@@ -246,6 +248,13 @@ extension FollowView {
     func initFollowView(){
         followVM.followModel = nil
         followVM.followGet(username: username, page: 1, tab: currentTab.rawValue)
+    }
+    
+    func callNextFollow(followData : ProfileModel){
+        if followVM.followModel?.results.isEmpty == false && followVM.followModel?.next != nil && followData.userID == followVM.followModel?.results.last?.userID{
+            self.currentPage += 1
+            followVM.followGet(username: username, page: currentPage, tab: currentTab.rawValue)
+        }
     }
 }
 
