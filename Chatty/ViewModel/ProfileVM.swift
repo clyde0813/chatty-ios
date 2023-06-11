@@ -13,7 +13,6 @@ import Foundation
 class ProfileVM : ObservableObject {    
     @Published var profileModel : ProfileModel? = nil
     
-
     let token = TokenVM()
     
     var profileEditSuccess = PassthroughSubject<(), Never>()
@@ -21,10 +20,15 @@ class ProfileVM : ObservableObject {
     func profileGet(username: String){
         let url = "https://chatty.kr/api/v1/user/profile/\(username)"
         
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json",
+                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
         AF.request(url,
                    method: .get,
                    encoding: JSONEncoding.default,
-                   headers: ["Content-Type":"application/json", "Accept":"application/json"])
+                   headers: headers)
         .responseDecodable(of: ProfileModel.self){ response in
             switch response.result {
             case .success(let data):
@@ -95,4 +99,32 @@ class ProfileVM : ObservableObject {
     func SumOfQuestion() -> Int{
         return (profileModel?.questionCount.answered ?? 0) + (profileModel?.questionCount.unanswered ?? 0) + (profileModel?.questionCount.rejected ?? 0)
     }
+    
+    func Follow(username : String) {
+        let url = "https://chatty.kr/api/v1/user/follow"
+        
+        var headers : HTTPHeaders = []
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let parameters: [String: String] = [
+            "username" : username
+        ]
+        
+        AF.request(url,
+                   method: .post,
+                   parameters: parameters,
+                   encoding: JSONEncoding.default,
+                   headers: headers)
+        .response{ response in
+            switch response.response?.statusCode {
+            case 201 :
+                print("실패")
+            case 200:
+                print("성공")
+            default :
+                print("error")
+            }
+        }
+    }
+    
 }

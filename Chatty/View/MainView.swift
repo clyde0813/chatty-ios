@@ -50,13 +50,16 @@ struct MainView: View {
         if self.logoutStatus{
             IndexView()
         } else {
-            NavigationStack{
+//            NavigationStack{
                 TabView (selection: $currentTab) {
-                    TimelineView()
-                        .tag(BottomTab.home)
+                    NavigationView{
+                        TimelineView()
+                            
+                    }.tag(BottomTab.home)
                         .tabItem{
                             Image(systemName: "house.fill")
                             Text("홈")}
+                    
 //                    CommunityView()
 //                        .tag(BottomTab.community)
 //                        .tabItem{
@@ -100,7 +103,7 @@ struct MainView: View {
 //                    ProfileEditView()
 //                }
                 
-            }
+//            }
             
         }
     }
