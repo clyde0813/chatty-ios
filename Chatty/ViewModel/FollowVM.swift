@@ -47,6 +47,32 @@ class FollowVM : ObservableObject{
         }
     }
     
+    func Follow(username : String) {
+        let url = "https://chatty.kr/api/v1/user/follow"
+        
+        var headers : HTTPHeaders = []
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let parameters: [String: String] = [
+            "username" : username
+        ]
+        
+        AF.request(url,
+                   method: .post,
+                   parameters: parameters,
+                   encoding: JSONEncoding.default,
+                   headers: headers)
+        .response{ response in
+            switch response.response?.statusCode {
+            case 201 :
+                print("실패")
+            case 200:
+                print("성공")
+            default :
+                print("error")
+            }
+        }
+    }
 //    func followingGet(username: String, page : Int){
 //        let url = "https://chatty.kr/api/v1/user/profile/\(username)/followings"
 //        let params: Parameters = [
