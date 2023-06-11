@@ -5,7 +5,7 @@ import Foundation
 class FollowVM : ObservableObject{
     @Published var followModel : FollowModel? = nil
     
-    var isEmptyList = PassthroughSubject<(),Never>()
+    var isGetFollowSuccess = PassthroughSubject<(),Never>()
     
     func followGet(username: String, page : Int, tab:String){
         let url = "https://chatty.kr/api/v1/user/profile/\(username)/\(tab)"
@@ -28,12 +28,14 @@ class FollowVM : ObservableObject{
             switch response.result {
             case .success(let data):
                 print("Follow get : Success")
-                if data.results.isEmpty {
-                    self.isEmptyList.send()
-                }else{
+                if self.followModel == nil {
                     self.followModel = data
+                }else{
+                    self.followModel?.results += data.results
+                    self.followModel?.next = data.next
+                    self.followModel?.previous = data.previous
                 }
-                print(self.followModel)
+                self.isGetFollowSuccess.send()
             case .failure(_):
                 print("Follow get : Failed")
                 print(response)
