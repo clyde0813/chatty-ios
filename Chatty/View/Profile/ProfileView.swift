@@ -506,7 +506,7 @@ struct ProfileView: View {
                 }
                 
                 if questionPostSuccess {
-                    ProfileErrorView("질문 보내기 성공!")
+                    ProfileErrorView(msg: "질문 보내기 성공!")
                 }
                 
                 if copyButtonPressed {

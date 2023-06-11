@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct GenericListModel<T: Codable>: Codable {
+    var next, previous: Int?
+    var results: [T]
+}

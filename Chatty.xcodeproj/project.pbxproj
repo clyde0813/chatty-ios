@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2E0B64892A3213F100EE7F90 /* QuestionVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B64882A3213F100EE7F90 /* QuestionVM.swift */; };
+		2E0B648E2A34E20000EE7F90 /* UserSearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B648D2A34E20000EE7F90 /* UserSearchVM.swift */; };
+		2E0B64912A34E24600EE7F90 /* UserSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B64902A34E24600EE7F90 /* UserSearchView.swift */; };
+		2E0B64932A350D3000EE7F90 /* GenericListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B64922A350D3000EE7F90 /* GenericListModel.swift */; };
 		2E0B9958297F507000BDC534 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B9957297F507000BDC534 /* UserData.swift */; };
 		2E0B996C297F5CB700BDC534 /* ChattyVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B996B297F5CB700BDC534 /* ChattyVM.swift */; };
 		2E23386829EAFA1A00DF6E2F /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E23386729EAFA1A00DF6E2F /* BlurView.swift */; };
@@ -83,6 +86,9 @@
 		03CAD13A5370E1EBA2C783E3 /* Pods-Chatty-ChattyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatty-ChattyUITests.debug.xcconfig"; path = "Target Support Files/Pods-Chatty-ChattyUITests/Pods-Chatty-ChattyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		08ACB0F087F69EBB0E5E74FA /* Pods-ChattyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattyTests.release.xcconfig"; path = "Target Support Files/Pods-ChattyTests/Pods-ChattyTests.release.xcconfig"; sourceTree = "<group>"; };
 		2E0B64882A3213F100EE7F90 /* QuestionVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionVM.swift; sourceTree = "<group>"; };
+		2E0B648D2A34E20000EE7F90 /* UserSearchVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchVM.swift; sourceTree = "<group>"; };
+		2E0B64902A34E24600EE7F90 /* UserSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchView.swift; sourceTree = "<group>"; };
+		2E0B64922A350D3000EE7F90 /* GenericListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericListModel.swift; sourceTree = "<group>"; };
 		2E0B9957297F507000BDC534 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		2E0B996B297F5CB700BDC534 /* ChattyVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattyVM.swift; sourceTree = "<group>"; };
 		2E23386729EAFA1A00DF6E2F /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
@@ -180,6 +186,22 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		2E0B648C2A34E1B700EE7F90 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B648D2A34E20000EE7F90 /* UserSearchVM.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		2E0B648F2A34E23200EE7F90 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B64902A34E24600EE7F90 /* UserSearchView.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		2E0B9956297F504000BDC534 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +212,7 @@
 				2E9D85BD29DBB657007C9904 /* ErrorModel.swift */,
 				2EDF751129F03AEC006D7257 /* RankingModel.swift */,
 				2E8747E229F84ADF00839360 /* CurrentUserModel.swift */,
+				2E0B64922A350D3000EE7F90 /* GenericListModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -197,6 +220,7 @@
 		2E0B996A297F5CA900BDC534 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				2E0B648C2A34E1B700EE7F90 /* Search */,
 				2E0B996B297F5CB700BDC534 /* ChattyVM.swift */,
 				2EB068992A262551002E9D7A /* LoginVM.swift */,
 				2EB0689B2A2626B0002E9D7A /* RegisterVM.swift */,
@@ -334,6 +358,7 @@
 		2ED68B08295304BF007F5EA7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2E0B648F2A34E23200EE7F90 /* Search */,
 				2E7E27592A2C60B200651366 /* Timeline */,
 				2E9D03A429A691FD0042F0AE /* MainView.swift */,
 				2E71BD4929F55FD100D17200 /* MyPage */,
@@ -746,16 +771,19 @@
 				2E80F34A29E30A08002280D5 /* RoundedCornersShape.swift in Sources */,
 				2E71BD4129F2281A00D17200 /* MessageBoxShape.swift in Sources */,
 				2E0B996C297F5CB700BDC534 /* ChattyVM.swift in Sources */,
+				2E0B64912A34E24600EE7F90 /* UserSearchView.swift in Sources */,
 				2E80F33F29E2E70B002280D5 /* NewQuestionButton.swift in Sources */,
 				2E7E275B2A2C60B200651366 /* TimelineView.swift in Sources */,
 				2E3114DC2A08CB930052B309 /* PrivacyEditView.swift in Sources */,
 				2E5F21F429AD4D31003B2A14 /* TokenModel.swift in Sources */,
 				2E80F33B29E2D665002280D5 /* RefusedCard.swift in Sources */,
+				2E0B648E2A34E20000EE7F90 /* UserSearchVM.swift in Sources */,
 				2EDF751429F0ECFA006D7257 /* IntExtensions.swift in Sources */,
 				2E71BD4D29F579F900D17200 /* Test.swift in Sources */,
 				2E23386829EAFA1A00DF6E2F /* BlurView.swift in Sources */,
 				2EF5AC8F29AEB1940019A37D /* TextExtensions.swift in Sources */,
 				2E23386A29EB50E500DF6E2F /* AnswerEditor.swift in Sources */,
+				2E0B64932A350D3000EE7F90 /* GenericListModel.swift in Sources */,
 				2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */,
 				2E0B9958297F507000BDC534 /* UserData.swift in Sources */,
 				2E7E27602A2C6DC400651366 /* TokenVM.swift in Sources */,

@@ -8,8 +8,8 @@
 import SwiftUI
 import Kingfisher
 
-struct SearchUserView: View {
-    @StateObject var searchUserVM = SearchUserVM()
+struct UserSearchView: View {
+    @StateObject var userSearchVM = UserSearchVM()
     
     @State var keyword: String = ""
     
@@ -28,7 +28,7 @@ struct SearchUserView: View {
     
 }
 
-extension SearchUserView {
+extension UserSearchView {
     var navBar : some View {
         HStack{
             TextField("검색어를 입력해주세요.", text: $keyword)
@@ -49,23 +49,41 @@ extension SearchUserView {
                 Color.white
                 HStack{
                     //profile image & ID + Profile Name Area
-                    HStack(spacing: 12){
-                        KFImage(URL(string:"https://www.tclf.org/sites/default/files/microsites/raleigh2018/images/portfolio/geuze_headshot.jpg"))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 48, height: 48)
-                            .clipShape(Circle())
-                            .clipped()
-                            .padding(.trailing, 8)
-                        VStack(alignment: .center, spacing: 4){
-                            Text("푸바오")
-                                .font(Font.system(size: 14, weight: .semibold))
-                            Text("@rre_1102")
-                                .font(Font.system(size: 11, weight: .light))
-                                .foregroundColor(Color("Text Light Secondary"))
+                    NavigationLink {
+                        ProfileView(username: .constant("Test12343"), isOwner: false)
+                    } label: {
+                        HStack(spacing: 12){
+                            KFImage(URL(string:"https://www.tclf.org/sites/default/files/microsites/raleigh2018/images/portfolio/geuze_headshot.jpg"))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 48, height: 48)
+                                .clipShape(Circle())
+                                .clipped()
+                                .padding(.trailing, 8)
+                            VStack(alignment: .center, spacing: 4){
+                                Text("푸바오")
+                                    .font(Font.system(size: 14, weight: .semibold))
+                                Text("@rre_1102")
+                                    .font(Font.system(size: 11, weight: .light))
+                                    .foregroundColor(Color("Text Light Secondary"))
+                            }
                         }
                     }
-                    
+                    Spacer()
+                    Button(action: {
+                        
+                    }){
+                        Text("팔로우")
+                            .font(.system(size:14, weight: .bold))
+                            .frame(width: 45, height: 18)
+                            .foregroundColor(Color.white)
+                            .padding(.vertical,10)
+                            .padding(.horizontal)
+                            .background(
+                                Capsule()
+                                    .fill(Color("Pink Main"))
+                            )
+                    }
                     //Follow button
                     
                 }
@@ -80,8 +98,8 @@ extension SearchUserView {
     }
 }
 
-struct SearchUserView_Previews: PreviewProvider {
+struct UserSearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchUserView()
+        UserSearchView()
     }
 }
