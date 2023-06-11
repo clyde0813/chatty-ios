@@ -21,6 +21,8 @@ struct ProfileView: View {
 
     @Binding var username: String
     
+    @State var selectFollow : followTab = .follow
+    
     @State var isOwner: Bool
         
     @State var offset: CGFloat = 0
@@ -233,10 +235,12 @@ struct ProfileView: View {
                                         Text(profileVM.profileModel?.profileMessage ?? "")
                                             .font(Font.system(size: 16, weight: .light))
                                     }
+                                    
+                                    //MARK: - follow/following
                                     HStack{
                                         //2022.06.11 신현호
                                         NavigationLink {
-                                            TestView()
+                                            FollowView(username: $username, currentTab: $selectFollow)
                                         } label: {
                                             Text("\(profileVM.profileModel?.follower ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -246,8 +250,9 @@ struct ProfileView: View {
                                                 .padding(.trailing, 20)
                                                 .foregroundColor(.black)
                                         }
+                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follow})
                                         NavigationLink {
-                                            TestView()
+                                            FollowView(username: $username, currentTab: $selectFollow)
                                         } label: {
                                             Text("\(profileVM.profileModel?.following ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -256,6 +261,7 @@ struct ProfileView: View {
                                                 .font(Font.system(size: 14, weight: .light))
                                                 .foregroundColor(.black)
                                         }
+                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .following})
                                     }
                                 }
                                 .padding([.leading, .trailing], 16)
@@ -679,8 +685,8 @@ struct ProfileErrorView : View {
 }
 
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView(username: .constant("TestAccount1"), isOwner: true).environmentObject(ChattyVM())
-    }
-}
+//struct ProfileView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileView(username: .constant("TestAccount1"), isOwner: true).environmentObject(ChattyVM())
+//    }
+//}
