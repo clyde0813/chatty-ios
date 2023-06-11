@@ -12,23 +12,28 @@ class FollowVM : ObservableObject{
         
         var headers : HTTPHeaders = []
         
-//        let params: Parameters = [
-//            "page": page
-//        ]
+        let params: Parameters = [
+            "page": page
+        ]
         
-        headers = ["Content-Type":"application/json", "Accept":"application/json"]
+        headers = ["Content-Type":"application/json", "Accept":"application/json",
+                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         AF.request(url,
                    method: .get,
-//                   parameters: params,
-                   encoding: JSONEncoding.default,
+                   parameters: params,
+                   encoding: URLEncoding.default,
                    headers: headers)
         .responseDecodable(of: FollowModel.self){ response in
             switch response.result {
             case .success(let data):
                 print("Follow get : Success")
-                print(data)
-                self.followModel = data
+                if data.results.isEmpty {
+                    self.isEmptyList.send()
+                }else{
+                    self.followModel = data
+                }
+                print(self.followModel)
             case .failure(_):
                 print("Follow get : Failed")
                 print(response)
