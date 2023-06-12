@@ -53,7 +53,7 @@ struct ProfileEditView: View {
                             .foregroundColor(Color.black)
                     }
                     Spacer()
-                    if (self.username.isEmpty || self.usernameVerify) && self.profile_name.count <= 20 && self.profile_message.count <= 20{
+                    if (self.username.isEmpty || self.usernameVerify) && self.profile_name.count <= 20 && self.profile_message.count < 50{
                         Button(action:{
                             self.profileEditProgress = true
                             
@@ -241,15 +241,17 @@ struct ProfileEditView: View {
                             .padding(.top, 32)
                             .padding([.leading, .trailing], 16)
                             
-                            VStack(spacing: 8){
+                            VStack(alignment: .leading,spacing: 8){
                                 HStack{
                                     Text("자기소개")
                                         .font(.system(size: 16, weight: .semibold))
                                         .foregroundColor(Color("Grey700"))
+                                    Text("\(profile_message.count)/50")
+                                        .font(.caption)
                                     Spacer()
                                 }
                                 .padding(.leading, 5)
-                                TextField("\(profileVM.profileModel?.profileMessage ?? "")", text: $profile_message)
+                                TextField("\(profileVM.profileModel?.profileMessage ?? "")", text: $profile_message,axis: .vertical)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
                                     .mask(RoundedRectangle(cornerRadius: 16))

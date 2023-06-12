@@ -194,10 +194,13 @@ struct ProfileView: View {
                                                 .padding(.top, -50)
                                         Spacer()
                                         ZStack{
-                                            if !isOwner{
+                                            //2022.06.13 -신현호
+                                            if profileVM.profileModel?.username != KeyChain.read(key: "username"){
                                                 Button {
                                                     print("onClick Follow!")
                                                     profileVM.Follow(username: profileVM.profileModel?.username ?? "")
+                                                    //2022.06.13 -신현호
+                                                    profileVM.profileModel?.followState.toggle()
                                                 } label: {
                                                     if let followState = profileVM.profileModel?.followState {
                                                         if !followState {
@@ -237,20 +240,6 @@ struct ProfileView: View {
                                                                 .strokeBorder(Color("Pink Main"), lineWidth: 1)
                                                         )
                                                 }
-
-//                                                Button(action:{
-//                                                    chattyVM.profileEditPressed.send()
-//                                                }){
-//                                                    Text("프로필 수정")
-//                                                        .font(.system(size:14, weight: .bold))
-//                                                        .frame(height: 40)
-//                                                        .frame(width: 90)
-//                                                        .foregroundColor(Color("Pink Main"))
-//                                                        .background(
-//                                                            Capsule()
-//                                                                .strokeBorder(Color("Pink Main"), lineWidth: 1)
-//                                                        )
-//                                                }
                                             }
                                         }
                                     }
@@ -262,6 +251,8 @@ struct ProfileView: View {
                                     if profileVM.profileModel?.profileMessage != nil {
                                         Text(profileVM.profileModel?.profileMessage ?? "")
                                             .font(Font.system(size: 16, weight: .light))
+                                        //2022.06.13 -신현호
+                                            .lineLimit(3)
                                     }
                                     
                                     //MARK: - follow/following
