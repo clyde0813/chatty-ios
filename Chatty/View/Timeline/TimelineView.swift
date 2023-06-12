@@ -127,10 +127,14 @@ extension TimelineView {
                 .scaledToFill()
                 .frame(width: 32, height: 32)
             Spacer()
-            Image(systemName: "magnifyingglass")
-                .fontWeight(.bold)
-                .font(.system(size: 28))
-                .foregroundColor(Color("Main Secondary"))
+            NavigationLink{
+                UserSearchView()
+            } label: {
+                Image(systemName: "magnifyingglass")
+                    .fontWeight(.semibold)
+                    .font(.system(size: 28))
+                    .foregroundColor(Color("Main Secondary"))
+            }
         }
         .padding(.horizontal, 16)
         .frame(height: 60)
@@ -250,9 +254,9 @@ extension TimelineView {
     }
 }
 
-//
+
 //struct TimelineView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        TimelineView()
+//        TimelineView().environmentObject(ChattyVM())
 //    }
 //}

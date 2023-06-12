@@ -2,7 +2,7 @@ import SwiftUI
 import Kingfisher
 
 enum followTab :String {
-    case follow = "followers"
+    case follower = "followers"
     case following = "followings"
     
 }
@@ -36,7 +36,7 @@ struct FollowView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear{
-            if currentTab == .follow {
+            if currentTab == .follower {
                 followVM.followGet(username: username, page: 1,tab: "followers")
             }else if currentTab == .following {
                 followVM.followGet(username: username, page: 1,tab: "followings")
@@ -75,12 +75,12 @@ extension FollowView {
             Spacer()
             ZStack(alignment: .bottom){
                 Button(action: {
-                    self.currentTab = .follow
+                    self.currentTab = .follower
                     self.initFollowView()
                 }){
-                    if currentTab == .follow {
+                    if currentTab == .follower {
                         VStack(alignment: .center, spacing: 0){
-                            Text("팔로우")
+                            Text("팔로워")
                                 .font(Font.system(size: 16, weight: .bold))
                                 .accentColor(.black)
                                 .padding(.bottom, 9)
@@ -90,7 +90,7 @@ extension FollowView {
                         }
                     } else {
                         VStack{
-                            Text("팔로우")
+                            Text("팔로워")
                                 .font(Font.system(size: 16, weight: .semibold))
                                 .foregroundColor(Color.gray)
                             Rectangle()
@@ -149,42 +149,29 @@ extension FollowView {
                     }
                     else{
                         if let followList = followVM.followModel?.results {
-                            if self.currentTab == .follow {
+                            if self.currentTab == .follower {
                                 ForEach(followList, id:\.username) { follow in
                                     HStack(spacing: 24){
                                         NavigationLink {
                                             ProfileView(username: .constant(follow.username),isOwner: false)
                                         } label: {
-                                            KFImage(URL(string: follow.profileImage ))
-                                                .resizable()
-                                                .clipShape(Circle())
-                                                .scaledToFill()
-                                                .frame(width: 48, height: 48)
-                                                .clipped()
-                                        }
-                                        Text("\(follow.profile_name)")
-                                            .font(Font.system(size: 14, weight: .bold))
-                                        Spacer()
-                                        if follow.followState == true{
-                                            Button {
-                                                followVM.Follow(username: follow.username)
-                                                let index = followVM.followModel?.results.firstIndex(where: {
-                                                    $0.username == follow.username
-                                                })
-                                                followVM.followModel?.results[index!].followState.toggle()
-                                            } label: {
-                                                Text("맞팔로잉")
-                                                    .font(Font.system(size: 14, weight: .bold))
-                                                    .foregroundColor(Color.white)
-                                                    .frame(width:80, height: 28)
-                                                    .padding(.vertical,4)
-                                                    .background(Capsule()
-                                                        .foregroundColor(Color("Main Secondary"))
-                                                    )
+                                            HStack(spacing: 24){
+                                                KFImage(URL(string: follow.profileImage ))
+                                                    .resizable()
+                                                    .clipShape(Circle())
+                                                    .scaledToFill()
+                                                    .frame(width: 48, height: 48)
+                                                    .clipped()
+                                                
+                                                Text("\(follow.profile_name)")
+                                                    .font(Font.system(size: 16, weight: .bold))
                                             }
-                                        }else{
+                                        }
+                                        .buttonStyle(.plain)
+                                        Spacer()
+                                        if follow.followState{
                                             Button {
-                                                followVM.Follow(username: follow.username)
+                                                followVM.followPost(username: follow.username)
                                                 let index = followVM.followModel?.results.firstIndex(where: {
                                                     $0.username == follow.username
                                                 })
@@ -199,6 +186,23 @@ extension FollowView {
                                                         .foregroundColor(Color("Grey300"))
                                                     )
                                                 
+                                            }
+                                        } else {
+                                            Button {
+                                                followVM.followPost(username: follow.username)
+                                                let index = followVM.followModel?.results.firstIndex(where: {
+                                                    $0.username == follow.username
+                                                })
+                                                followVM.followModel?.results[index!].followState.toggle()
+                                            } label: {
+                                                Text("맞팔로우")
+                                                    .font(Font.system(size: 14, weight: .bold))
+                                                    .foregroundColor(Color.white)
+                                                    .frame(width:80, height: 30)
+                                                    .padding(.vertical,4)
+                                                    .background(Capsule()
+                                                        .foregroundColor(Color("Main Secondary"))
+                                                    )
                                             }
                                         }
                                     }
@@ -219,7 +223,7 @@ extension FollowView {
                                             .frame(width: 48, height: 48)
                                             .clipped()
                                         Text("\(following.profile_name)")
-                                            .font(Font.system(size: 14, weight: .bold))
+                                            .font(Font.system(size: 16, weight: .bold))
                                         Spacer()
                                         Text("팔로잉")
                                             .font(Font.system(size: 14, weight: .bold))

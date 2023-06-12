@@ -21,7 +21,7 @@ struct ProfileView: View {
 
     @Binding var username: String
     
-    @State var selectFollow : followTab = .follow
+    @State var selectFollow : followTab = .follower
     
     @State var isOwner: Bool
         
@@ -278,7 +278,7 @@ struct ProfileView: View {
                                                 .padding(.trailing, 20)
                                                 .foregroundColor(.black)
                                         }
-                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follow})
+                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follower})
                                         NavigationLink {
                                             FollowView(username: $username, currentTab: $selectFollow)
                                         } label: {

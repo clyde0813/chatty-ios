@@ -17,7 +17,7 @@ class UserSearchVM: ObservableObject {
         let url = "https://chatty.kr/api/v1/user/search"
         var headers : HTTPHeaders = []
         
-        headers = ["Content-Type":"application/json", "Accept":"application/json"]
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let params: Parameters = [
             "keyword" : keyword

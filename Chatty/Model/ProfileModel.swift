@@ -16,7 +16,7 @@ struct ProfileModel: Codable {
     let profileMessage: String?
     let follower, following: Int
     let views: Int
-    let followState : Bool
+    var followState : Bool
 
     enum CodingKeys: String, CodingKey {
         case username = "username"

@@ -47,7 +47,7 @@ class FollowVM : ObservableObject{
         }
     }
     
-    func Follow(username : String) {
+    func followPost(username : String) {
         let url = "https://chatty.kr/api/v1/user/follow"
         
         var headers : HTTPHeaders = []
