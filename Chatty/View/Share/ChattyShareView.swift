@@ -149,7 +149,7 @@ struct ChattyShareView: View {
 //                                )
                             Button(action: {
                                 self.hideButton = true
-                                saveScreenshot()
+                                
                             }){
                                 Text("이미지로 저장")
                                     .font(.system(size:16, weight: .semibold))
