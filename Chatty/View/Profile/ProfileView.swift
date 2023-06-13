@@ -17,6 +17,8 @@ struct ProfileView: View {
     @StateObject var profileVM = ProfileVM()
     @StateObject private var questionVM = QuestionVM()
     
+    @StateObject var eventVM = ChattyEventVM()
+    
     @Environment(\.dismiss) private var dismiss
 
     @Binding var username: String
@@ -52,6 +54,9 @@ struct ProfileView: View {
     
     @State var deleteSuccess : Bool = false
     
+    @State var isSheet : Bool = false
+    
+    @State var isAnswerSheet : Bool = false
     
     var body: some View {
         GeometryReader { proxy in
@@ -464,16 +469,16 @@ struct ProfileView: View {
                                         if let questionlist = questionVM.questionModel?.results {
                                             ForEach(questionlist, id:\.pk){ questiondata in
                                                 if self.currentPostTab == .responsedTab {
-                                                    ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata)
+                                                    ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, eventVM : eventVM)
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
                                                 }
                                                 else if self.currentPostTab == .arrivedTab {
-                                                    ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata)
-                                                    .onAppear{
-                                                        callNextQuestion(questiondata: questiondata)
-                                                    }
+                                                    ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata, eventVM: eventVM)
+                                                        .onAppear{
+                                                            callNextQuestion(questiondata: questiondata)
+                                                        }
                                                 }
                                                 else if self.currentPostTab == .refusedTab {
                                                     RefusedCard(width: proxy.size.width - 32, questiondata: questiondata)
@@ -595,27 +600,38 @@ struct ProfileView: View {
                     self.questionPostSuccess = false
                 }
             }
-            .sheet(isPresented: $questionEditorStatus, onDismiss: {
-                questionEditorStatus = false
-            }){
-                QuestionEditor(username: username)
-                    .presentationDetents([.fraction(0.45)])
+            .onReceive(eventVM.sheetPublisher){
+                isSheet = true
             }
-            .sheet(isPresented: .constant(chattyVM.answerEditorStatus), onDismiss: {
-                chattyVM.answerEditorStatus = false
-            }){
-                AnswerEditor(questiondata: chattyVM.questiondata!)
+            .sheet(isPresented: $isSheet, onDismiss: {
+                isSheet = false
+            }) {
+                QuestionOption(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.4)])
+            }
+            .onReceive(eventVM.deletePublisher){
+                questionVM.questionDelete(question_id: eventVM.data?.pk ?? 0)
+            }
+            .onReceive(eventVM.reportPublisher){
+                questionVM.questionReport(question_id: eventVM.data?.pk ?? 0)
+            }
+            .onReceive(eventVM.refusePublisher){
+                questionVM.questionRefuse(question_id: eventVM.data?.pk ?? 0)
+            }
+            .onReceive(eventVM.answerSheetPublisher){
+                isAnswerSheet = true
+            }
+            .sheet(isPresented: $isAnswerSheet, onDismiss: {
+                isAnswerSheet = false
+            }) {
+                AnswerEditor(eventVM: eventVM)
                     .presentationDetents([.fraction(0.45)])
                     .onDisappear{
                         self.initProfileView()
                     }
             }
-            .sheet(isPresented: .constant(chattyVM.questionOptionStatus), onDismiss: {
-                print("dismissed")
-                chattyVM.questionOptionStatus = false
-            }) {
-                QuestionOption()
-                    .presentationDetents([.fraction(0.4)])
+            .onReceive(eventVM.answerPublisher){
+                questionVM.answerPost(question_id: eventVM.data?.pk ?? 0, content: eventVM.data?.answerContent ?? "")
             }
             .refreshable {
                 self.initProfileView()

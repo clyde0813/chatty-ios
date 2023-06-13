@@ -22,7 +22,7 @@ struct ResultDetail: Codable {
     //글질문한사람 -> nil일시 익명
     let author: Profile?
     let content: String
-    let answerContent: String?
+    var answerContent: String?
 
     enum CodingKeys: String, CodingKey {
         case pk

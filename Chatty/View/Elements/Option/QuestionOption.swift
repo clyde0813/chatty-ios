@@ -11,6 +11,10 @@ struct QuestionOption: View {
     @EnvironmentObject var chattyVM: ChattyVM
     @Environment(\.dismiss) var dismiss
     
+    @ObservedObject var eventVM : ChattyEventVM
+    
+    @State var isSaveImage = false
+    
     var body: some View {
         ZStack{
             Color.white
@@ -30,9 +34,7 @@ struct QuestionOption: View {
                     }
                 }
                 Button(action: {
-                    chattyVM.questionOptionStatus = false
-                    dismiss()
-                    chattyVM.shareViewPass.send()
+                    isSaveImage = true
                 }){
                     HStack(spacing: 8){
                         Image(systemName: "photo.fill")
@@ -49,11 +51,13 @@ struct QuestionOption: View {
                     .background(Color("Main Primary"))
                     .cornerRadius(16)
                 }
+                .fullScreenCover(isPresented: $isSaveImage){
+                    ChattyShareView(username: eventVM.data?.profile.username ?? "", profile_name: eventVM.data?.profile.profileName ?? "", profile_image: eventVM.data?.profile.profileImage ?? "", background_image: eventVM.data?.profile.backgroundImage ?? "", content: eventVM.data?.content ?? "", anseredContent: eventVM.data?.answerContent ?? "")
+                }
                 
                 Button(action:{
-                    chattyVM.questionReport(question_id: chattyVM.questiondata?.pk ?? -1)
-                    chattyVM.questionOptionStatus = false
                     dismiss()
+                    eventVM.reportQuestion()
                 }){
                     HStack(spacing: 8){
                         Image(systemName: "light.beacon.max")
@@ -74,9 +78,8 @@ struct QuestionOption: View {
                 }
                 .padding([.leading, .trailing, .bottom], 3)
                 Button(action:{
-                    chattyVM.questionDelete(question_id: chattyVM.questiondata?.pk ?? -1)
-                    chattyVM.questionOptionStatus = false
                     dismiss()
+                    eventVM.deleteQuestion()
                 }){
                     HStack(spacing: 8){
                         Image(systemName: "trash.fill")

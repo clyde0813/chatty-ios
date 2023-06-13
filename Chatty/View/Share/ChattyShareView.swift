@@ -11,15 +11,27 @@ import Kingfisher
 struct ChattyShareView: View {
     @Environment(\.presentationMode) var presentationMode
         
-    @Binding var username : String
+//    @Binding var username : String
+//
+//    @Binding var profile_name : String
+//
+//    @Binding var profile_image : String
+//
+//    @Binding var background_image : String
+//
+//    @Binding var questiondata : ResultDetail?
     
-    @Binding var profile_name : String
+    var username : String
     
-    @Binding var profile_image : String
+    var profile_name : String
     
-    @Binding var background_image : String
+    var profile_image : String
+
+    var background_image : String
     
-    @Binding var questiondata : ResultDetail?
+    var content : String
+    
+    var anseredContent : String
     
     @State private var hideButton = false
     
@@ -48,7 +60,7 @@ struct ChattyShareView: View {
                                     Spacer()
                                 }
                                 .padding(.bottom, 4)
-                                Text("\(questiondata?.content ?? "")")
+                                Text(content)
                                     .font(Font.system(size: 16, weight: .semibold))
                                     .padding(.bottom, 24)
                                 HStack(alignment: .top, spacing: 0){
@@ -72,7 +84,7 @@ struct ChattyShareView: View {
                                                 .font(Font.system(size: 16, weight: .bold))
                                         }
                                         .padding(.bottom, 8)
-                                        Text("\(questiondata?.answerContent ?? "")")
+                                        Text(anseredContent)
                                             .font(Font.system(size: 16, weight: .none))
                                     }
                                 }
@@ -137,6 +149,7 @@ struct ChattyShareView: View {
 //                                )
                             Button(action: {
                                 self.hideButton = true
+                                
                             }){
                                 Text("이미지로 저장")
                                     .font(.system(size:16, weight: .semibold))
@@ -167,9 +180,47 @@ struct ChattyShareView: View {
     }
     
     func saveScreenshot() {
-            let image = UIApplication.shared.windows.first?.rootViewController?.view.asImage()
-            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+//            let image = UIApplication.shared.windows.first?.rootViewController?.view.asImage()
+//            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+//            self.hideButton = false
+        guard let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }),
+                  let frontViewController = keyWindow.frontViewController,
+                  let frontView = frontViewController.view else {
+                return
+            }
+            
+            let image = frontView.asImage()
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
             self.hideButton = false
+    }
+}
+extension UIWindow {
+    var frontViewController: UIViewController? {
+        return self.windowScene?.frontMostUIWindowViewController
+    }
+}
+
+extension UIWindowScene {
+    var frontMostUIWindowViewController: UIViewController? {
+        return self.windows.first { $0.isKeyWindow }?.rootViewController?.frontMostViewController
+    }
+}
+
+extension UIViewController {
+    var frontMostViewController: UIViewController {
+        if let presentedViewController = presentedViewController {
+            return presentedViewController.frontMostViewController
+        }
+        
+        if let navigationController = self as? UINavigationController {
+            return navigationController.visibleViewController?.frontMostViewController ?? self
+        }
+        
+        if let tabBarController = self as? UITabBarController {
+            return tabBarController.selectedViewController?.frontMostViewController ?? self
+        }
+        
+        return self
     }
 }
 
