@@ -15,8 +15,10 @@ struct AnswerEditor: View {
     @State var username: String = ""
     @State var anonymous: Bool = false
     
-    @State var questiondata : ResultDetail
+//    @State var questiondata : ResultDetail
 
+    @ObservedObject var eventVM : ChattyEventVM
+    
     var body: some View {
         ZStack{
             Color.white
@@ -49,13 +51,13 @@ struct AnswerEditor: View {
                         .font(Font.system(size: 12, weight: .semibold))
                         .foregroundColor(Color.gray)
                         .padding(.trailing, 8)
-                    Text("\(elapsedtime(time: questiondata.createdDate))")
+                    Text("\(elapsedtime(time: eventVM.data?.createdDate ?? ""))")
                         .font(Font.system(size: 12, weight: .semibold))
                         .foregroundColor(Color.gray)
                 }
                 .foregroundColor(Color("Main Primary"))
                 .padding(.bottom, 4)
-                Text("\(questiondata.content)")
+                Text(eventVM.data?.content ?? "")
                     .font(Font.system(size: 16, weight: .none))
                     .padding(.bottom, 12)
                 //질문 입력창
@@ -64,14 +66,17 @@ struct AnswerEditor: View {
                         .foregroundColor(Color.gray)
                         .font(.system(size:16, weight: .bold))
                     TextEditor(text: $content)
-                        .frame(minHeight: 120)                        .font(.system(size:16, weight: .none))
+                        .frame(minHeight: 120)
+                        .font(.system(size:16, weight: .none))
                         .opacity(content.isEmpty ? 0.1 : 1)
                 }
                 //완료 버튼
                 Button(action:{
-                    chattyVM.answerPost(question_id: questiondata.pk, content: content)
-                    chattyVM.answerEditorStatus = false
+//                    chattyVM.answerPost(question_id: questiondata.pk, content: content)
+//                    chattyVM.answerEditorStatus = false
                     dismiss()
+                    eventVM.data?.answerContent = content
+                    eventVM.answerQuestion()
                 }){
                     Text("완료")
                         .font(.system(size: 16, weight: .bold))

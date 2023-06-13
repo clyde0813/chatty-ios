@@ -15,6 +15,9 @@ struct TimelineView: View {
     @State var isClickedQuestion = false
     @State var currentPage = 1
     
+    @State var isSheet = false
+    
+    @StateObject var eventVM = ChattyEventVM()
     //    @Binding var currentTab : BottomTab
     var body: some View {
         ZStack(alignment: .bottomTrailing){
@@ -32,7 +35,7 @@ struct TimelineView: View {
                             LazyVStack(spacing: 16){
                                 if let timelineList = questionVM.questionModel?.results{
                                     ForEach(timelineList, id:\.pk){ questiondata in
-                                        ResponsedCard(width:proxy.size.width-32, questiondata: questiondata)
+                                        ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
                                             .onAppear{
                                                 callNextTimeline(questiondata: questiondata)
                                             }
@@ -72,11 +75,18 @@ struct TimelineView: View {
             guard let user = userInfo else { return }
             self.profile_image = user.profileImage
         }
-        .sheet(isPresented: .constant(chattyVM.questionOptionStatus), onDismiss: {
-            print("dismissed")
-            chattyVM.questionOptionStatus = false
-        }) {
-            QuestionOption()
+//        .sheet(isPresented: .constant(chattyVM.questionOptionStatus), onDismiss: {
+//            print("dismissed")
+//            chattyVM.questionOptionStatus = false
+//        }) {
+//            QuestionOption()
+//                .presentationDetents([.fraction(0.4)])
+//        }
+        .onReceive(eventVM.sheetPublisher){
+            isSheet = true
+        }
+        .sheet(isPresented: $isSheet, onDismiss: {isSheet = false}) {
+            QuestionOption(eventVM: eventVM)
                 .presentationDetents([.fraction(0.4)])
         }
         
@@ -105,7 +115,7 @@ extension TimelineView {
         if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
             self.currentPage += 1
             questionVM.timelineGet(page: self.currentPage)
-        }
+         }
     }
 }
 

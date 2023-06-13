@@ -16,6 +16,7 @@ struct ArrivedCard: View {
 
     @State var questiondata : ResultDetail
 
+    @ObservedObject var eventVM : ChattyEventVM
     
     var body: some View {
         ZStack{
@@ -46,6 +47,8 @@ struct ArrivedCard: View {
                             chattyVM.background_image = questiondata.profile.backgroundImage
                             chattyVM.questiondata = self.questiondata
                             chattyVM.questionOptionStatus = true
+                            
+                            
                         }){
                             ZStack{
                                 Image(systemName: "ellipsis")
@@ -64,7 +67,8 @@ struct ArrivedCard: View {
                     .padding(.trailing, 15)
                 HStack(spacing: 0){
                     Button(action:{
-                        questionVM.questionRefuse(question_id: questiondata.pk)
+//                        questionVM.questionRefuse(question_id: questiondata.pk)
+                        eventVM.refuseQuestion()
                     }){
                         Text("거절하기")
                             .font(.system(size: 16, weight: .bold))
@@ -77,8 +81,10 @@ struct ArrivedCard: View {
                             .padding(.trailing, 16)
                     }
                     Button(action:{
-                        chattyVM.questiondata = self.questiondata
-                        chattyVM.answerEditorStatus = true
+//                        chattyVM.questiondata = self.questiondata
+//                        chattyVM.answerEditorStatus = true
+                        eventVM.data = questiondata
+                        eventVM.answerSheetShow()
                     }){
                         Text("답변하기")
                             .font(.system(size: 16, weight: .bold))

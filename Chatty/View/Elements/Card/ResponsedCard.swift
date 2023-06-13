@@ -15,6 +15,8 @@ struct ResponsedCard: View {
     
     @State var questiondata : ResultDetail
     
+    @ObservedObject var eventVM : ChattyEventVM
+    
     
     var body: some View {
         ZStack{
@@ -65,13 +67,8 @@ struct ResponsedCard: View {
                     }
                     Spacer()
                     Button(action : {
-                        chattyVM.username = questiondata.profile.username
-                        chattyVM.profile_name = questiondata.profile.profileName
-                        chattyVM.profile_image = questiondata.profile.profileImage
-                        chattyVM.background_image = questiondata.profile.backgroundImage
-                        chattyVM.questiondata = self.questiondata
-                        chattyVM.questionOptionStatus = true
-                        
+                        eventVM.ShowSheet()
+                        eventVM.data = questiondata
                     }){
                         ZStack{
                             Image(systemName: "ellipsis")
