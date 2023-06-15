@@ -12,7 +12,7 @@ struct FollowView: View {
     
     @Binding var username : String
     
-    @Binding var currentTab : followTab
+    @State var currentTab : followTab
 
     @StateObject var followVM = FollowVM()
     
@@ -77,8 +77,9 @@ extension FollowView {
                 Button(action: {
                     self.currentTab = .follower
                     self.initFollowView()
+                    print(currentTab)
                 }){
-                    if currentTab == .follower {
+                    if self.currentTab == .follower {
                         VStack(alignment: .center, spacing: 0){
                             Text("팔로워")
                                 .font(Font.system(size: 16, weight: .bold))
@@ -106,8 +107,9 @@ extension FollowView {
                 Button(action: {
                     self.currentTab = .following
                     self.initFollowView()
+                    print(currentTab)
                 }){
-                    if currentTab == .following {
+                    if self.currentTab == .following {
                         VStack(alignment: .center, spacing: 0){
                             Text("팔로잉")
                                 .font(Font.system(size: 16, weight: .bold))
@@ -148,8 +150,8 @@ extension FollowView {
                         }
                     }
                     else{
-                        if let followList = followVM.followModel?.results {
-                            if self.currentTab == .follower {
+                        if self.currentTab == .follower {
+                            if let followList = followVM.followModel?.results {
                                 ForEach(followList, id:\.username) { follow in
                                     HStack(spacing: 24){
                                         NavigationLink {
@@ -169,7 +171,7 @@ extension FollowView {
                                         }
                                         .buttonStyle(.plain)
                                         Spacer()
-                                        if follow.followState{
+                                        if follow.followState == false{
                                             Button {
                                                 followVM.followPost(username: follow.username)
                                                 let index = followVM.followModel?.results.firstIndex(where: {
@@ -195,7 +197,7 @@ extension FollowView {
                                                 })
                                                 followVM.followModel?.results[index!].followState.toggle()
                                             } label: {
-                                                Text("맞팔로우")
+                                                Text("맞팔로워")
                                                     .font(Font.system(size: 14, weight: .bold))
                                                     .foregroundColor(Color.white)
                                                     .frame(width:80, height: 30)
@@ -212,16 +214,25 @@ extension FollowView {
                                         callNextFollow(followData: follow)
                                     }
                                 }
+                                .onAppear{
+                                    print(currentTab)
+                                }
                             }
-                            else if self.currentTab == .following {
+                        }
+                        else if self.currentTab == .following {
+                            if let followList = followVM.followModel?.results {
                                 ForEach(followList,id:\.username) { following in
                                     HStack(spacing: 24){
-                                        KFImage(URL(string: following.profileImage ))
-                                            .resizable()
-                                            .clipShape(Circle())
-                                            .scaledToFill()
-                                            .frame(width: 48, height: 48)
-                                            .clipped()
+                                        NavigationLink {
+                                            ProfileView(username: .constant(following.username),isOwner: false)
+                                        } label: {
+                                            KFImage(URL(string: following.profileImage ))
+                                                .resizable()
+                                                .clipShape(Circle())
+                                                .scaledToFill()
+                                                .frame(width: 48, height: 48)
+                                                .clipped()
+                                        }
                                         Text("\(following.profile_name)")
                                             .font(Font.system(size: 16, weight: .bold))
                                         Spacer()
@@ -239,6 +250,9 @@ extension FollowView {
                                     .onAppear{
                                         callNextFollow(followData: following)
                                     }
+                                }
+                                .onAppear{
+                                    print(currentTab)
                                 }
                             }
                         }
@@ -272,8 +286,3 @@ extension FollowView {
     }
 }
 
-//struct FollowView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        FollowView(username: .constant("test11"))
-//    }
-//}
