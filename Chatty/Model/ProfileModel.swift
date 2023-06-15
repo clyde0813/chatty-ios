@@ -14,7 +14,7 @@ struct ProfileModel: Codable {
     let profileImage: String
     let backgroundImage: String
     let profileMessage: String?
-    let follower, following: Int
+    var follower, following: Int
     let views: Int
     var followState : Bool
 
