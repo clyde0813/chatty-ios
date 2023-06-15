@@ -15,7 +15,7 @@ enum PostTab {
 struct ProfileView: View {
     @EnvironmentObject var chattyVM: ChattyVM
     @StateObject var profileVM = ProfileVM()
-    @StateObject private var questionVM = QuestionVM()
+    @StateObject var questionVM = QuestionVM()
     
     @StateObject var eventVM = ChattyEventVM()
     
@@ -57,6 +57,8 @@ struct ProfileView: View {
     @State var isSheet : Bool = false
     
     @State var isAnswerSheet : Bool = false
+    
+    @GestureState private var dragOffset = CGSize.zero
     
     var body: some View {
         GeometryReader { proxy in
@@ -104,21 +106,23 @@ struct ProfileView: View {
                                         .padding(.leading, 25)
                                         .padding(.bottom, 40)
                                         Spacer()
-                                        Button(action:{
-                                            dismiss()
-                                        }){
-                                            Image(systemName: "ellipsis")
-                                                .font(.system(size:16, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .rotationEffect(.degrees(-90))
-                                                .background(
-                                                    Circle()
-                                                        .fill(Color("Card Share Background"))
-                                                        .frame(width: 32, height: 32)
-                                                )
-                                        }
-                                        .padding(.trailing, 25)
-                                        .padding(.bottom, 40)
+                                        //2023.06.15 -신현호
+                                        //아직기능이없어서, 주석처리
+//                                        Button(action:{
+//                                            dismiss()
+//                                        }){
+//                                            Image(systemName: "ellipsis")
+//                                                .font(.system(size:16, weight: .bold))
+//                                                .foregroundColor(Color.white)
+//                                                .rotationEffect(.degrees(-90))
+//                                                .background(
+//                                                    Circle()
+//                                                        .fill(Color("Card Share Background"))
+//                                                        .frame(width: 32, height: 32)
+//                                                )
+//                                        }
+//                                        .padding(.trailing, 25)
+//                                        .padding(.bottom, 40)
                                     }
                                     BlurView()
                                         .opacity(blurViewOpacity())
@@ -148,21 +152,23 @@ struct ProfileView: View {
                                                 .foregroundColor(Color.white)
                                         }
                                         Spacer()
-                                        Button(action:{
-                                            dismiss()
-                                        }){
-                                            Image(systemName: "ellipsis")
-                                                .font(.system(size:16, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .rotationEffect(.degrees(-90))
-                                                .background(
-                                                    Circle()
-                                                        .fill(Color("Card Share Background"))
-                                                        .frame(width: 32, height: 32)
-                                                )
-                                        }
-                                        .padding(.trailing, 25)
-                                        .padding(.bottom, 10)
+                                        //2023.06.15 -신현호
+                                        //아직기능이없어서, 주석처리
+//                                        Button(action:{
+//                                            dismiss()
+//                                        }){
+//                                            Image(systemName: "ellipsis")
+//                                                .font(.system(size:16, weight: .bold))
+//                                                .foregroundColor(Color.white)
+//                                                .rotationEffect(.degrees(-90))
+//                                                .background(
+//                                                    Circle()
+//                                                        .fill(Color("Card Share Background"))
+//                                                        .frame(width: 32, height: 32)
+//                                                )
+//                                        }
+//                                        .padding(.trailing, 25)
+//                                        .padding(.bottom, 10)
                                     }
                                     // to slide from bottom added extra 60..
                                     .offset(y: 120)
@@ -202,10 +208,15 @@ struct ProfileView: View {
                                             //2022.06.13 -신현호
                                             if profileVM.profileModel?.username != KeyChain.read(key: "username"){
                                                 Button {
-                                                    print("onClick Follow!")
                                                     profileVM.Follow(username: profileVM.profileModel?.username ?? "")
                                                     //2022.06.13 -신현호
                                                     profileVM.profileModel?.followState.toggle()
+                                                    //2022.06.15 -신현호
+                                                    if profileVM.profileModel?.followState == true {
+                                                        profileVM.profileModel?.follower += 1
+                                                    }else{
+                                                        profileVM.profileModel?.follower -= 1
+                                                    }
                                                 } label: {
                                                     if let followState = profileVM.profileModel?.followState {
                                                         if !followState {
@@ -213,20 +224,22 @@ struct ProfileView: View {
                                                                 .font(.system(size:14, weight: .bold))
                                                                 .frame(height: 40)
                                                                 .frame(width: 90)
-                                                                .foregroundColor(Color("Pink Main"))
+                                                                .foregroundColor(.white)
                                                                 .background(
                                                                     Capsule()
-                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                                        .fill(Color("Pink Main"))
                                                                 )
                                                         }else{
-                                                            Text("언팔로우")
+                                                            //2022.06.15 -신현호
+                                                            Text("팔로우취소")
                                                                 .font(.system(size:14, weight: .bold))
                                                                 .frame(height: 40)
                                                                 .frame(width: 90)
-                                                                .foregroundColor(Color("Pink Main"))
+                                                                .foregroundColor(.white)
                                                                 .background(
                                                                     Capsule()
-                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                                        .fill(Color("Grey400"))
+//                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
                                                                 )
                                                         }
                                                     }
@@ -264,7 +277,7 @@ struct ProfileView: View {
                                     HStack{
                                         //2022.06.11 신현호
                                         NavigationLink {
-                                            FollowView(username: $username, currentTab: $selectFollow )
+                                            FollowView(username: $username,currentTab: followTab.follower)
                                         } label: {
                                             Text("\(profileVM.profileModel?.follower ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -274,9 +287,9 @@ struct ProfileView: View {
                                                 .padding(.trailing, 20)
                                                 .foregroundColor(.black)
                                         }
-                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follower})
+//                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follower})
                                         NavigationLink {
-                                            FollowView(username: $username, currentTab: $selectFollow)
+                                            FollowView(username: $username,currentTab: followTab.following)
                                         } label: {
                                             Text("\(profileVM.profileModel?.following ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -285,7 +298,7 @@ struct ProfileView: View {
                                                 .font(Font.system(size: 14, weight: .light))
                                                 .foregroundColor(.black)
                                         }
-                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .following})
+//                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .following})
                                     }
                                 }
                                 .padding([.leading, .trailing], 16)
@@ -368,7 +381,7 @@ struct ProfileView: View {
                                     .frame(width: widthFix, alignment: .bottom)
                                     
                                     ZStack {
-                                        if isOwner {
+                                        if profileVM.profileModel?.username == KeyChain.read(key: "username") {
                                             Button(action: {
                                                 currentPostTab = .arrivedTab
                                                 self.questionType = "arrived"
@@ -402,7 +415,7 @@ struct ProfileView: View {
                                     .frame(width: widthFix)
                                     
                                     ZStack {
-                                        if isOwner {
+                                        if profileVM.profileModel?.username == KeyChain.read(key: "username") {
                                             Button(action: {
                                                 currentPostTab = .refusedTab
                                                 self.questionType = "refused"
@@ -538,7 +551,7 @@ struct ProfileView: View {
                         .zIndex(-offset > 80 ? 0 : 1)
                     }
                 })
-                if !isOwner {
+                if !(profileVM.profileModel?.username == KeyChain.read(key: "username")) {
                     Button(action: {
                         self.questionEditorStatus = true
                     }
@@ -594,19 +607,25 @@ struct ProfileView: View {
                     self.deleteSuccess = false
                 }
             }
+            .onReceive(eventVM.sheetPublisher){
+                isSheet = true
+            }
             .onReceive(questionVM.questionPostSuccess){
                 self.questionPostSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.questionPostSuccess = false
                 }
             }
-            .onReceive(eventVM.sheetPublisher){
-                isSheet = true
-            }
             .sheet(isPresented: $isSheet, onDismiss: {
                 isSheet = false
             }) {
                 QuestionOption(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.4)])
+            }
+            .sheet(isPresented: $questionEditorStatus,onDismiss:{
+                questionEditorStatus = false
+            }){
+                QuestionEditor(username: $username, questionVM: questionVM)
                     .presentationDetents([.fraction(0.4)])
             }
             .onReceive(eventVM.deletePublisher){
@@ -641,6 +660,11 @@ struct ProfileView: View {
             }
         }
         .navigationBarHidden(true)
+        .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+                    if(value.startLocation.x < 20 && value.translation.width > 100) {
+                        dismiss()
+                    }
+                }))
         
     }
     
