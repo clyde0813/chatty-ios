@@ -12,8 +12,10 @@ struct QuestionEditor: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var content: String = ""
-    @State var username: String = ""
+    @Binding var username: String
     @State var anonymous: Bool = false
+    
+    @ObservedObject var questionVM : QuestionVM
     
     var body: some View {
         ZStack{
@@ -44,13 +46,13 @@ struct QuestionEditor: View {
                 }
                 .foregroundColor(Color("Main Primary"))
                 .padding(.bottom, 16)
-//                HStack(spacing: 0){
-//                    Toggle(isOn: $anonymous){
-//                        Text("익명으로 쓰기")
-//                            .font(.system(size:14, weight: .none))
-//                    }
-//                }
-//                .padding(.bottom, 16)
+                HStack(spacing: 0){
+                    Toggle(isOn: $anonymous){
+                        Text("익명으로 쓰기")
+                            .font(.system(size:14, weight: .none))
+                    }
+                }
+                .padding(.bottom, 16)
                 //질문 입력창
                 ZStack(alignment: .topLeading){
                     Text("@\(username)에게 질문하기")
@@ -63,8 +65,7 @@ struct QuestionEditor: View {
                 }
                 //완료 버튼
                 Button(action:{
-                    print(username, content)
-                    chattyVM.questionPost(username: username, content: content)
+                    questionVM.questionPost(username: username, content: content,anonymous: anonymous)
                     dismiss()
                 }){
                     Text("완료")
@@ -86,9 +87,9 @@ struct QuestionEditor: View {
         }
     }
 }
-
-struct QuestionEditor_Previews: PreviewProvider {
-    static var previews: some View {
-        QuestionEditor().environmentObject(ChattyVM())
-    }
-}
+//
+//struct QuestionEditor_Previews: PreviewProvider {
+//    static var previews: some View {
+//        QuestionEditor().environmentObject(ChattyVM())
+//    }
+//}

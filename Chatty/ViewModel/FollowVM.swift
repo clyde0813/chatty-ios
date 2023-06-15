@@ -8,6 +8,7 @@ class FollowVM : ObservableObject{
     var isGetFollowSuccess = PassthroughSubject<(),Never>()
     
     func followGet(username: String, page : Int, tab:String){
+        
         let url = "https://chatty.kr/api/v1/user/profile/\(username)/\(tab)"
         
         var headers : HTTPHeaders = []
