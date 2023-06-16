@@ -1,3 +1,5 @@
+import SwiftUI
+
 struct Background<Content: View>: View {
     private var content: Content
 

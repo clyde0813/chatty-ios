@@ -68,6 +68,7 @@ struct TimelineView: View {
             
                 
         }
+        .navigationBarHidden(true)
         .onAppear(perform: {
             self.initTimelineView()
         })

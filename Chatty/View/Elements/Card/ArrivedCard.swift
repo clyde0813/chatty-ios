@@ -67,7 +67,7 @@ struct ArrivedCard: View {
                     .padding(.trailing, 15)
                 HStack(spacing: 0){
                     Button(action:{
-//                        questionVM.questionRefuse(question_id: questiondata.pk)
+                        questionVM.questionRefuse(question_id: questiondata.pk)
                         eventVM.refuseQuestion()
                     }){
                         Text("거절하기")

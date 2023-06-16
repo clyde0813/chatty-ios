@@ -52,6 +52,8 @@ struct ProfileView: View {
     
     @State var reportSuccess : Bool = false
     
+    @State var refuseSuccess : Bool = false
+    
     @State var deleteSuccess : Bool = false
     
     @State var isSheet : Bool = false
@@ -323,7 +325,7 @@ struct ProfileView: View {
                                     VStack (alignment: .center) {
                                         Text("\(profileVM.profileModel?.views ?? 0)")
                                             .font(Font.system(size: 20, weight: .semibold))
-                                        Text("오늘 방문자 수")
+                                        Text("총 방문자 수")
                                             .font(Font.system(size: 14, weight: .ultraLight))
                                     }
                                     .frame(width: widthFix)
@@ -569,6 +571,10 @@ struct ProfileView: View {
                     ProfileErrorView(msg: "복사 완료!")
                 }
                 
+                if refuseSuccess {
+                    ProfileErrorView(msg: "질문이 거절되었습니다.")
+                }
+                
                 if reportSuccess {
                     ProfileErrorView(msg: "신고가 접수되었습니다!")
                 }
@@ -589,9 +595,12 @@ struct ProfileView: View {
                     self.isQuestionEmpty = true
                 }
             }
-            .onReceive(questionVM.refuseComplete) {
-                print(".onReceive(questionVM.refuseComplete)")
+            .onReceive(eventVM.refusePublisher) {
                 self.initProfileView()
+                self.refuseSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.refuseSuccess = false
+                }
             }
             .onReceive(questionVM.reportSuccess) {
                 self.initProfileView()
