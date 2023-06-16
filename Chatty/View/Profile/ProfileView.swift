@@ -490,13 +490,13 @@ struct ProfileView: View {
                                                     }
                                                 }
                                                 else if self.currentPostTab == .arrivedTab {
-                                                    ArrivedCard(width: proxy.size.width - 32, questiondata: questiondata, eventVM: eventVM)
+                                                    ArrivedCard(width: proxy.size.width - 32, questionVM: questionVM, questiondata: questiondata, eventVM: eventVM)
                                                         .onAppear{
                                                             callNextQuestion(questiondata: questiondata)
                                                         }
                                                 }
                                                 else if self.currentPostTab == .refusedTab {
-                                                    RefusedCard(width: proxy.size.width - 32, questiondata: questiondata)
+                                                    RefusedCard(width: proxy.size.width - 32, questiondata: questiondata,eventVM : eventVM)
                                                     .onAppear{
                                                         callNextQuestion(questiondata: questiondata)
                                                     }
