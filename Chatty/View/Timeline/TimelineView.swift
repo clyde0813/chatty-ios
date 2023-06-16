@@ -7,7 +7,7 @@ enum Timeline_Hot_Tab {
 }
 
 struct TimelineView: View {
-    @EnvironmentObject var chattyVM: ChattyVM
+    
     @State var currentTab : Timeline_Hot_Tab =  .timeline
     @StateObject var profileVM = ProfileVM()
     @StateObject var questionVM = QuestionVM()
@@ -75,13 +75,6 @@ struct TimelineView: View {
             guard let user = userInfo else { return }
             self.profile_image = user.profileImage
         }
-//        .sheet(isPresented: .constant(chattyVM.questionOptionStatus), onDismiss: {
-//            print("dismissed")
-//            chattyVM.questionOptionStatus = false
-//        }) {
-//            QuestionOption()
-//                .presentationDetents([.fraction(0.4)])
-//        }
         .onReceive(eventVM.sheetPublisher){
             isSheet = true
         }
@@ -89,7 +82,6 @@ struct TimelineView: View {
             QuestionOption(eventVM: eventVM)
                 .presentationDetents([.fraction(0.4)])
         }
-        
         
     }
     

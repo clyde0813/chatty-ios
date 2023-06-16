@@ -50,7 +50,6 @@ struct MainView: View {
         if self.logoutStatus{
             IndexView()
         } else {
-//            NavigationStack{
                 TabView (selection: $currentTab) {
                     NavigationView{
                         TimelineView()
@@ -95,18 +94,14 @@ struct MainView: View {
                     self.profileEditView = true
                 }
                 .accentColor(Color.black)
-                .navigationBarHidden(true)
-//                .navigationDestination(isPresented: $shareView) {
-//                    ChattyShareView(username: self.$username, profile_name: self.$profile_name, profile_image: self.$profile_image, background_image: self.$background_image, questiondata: self.$questiondata)
-//                }
-//                .navigationDestination(isPresented: $profileEditView){
-//                    ProfileEditView()
-//                }
-                
-//            }
-            
+                .onChange(of: currentTab) { tab in
+                    if tab == .home {
+                        NavigationUtil.popToRootView()
+                    }
+                }
         }
     }
+    
 }
 
 

@@ -98,15 +98,17 @@ class QuestionVM : ObservableObject {
         }
     }
     
-    func questionPost(username: String, content: String) {
+    func questionPost(username: String, content: String, anonymous: Bool) {
         let url = "https://chatty.kr/api/v1/chatty"
         var headers : HTTPHeaders = []
         
+        //2023.06.16 -신현호 차후,헤더에 토큰추가
         headers = ["Content-Type":"application/json", "Accept":"application/json"]
         
         let params: Parameters = [
             "target_profile" : username,
             "content" : content
+            //2023.06.16 -신현호 차후, 파라미터에 익명체크여부 추가
         ]
         
         AF.request(url,
