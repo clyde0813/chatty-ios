@@ -595,7 +595,7 @@ struct ProfileView: View {
                     self.isQuestionEmpty = true
                 }
             }
-            .onReceive(eventVM.refusePublisher) {
+            .onReceive(questionVM.refuseComplete) {
                 self.initProfileView()
                 self.refuseSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
@@ -616,14 +616,14 @@ struct ProfileView: View {
                     self.deleteSuccess = false
                 }
             }
-            .onReceive(eventVM.sheetPublisher){
-                isSheet = true
-            }
             .onReceive(questionVM.questionPostSuccess){
                 self.questionPostSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.questionPostSuccess = false
                 }
+            }
+            .onReceive(eventVM.sheetPublisher){
+                isSheet = true
             }
             .sheet(isPresented: $isSheet, onDismiss: {
                 isSheet = false
@@ -637,6 +637,15 @@ struct ProfileView: View {
                 QuestionEditor(username: $username, questionVM: questionVM)
                     .presentationDetents([.fraction(0.4)])
             }
+            .sheet(isPresented: $isAnswerSheet, onDismiss: {
+                isAnswerSheet = false
+            }) {
+                AnswerEditor(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.45)])
+                    .onDisappear{
+                        self.initProfileView()
+                    }
+            }
             .onReceive(eventVM.deletePublisher){
                 questionVM.questionDelete(question_id: eventVM.data?.pk ?? 0)
             }
@@ -648,15 +657,6 @@ struct ProfileView: View {
             }
             .onReceive(eventVM.answerSheetPublisher){
                 isAnswerSheet = true
-            }
-            .sheet(isPresented: $isAnswerSheet, onDismiss: {
-                isAnswerSheet = false
-            }) {
-                AnswerEditor(eventVM: eventVM)
-                    .presentationDetents([.fraction(0.45)])
-                    .onDisappear{
-                        self.initProfileView()
-                    }
             }
             .onReceive(eventVM.answerPublisher){
                 questionVM.answerPost(question_id: eventVM.data?.pk ?? 0, content: eventVM.data?.answerContent ?? "")
