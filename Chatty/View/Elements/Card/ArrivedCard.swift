@@ -9,11 +9,10 @@ import SwiftUI
 import Combine
 
 struct ArrivedCard: View {
-    @EnvironmentObject var chattyVM: ChattyVM
-    @StateObject var profileVM = ProfileVM()
-    @StateObject var questionVM = QuestionVM()
     @State var width : CGFloat = 0.0
-
+    
+    @ObservedObject var questionVM : QuestionVM
+    
     @State var questiondata : ResultDetail
 
     @ObservedObject var eventVM : ChattyEventVM
@@ -41,13 +40,8 @@ struct ArrivedCard: View {
                         .foregroundColor(Color("Main Primary"))
                         Spacer()
                         Button(action : {
-                            chattyVM.username = questiondata.profile.username
-                            chattyVM.profile_name = questiondata.profile.profileName
-                            chattyVM.profile_image = questiondata.profile.profileImage
-                            chattyVM.background_image = questiondata.profile.backgroundImage
-                            chattyVM.questiondata = self.questiondata
-                            chattyVM.questionOptionStatus = true
-                            
+                            eventVM.data = questiondata
+                            eventVM.ShowSheet()
                             
                         }){
                             ZStack{
@@ -81,8 +75,6 @@ struct ArrivedCard: View {
                             .padding(.trailing, 16)
                     }
                     Button(action:{
-//                        chattyVM.questiondata = self.questiondata
-//                        chattyVM.answerEditorStatus = true
                         eventVM.data = questiondata
                         eventVM.answerSheetShow()
                     }){
