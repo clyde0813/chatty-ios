@@ -75,6 +75,7 @@ struct ResponsedCard: View {
                                 .foregroundColor(.black)
                                 .rotationEffect(.degrees(-90))
                                 .font(Font.system(size: 16, weight: .bold))
+                                .padding(.bottom, questiondata.author == nil ? 0 : 25)
                         }
                         .frame(width: 20, height: 20)
                     }

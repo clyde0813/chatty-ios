@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RefusedCard: View {
     @EnvironmentObject var chattyVM: ChattyVM
@@ -19,48 +20,72 @@ struct RefusedCard: View {
         ZStack{
             Color.white
             VStack(alignment: .leading, spacing: 0){
-                HStack{
-                    HStack {
+                HStack(spacing: 0){
+                    if questiondata.author != nil {
+                        HStack{
+                            NavigationLink {
+                                ProfileView(username: .constant(questiondata.author?.username ?? ""), isOwner: false)
+                            } label: {
+                                KFImage(URL(string:"\(questiondata.author?.profileImage ?? "" )"))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 45, height: 45)
+                                    .clipShape(Circle())
+                                    .overlay(Circle()
+                                        .stroke(Color.white, lineWidth: 3))
+                                    .clipped()
+                                    .padding(.trailing, 8)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 0){
+                                HStack(spacing: 4){
+                                    Text(questiondata.author?.profileName ?? "")
+                                        .font(Font.system(size: 16, weight: .bold))
+                                    Text("•")
+                                        .font(Font.system(size: 12, weight: .semibold))
+                                        .foregroundColor(Color.gray)
+                                    Text("\(elapsedtime(time: questiondata.createdDate))")
+                                        .font(Font.system(size: 12, weight: .semibold))
+                                        .foregroundColor(Color.gray)
+                                }
+                                .padding(.bottom, 8)
+                                Text(questiondata.content)
+                                    .font(Font.system(size: 16, weight: .none))
+                                    .padding(.trailing, 5)
+                            }
+                        }
+                    } else {
                         HStack(spacing: 0){
                             Text("From @")
                                 .font(.system(size:12))
                             Text("익명")
                                 .font(.system(size:12, weight: .bold))
-                                .padding(.trailing, 8)
-                            Text("•")
-                                .font(Font.system(size: 12, weight: .semibold))
-                                .foregroundColor(Color.gray)
-                                .padding(.trailing, 8)
-                            Text("\(elapsedtime(time: questiondata.createdDate))")
-                                .font(Font.system(size: 12, weight: .semibold))
-                                .foregroundColor(Color.gray)
                         }
                         .foregroundColor(Color("Main Primary"))
-                        Spacer()
-                        Button(action : {
-//                            chattyVM.username = questiondata.profile.username
-//                            chattyVM.profile_name = questiondata.profile.profileName
-//                            chattyVM.profile_image = questiondata.profile.profileImage
-//                            chattyVM.background_image = questiondata.profile.backgroundImage
-//                            chattyVM.questiondata = self.questiondata
-//                            chattyVM.questionOptionStatus = true
-                            eventVM.data = questiondata
-                            eventVM.ShowSheet()
-                        }){
-                            ZStack{
-                                Image(systemName: "ellipsis")
-                                    .foregroundColor(.black)
-                                    .rotationEffect(.degrees(-90))
-                                    .font(Font.system(size: 16, weight: .bold))
-                            }
-                            .frame(width: 20, height: 20)
+                    }
+                    Spacer()
+                    Button(action : {
+                        eventVM.ShowSheet()
+                        eventVM.data = questiondata
+                    }){
+                        ZStack{
+                            Image(systemName: "ellipsis")
+                                .foregroundColor(.black)
+                                .rotationEffect(.degrees(-90))
+                                .font(Font.system(size: 16, weight: .bold))
+                                .padding(.bottom, questiondata.author == nil ? 0 : 25)
                         }
+                        .frame(width: 20, height: 20)
                     }
                 }
                 .padding(.bottom, 4)
-                Text("\(questiondata.content)")
-                    .font(Font.system(size: 16, weight: .none))
-                    .padding(.trailing, 15)
+                //질문 내용
+                if questiondata.author == nil {
+                    Text("\(questiondata.content)")
+                        .font(Font.system(size: 16, weight: .none))
+                        .padding(.bottom, 16)
+                        .padding(.trailing, 15)
+                }
             }
             .padding([.leading, .trailing, .bottom], 16)
             .padding(.top, 12)
