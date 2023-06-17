@@ -16,7 +16,7 @@ enum BottomTab {
 struct MainView: View {
     @EnvironmentObject var chattyVM: ChattyVM
     
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismissgit
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -53,8 +53,8 @@ struct MainView: View {
                 TabView (selection: $currentTab) {
                     NavigationView{
                         TimelineView()
-                            
-                    }.tag(BottomTab.home)
+                    }
+                    .tag(BottomTab.home)
                         .tabItem{
                             Image(systemName: "house.fill")
                             Text("홈")}
@@ -69,6 +69,7 @@ struct MainView: View {
 //                        .tabItem{
 //                            Image(systemName: "trophy.fill")
 //                            Text("랭킹")}
+                    
                     MyPageView()
                         .tag(BottomTab.mypage)
                         .tabItem{

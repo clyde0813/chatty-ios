@@ -61,7 +61,7 @@ struct ProfileView: View {
     @State var isAnswerSheet : Bool = false
     
     @GestureState private var dragOffset = CGSize.zero
-    
+
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
@@ -154,23 +154,25 @@ struct ProfileView: View {
                                                 .foregroundColor(Color.white)
                                         }
                                         Spacer()
-                                        //2023.06.15 -신현호
-                                        //아직기능이없어서, 주석처리
-//                                        Button(action:{
-//                                            dismiss()
-//                                        }){
-//                                            Image(systemName: "ellipsis")
-//                                                .font(.system(size:16, weight: .bold))
-//                                                .foregroundColor(Color.white)
-//                                                .rotationEffect(.degrees(-90))
-//                                                .background(
-//                                                    Circle()
-//                                                        .fill(Color("Card Share Background"))
-//                                                        .frame(width: 32, height: 32)
-//                                                )
-//                                        }
-//                                        .padding(.trailing, 25)
-//                                        .padding(.bottom, 10)
+                                        
+                                        Button(action:{
+                                            dismiss()
+                                        }){
+                                            Image(systemName: "ellipsis")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .rotationEffect(.degrees(-90))
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                        }
+                                        .padding(.trailing, 25)
+                                        .padding(.bottom, 10)
+                                        //2023.06.16 -신현호
+                                        //아직기능이없어서, opacity 0으로줘서 클릭안되고, 안보이게함 비율때문에 opacity로 줌
+                                        .opacity(0)
                                     }
                                     // to slide from bottom added extra 60..
                                     .offset(y: 120)
@@ -584,10 +586,9 @@ struct ProfileView: View {
                 }
             }
             .ignoresSafeArea(.all, edges: .top)
-            .onAppear(perform: {
+            .onAppear{
                 self.initProfileView()
-                
-            })
+            }
             .onReceive(questionVM.isSuccessGetQuestion){ result in
                 if result {
                     self.isQuestionEmpty = false

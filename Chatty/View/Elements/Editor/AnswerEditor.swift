@@ -1,21 +1,14 @@
-//
-//  AnswerEditor.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2023/04/16.
-//
 
 import SwiftUI
+import Kingfisher
 
 struct AnswerEditor: View {
-    @EnvironmentObject var chattyVM: ChattyVM
+
     @Environment(\.dismiss) var dismiss
     
     @State private var content: String = ""
     @State var username: String = ""
     @State var anonymous: Bool = false
-    
-//    @State var questiondata : ResultDetail
 
     @ObservedObject var eventVM : ChattyEventVM
     
@@ -28,7 +21,6 @@ struct AnswerEditor: View {
                         .font(Font.system(size: 20, weight: .semibold))
                     Spacer()
                     Button(action: {
-                        chattyVM.answerEditorStatus = false
                         dismiss()
                     }){
                         ZStack{
@@ -41,28 +33,64 @@ struct AnswerEditor: View {
                     }
                 }
                 .padding(.bottom, 10)
-                HStack(spacing: 0){
-                    Text("From @")
-                        .font(.system(size:12))
-                    Text("익명")
-                        .font(.system(size:12, weight: .bold))
-                        .padding(.trailing, 8)
-                    Text("•")
-                        .font(Font.system(size: 12, weight: .semibold))
-                        .foregroundColor(Color.gray)
-                        .padding(.trailing, 8)
-                    Text("\(elapsedtime(time: eventVM.data?.createdDate ?? ""))")
-                        .font(Font.system(size: 12, weight: .semibold))
-                        .foregroundColor(Color.gray)
+                
+                if eventVM.data?.author == nil {
+                    HStack(spacing: 0){
+                        Text("From @")
+                            .font(.system(size:12))
+                        Text("익명")
+                            .font(.system(size:12, weight: .bold))
+                            .padding(.trailing, 8)
+                        Text("•")
+                            .font(Font.system(size: 12, weight: .semibold))
+                            .foregroundColor(Color.gray)
+                            .padding(.trailing, 8)
+                        Text("\(elapsedtime(time: eventVM.data?.createdDate ?? ""))")
+                            .font(Font.system(size: 12, weight: .semibold))
+                            .foregroundColor(Color.gray)
+                    }
+                    .foregroundColor(Color("Main Primary"))
+                    .padding(.bottom, 4)
+                }else {
+                    HStack{
+                        KFImage(URL(string:eventVM.data?.author?.profileImage ?? ""))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 45, height: 45)
+                                .clipShape(Circle())
+                                .overlay(Circle()
+                                    .stroke(Color.white, lineWidth: 3))
+                                .clipped()
+                                .padding(.trailing, 8)
+                        
+                        VStack(alignment: .leading, spacing: 0){
+                            HStack(spacing: 4){
+                                Text("From @")
+                                    .font(.system(size:12))
+                                Text(eventVM.data?.author?.username ?? "")
+                                    .font(.system(size:12, weight: .bold))
+                                    .padding(.trailing, 8)
+                                Text("\(elapsedtime(time: eventVM.data?.createdDate ?? ""))")
+                                    .font(Font.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color.gray)
+                            }
+                            .padding(.bottom, 8)
+                            Text(eventVM.data?.content ?? "")
+                                .font(Font.system(size: 16, weight: .none))
+                                .padding(.bottom, 12)
+                        }
+                    }
+                    .padding(.bottom,4)
                 }
-                .foregroundColor(Color("Main Primary"))
-                .padding(.bottom, 4)
-                Text(eventVM.data?.content ?? "")
-                    .font(Font.system(size: 16, weight: .none))
-                    .padding(.bottom, 12)
+                if eventVM.data?.author == nil {
+                    Text(eventVM.data?.content ?? "")
+                        .font(Font.system(size: 16, weight: .none))
+                        .padding(.bottom, 12)
+                }
+                
                 //질문 입력창
                 ZStack(alignment: .topLeading){
-                    Text("@익명에게 답변 쓰기")
+                    Text(eventVM.data?.author == nil ? "@익명에게 답변 쓰기" : "@\(eventVM.data?.author?.username ?? "")에게 답변 쓰기")
                         .foregroundColor(Color.gray)
                         .font(.system(size:16, weight: .bold))
                     TextEditor(text: $content)
@@ -72,8 +100,6 @@ struct AnswerEditor: View {
                 }
                 //완료 버튼
                 Button(action:{
-//                    chattyVM.answerPost(question_id: questiondata.pk, content: content)
-//                    chattyVM.answerEditorStatus = false
                     dismiss()
                     eventVM.data?.answerContent = content
                     eventVM.answerQuestion()

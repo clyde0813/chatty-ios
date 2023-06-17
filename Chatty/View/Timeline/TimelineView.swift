@@ -211,8 +211,8 @@ extension TimelineView {
         VStack(alignment: .trailing){
             if isClickedQuestion {
                 VStack(alignment: .trailing){
-                    Button {
-                        print("!!")
+                    NavigationLink {
+                        QuestionDetailView(questionVM : questionVM)
                     } label: {
                         HStack{
                             Image(systemName: "plus")
@@ -226,6 +226,7 @@ extension TimelineView {
                         .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
                         .font(Font.system(size: 16, weight: .bold))
                     }
+
                     Button {
                         print("!!")
                     } label: {

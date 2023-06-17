@@ -103,11 +103,12 @@ class QuestionVM : ObservableObject {
         var headers : HTTPHeaders = []
         
         //2023.06.16 -신현호 차후,헤더에 토큰추가
-        headers = ["Content-Type":"application/json", "Accept":"application/json"]
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let params: Parameters = [
             "target_profile" : username,
-            "content" : content
+            "content" : content,
+            "anonymous_status" : anonymous
             //2023.06.16 -신현호 차후, 파라미터에 익명체크여부 추가
         ]
         
@@ -119,6 +120,7 @@ class QuestionVM : ObservableObject {
         .responseString { (response) in
             switch response.result {
             case .success:
+                print("질문은 성공이 맞는데?")
                 self.questionPostSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
