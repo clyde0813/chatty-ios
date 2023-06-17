@@ -248,6 +248,7 @@ struct ProfileEditView: View {
                                         .foregroundColor(Color("Grey700"))
                                     Text("\(profile_message.count)/50")
                                         .font(.caption)
+                                        .foregroundColor(profile_message.count <= 50 ? Color.black : Color.red)
                                     Spacer()
                                 }
                                 .padding(.leading, 5)

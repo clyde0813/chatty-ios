@@ -52,7 +52,7 @@ struct QuestionOption: View {
                     .cornerRadius(16)
                 }
                 .fullScreenCover(isPresented: $isSaveImage){
-                    ChattyShareView(username: eventVM.data?.profile.username ?? "", profile_name: eventVM.data?.profile.profileName ?? "", profile_image: eventVM.data?.profile.profileImage ?? "", background_image: eventVM.data?.profile.backgroundImage ?? "", content: eventVM.data?.content ?? "", anseredContent: eventVM.data?.answerContent ?? "")
+                    ChattyShareView(eventVM: eventVM, username: eventVM.data?.profile.username ?? "", profile_name: eventVM.data?.profile.profileName ?? "", profile_image: eventVM.data?.profile.profileImage ?? "", background_image: eventVM.data?.profile.backgroundImage ?? "", content: eventVM.data?.content ?? "", anseredContent: eventVM.data?.answerContent ?? "")
                 }
                 
                 Button(action:{

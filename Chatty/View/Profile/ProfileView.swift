@@ -623,7 +623,7 @@ struct ProfileView: View {
                 }
             }
             .onReceive(eventVM.sheetPublisher){
-                isSheet = true
+                isSheet.toggle()
             }
             .sheet(isPresented: $isSheet, onDismiss: {
                 isSheet = false

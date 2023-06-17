@@ -75,6 +75,7 @@ struct MainView: View {
                             Image(systemName: "person.crop.circle.fill")
                             Text("마이페이지")}
                 }
+                .navigationBarHidden(true)
                 .onReceive(chattyVM.logoutSuccess){
                     self.logoutStatus = true
                 }

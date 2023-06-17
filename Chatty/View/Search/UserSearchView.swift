@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import Combine
 import Kingfisher
 
 struct UserSearchView: View {
     @StateObject var userSearchVM = UserSearchVM()
     @StateObject var followVM = FollowVM()
+    @StateObject var userSearchHistoryVM = UserSearchHistoryVM()
     
     @Environment(\.dismiss) private var dismiss
     
@@ -22,9 +24,12 @@ struct UserSearchView: View {
                 VStack{
                     navBar
                     resultArea
-                        .frame(width: proxy.size.width, height: proxy.size.height - 60)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(Color("Background inner"))
                 }
+            }
+            .onTapGesture {
+                endEditing()
             }
         }
         .navigationBarHidden(true)
@@ -67,7 +72,46 @@ extension UserSearchView {
     var resultArea : some View {
         ScrollView {
             VStack(spacing: 16) {
-                if !self.keyword.isEmpty && userSearchVM.genericListModel?.results == nil {
+                if self.keyword.isEmpty && !userSearchHistoryVM.userSearchHistory.isEmpty {
+                    VStack{
+                        HStack(alignment: .center){
+                            Text("최근 검색")
+                                .font(Font.system(size: 20, weight: .semibold))
+                            Spacer()
+                            Button(action: {
+                                userSearchHistoryVM.deleteAllSearches()
+                            }){
+                                Text("모두 지우기")
+                                    .font(Font.system(size: 18, weight: .semibold))
+                                    .foregroundColor(Color("Orange Main"))
+                            }
+                        }
+                        VStack(spacing: 25){
+                            ForEach(userSearchHistoryVM.userSearchHistory, id:\.keyword) { data in
+                                HStack(spacing: 0){
+                                    Button(action: {
+                                        self.keyword = data.keyword ?? ""
+                                    }){
+                                        Text("\(data.keyword ?? "")")
+                                            .font(Font.system(size: 16, weight: .none))
+                                        Spacer()
+                                    }
+                                    Image(systemName: "x.circle.fill")
+                                        .fontWeight(.semibold)
+                                        .font(.system(size: 20))
+                                        .foregroundColor(Color("Grey600"))
+                                }
+                            }
+                        }
+                        .padding(.top, 15)
+                        .padding([.leading, .trailing], 5)
+                    }
+                    .frame(minHeight: 20)
+                    .padding([.leading, .trailing], 24)
+                    .padding([.top], 12)
+                } else if self.keyword.isEmpty && userSearchHistoryVM.userSearchHistory.isEmpty {
+                    EmptyView()
+                }else if !self.keyword.isEmpty && userSearchVM.genericListModel?.results == nil {
                     ProgressView()
                 } else if let resultList = userSearchVM.genericListModel?.results {
                     ForEach(resultList, id:\.username) { data in
@@ -95,6 +139,10 @@ extension UserSearchView {
                                                 .foregroundColor(Color("Text Light Secondary"))
                                         }
                                     }
+                                }
+                                .onSubmit {
+                                    userSearchHistoryVM.addSearch(keyword: data.username)
+                                    print("Core Data : \(userSearchHistoryVM.userSearchHistory)")
                                 }
                                 Spacer()
                                 Button(action: {

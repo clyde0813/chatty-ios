@@ -53,9 +53,9 @@
 		2EA1C7C32A3C5DD800232CDB /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7B92A3C5DD800232CDB /* Background.swift */; };
 		2EA1C7C42A3C5DD800232CDB /* NavigationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7BA2A3C5DD800232CDB /* NavigationUtil.swift */; };
 		2EA1C7C52A3C5DD800232CDB /* TextExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7BB2A3C5DD800232CDB /* TextExtensions.swift */; };
-		2EA1C7C92A3CD95500232CDB /* UserSearchHistoryModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7C72A3CD95500232CDB /* UserSearchHistoryModel.xcdatamodeld */; };
-		2EA1C7CD2A3CDAD300232CDB /* UserSearchHistoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7CC2A3CDAD300232CDB /* UserSearchHistoryVM.swift */; };
 		2EA1C7D02A3CDB9B00232CDB /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7CF2A3CDB9B00232CDB /* CoreDataManager.swift */; };
+		2EA1C7D32A3CE3F900232CDB /* UserSearchHistoryModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7D12A3CE3F900232CDB /* UserSearchHistoryModel.xcdatamodeld */; };
+		2EA1C7D52A3CE88E00232CDB /* UserSearchHistoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA1C7D42A3CE88E00232CDB /* UserSearchHistoryVM.swift */; };
 		2EB0689A2A262551002E9D7A /* LoginVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB068992A262551002E9D7A /* LoginVM.swift */; };
 		2EB0689C2A2626B0002E9D7A /* RegisterVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB0689B2A2626B0002E9D7A /* RegisterVM.swift */; };
 		2EB0689E2A26280E002E9D7A /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB0689D2A26280E002E9D7A /* ErrorView.swift */; };
@@ -143,9 +143,9 @@
 		2EA1C7B92A3C5DD800232CDB /* Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		2EA1C7BA2A3C5DD800232CDB /* NavigationUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationUtil.swift; sourceTree = "<group>"; };
 		2EA1C7BB2A3C5DD800232CDB /* TextExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
-		2EA1C7C82A3CD95500232CDB /* SearchHistoryModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SearchHistoryModel.xcdatamodel; sourceTree = "<group>"; };
-		2EA1C7CC2A3CDAD300232CDB /* UserSearchHistoryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchHistoryVM.swift; sourceTree = "<group>"; };
 		2EA1C7CF2A3CDB9B00232CDB /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		2EA1C7D22A3CE3F900232CDB /* UserSearchModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserSearchModel.xcdatamodel; sourceTree = "<group>"; };
+		2EA1C7D42A3CE88E00232CDB /* UserSearchHistoryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchHistoryVM.swift; sourceTree = "<group>"; };
 		2EB068992A262551002E9D7A /* LoginVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVM.swift; sourceTree = "<group>"; };
 		2EB0689B2A2626B0002E9D7A /* RegisterVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVM.swift; sourceTree = "<group>"; };
 		2EB0689D2A26280E002E9D7A /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
@@ -210,7 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				2E0B648D2A34E20000EE7F90 /* UserSearchVM.swift */,
-				2EA1C7CC2A3CDAD300232CDB /* UserSearchHistoryVM.swift */,
+				2EA1C7D42A3CE88E00232CDB /* UserSearchHistoryVM.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -398,7 +398,7 @@
 		2EA1C7C62A3CD82200232CDB /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				2EA1C7C72A3CD95500232CDB /* UserSearchHistoryModel.xcdatamodeld */,
+				2EA1C7D12A3CE3F900232CDB /* UserSearchHistoryModel.xcdatamodeld */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -838,7 +838,9 @@
 				2E0B996C297F5CB700BDC534 /* ChattyVM.swift in Sources */,
 				2E0B64912A34E24600EE7F90 /* UserSearchView.swift in Sources */,
 				2E80F33F29E2E70B002280D5 /* NewQuestionButton.swift in Sources */,
+				2EA1C7D32A3CE3F900232CDB /* UserSearchHistoryModel.xcdatamodeld in Sources */,
 				2E7E275B2A2C60B200651366 /* TimelineView.swift in Sources */,
+				2EA1C7D52A3CE88E00232CDB /* UserSearchHistoryVM.swift in Sources */,
 				2E0B649F2A38FA5700EE7F90 /* ChattyEventVM.swift in Sources */,
 				2E3114DC2A08CB930052B309 /* PrivacyEditView.swift in Sources */,
 				2E5F21F429AD4D31003B2A14 /* TokenModel.swift in Sources */,
@@ -852,7 +854,6 @@
 				2EA1C7C12A3C5DD800232CDB /* DragGestureExtention.swift in Sources */,
 				2E0B64952A36636100EE7F90 /* FollowVM.swift in Sources */,
 				2E0B64932A350D3000EE7F90 /* GenericListModel.swift in Sources */,
-				2EA1C7C92A3CD95500232CDB /* UserSearchHistoryModel.xcdatamodeld in Sources */,
 				2EA1C7BF2A3C5DD800232CDB /* TimeExtensions.swift in Sources */,
 				2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */,
 				2E0B9958297F507000BDC534 /* UserData.swift in Sources */,
@@ -867,7 +868,6 @@
 				2E0B649C2A36647C00EE7F90 /* FollowModel.swift in Sources */,
 				2EDF751229F03AEC006D7257 /* RankingModel.swift in Sources */,
 				2E23386F29ED9F4900DF6E2F /* QuestionOption.swift in Sources */,
-				2EA1C7CD2A3CDAD300232CDB /* UserSearchHistoryVM.swift in Sources */,
 				2E9D03A929A6A2B90042F0AE /* CommunityView.swift in Sources */,
 				2EB0689C2A2626B0002E9D7A /* RegisterVM.swift in Sources */,
 				2EB0689A2A262551002E9D7A /* LoginVM.swift in Sources */,
@@ -1237,12 +1237,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		2EA1C7C72A3CD95500232CDB /* UserSearchHistoryModel.xcdatamodeld */ = {
+		2EA1C7D12A3CE3F900232CDB /* UserSearchHistoryModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				2EA1C7C82A3CD95500232CDB /* SearchHistoryModel.xcdatamodel */,
+				2EA1C7D22A3CE3F900232CDB /* UserSearchModel.xcdatamodel */,
 			);
-			currentVersion = 2EA1C7C82A3CD95500232CDB /* SearchHistoryModel.xcdatamodel */;
+			currentVersion = 2EA1C7D22A3CE3F900232CDB /* UserSearchModel.xcdatamodel */;
 			path = UserSearchHistoryModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

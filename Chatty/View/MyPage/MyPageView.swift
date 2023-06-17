@@ -274,6 +274,7 @@ struct MyPageView: View {
 //                chattyVM.profileGet(username: KeyChain.read(key: "username") ?? "")
             }
         }
+        .navigationBarHidden(true)
         
 //        .navigationDestination(isPresented: $profilePrivacyEditView){
 //            PrivacyEditView()

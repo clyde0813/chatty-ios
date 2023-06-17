@@ -9,6 +9,8 @@ import SwiftUI
 import Kingfisher
 
 struct ChattyShareView: View {
+    @StateObject var chattyVM = ChattyVM()
+    @ObservedObject var eventVM : ChattyEventVM
     @Environment(\.presentationMode) var presentationMode
         
 //    @Binding var username : String
@@ -117,6 +119,8 @@ struct ChattyShareView: View {
                     VStack(spacing:0){
                         HStack(spacing: 0) {
                             Button(action:{
+                                chattyVM.questionOptionStatus = false
+                                eventVM.sheetPublisher.send()
                                 presentationMode.wrappedValue.dismiss()
                             }){
                                 Image(systemName: "arrow.left")
@@ -149,7 +153,6 @@ struct ChattyShareView: View {
 //                                )
                             Button(action: {
                                 self.hideButton = true
-                                
                             }){
                                 Text("이미지로 저장")
                                     .font(.system(size:16, weight: .semibold))
