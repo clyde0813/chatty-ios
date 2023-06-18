@@ -81,6 +81,7 @@ struct QuestionEditor: View {
                 }
             }
             .padding(20)
+            
         }
         .onTapGesture {
             endEditing()
