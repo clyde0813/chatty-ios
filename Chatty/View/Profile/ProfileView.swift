@@ -636,7 +636,7 @@ struct ProfileView: View {
                 questionEditorStatus = false
             }){
                 QuestionEditor(username: $username, questionVM: questionVM)
-                    .presentationDetents([.fraction(0.4)])
+                    .presentationDetents([.fraction(0.45)])
             }
             .sheet(isPresented: $isAnswerSheet, onDismiss: {
                 isAnswerSheet = false
@@ -670,6 +670,8 @@ struct ProfileView: View {
             }
         }
         .navigationBarHidden(true)
+        .onTapGesture {
+        }
         .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
                     if(value.startLocation.x < 20 && value.translation.width > 100) {
                         dismiss()

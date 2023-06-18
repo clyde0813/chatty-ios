@@ -54,7 +54,7 @@ struct QuestionDetailView: View {
             questionEditorStatus = false
         }){
             QuestionEditor(username: $responser, questionVM: questionVM)
-                .presentationDetents([.fraction(0.4)])
+                .presentationDetents([.fraction(0.45)])
         }
         .toolbar(.hidden)
     }

@@ -51,10 +51,8 @@ struct MainView: View {
             IndexView()
         } else {
                 TabView (selection: $currentTab) {
-                    NavigationView{
-                        TimelineView()
-                    }
-                    .tag(BottomTab.home)
+                    TimelineView()
+                        .tag(BottomTab.home)
                         .tabItem{
                             Image(systemName: "house.fill")
                             Text("홈")}
