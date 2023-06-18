@@ -98,6 +98,7 @@ class QuestionVM : ObservableObject {
         }
     }
     
+    //질문하기
     func questionPost(username: String, content: String, anonymous: Bool) {
         let url = "https://chatty.kr/api/v1/chatty"
         var headers : HTTPHeaders = []
@@ -128,6 +129,7 @@ class QuestionVM : ObservableObject {
         }
     }
     
+    //질문신고
     func questionReport(question_id: Int) {
         let url = "https://chatty.kr/api/v1/chatty"
         var headers : HTTPHeaders = []
@@ -146,6 +148,9 @@ class QuestionVM : ObservableObject {
             switch response.result {
             case .success:
                 print("Report & Delete 성공")
+                self.questionModel?.results.removeAll{
+                    $0.pk == question_id
+                }
                 self.reportSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
@@ -153,6 +158,7 @@ class QuestionVM : ObservableObject {
         }
     }
     
+    //질문삭제
     func questionDelete(question_id: Int) {
         let url = "https://chatty.kr/api/v1/chatty"
         var headers : HTTPHeaders = []
@@ -171,6 +177,9 @@ class QuestionVM : ObservableObject {
             switch response.result {
             case .success:
                 print("DELETE 성공")
+                self.questionModel?.results.removeAll{
+                    $0.pk == question_id
+                }
                 self.deleteSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
@@ -178,6 +187,7 @@ class QuestionVM : ObservableObject {
         }
     }
     
+    //질문거절
     func questionRefuse(question_id: Int) {
         let url = "https://chatty.kr/api/v1/chatty/refused"
         var headers : HTTPHeaders = []
@@ -196,6 +206,10 @@ class QuestionVM : ObservableObject {
             switch response.result {
             case .success:
                 print("Refuse 성공")
+                
+                self.questionModel?.results.removeAll{
+                    $0.pk == question_id
+                }
                 self.refuseComplete.send()
                 print("self.refuseComplete.send()")
             case .failure(let error):
@@ -223,6 +237,9 @@ class QuestionVM : ObservableObject {
             switch response.response?.statusCode {
             case 200:
                 print("POST 성공")
+                self.questionModel?.results.removeAll{
+                    $0.pk == question_id
+                }
                 self.answerComplete.send()
             case 401:
                 if let data = response.data,

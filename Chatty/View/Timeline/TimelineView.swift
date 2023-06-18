@@ -20,55 +20,57 @@ struct TimelineView: View {
     @StateObject var eventVM = ChattyEventVM()
     //    @Binding var currentTab : BottomTab
     var body: some View {
-        ZStack(alignment: .bottomTrailing){
-            VStack{
-                //MARK: - 상단 navBar & Tabbar  -2023.06.03 신현호-
+        NavigationView {
+            ZStack(alignment: .bottomTrailing){
                 VStack{
-                    navBar
-                    tabChangeBar
-                        .background(Rectangle()
-                            .fill(Color.white)
-                            .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
-                        )
-                    GeometryReader{ proxy in
-                        ScrollView(showsIndicators: false){
-                            LazyVStack(spacing: 16){
-                                if let timelineList = questionVM.questionModel?.results{
-                                    ForEach(timelineList, id:\.pk){ questiondata in
-                                        ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
-                                            .onAppear{
-                                                callNextTimeline(questiondata: questiondata)
-                                            }
+                    //MARK: - 상단 navBar & Tabbar  -2023.06.03 신현호-
+                    VStack{
+                        navBar
+                        tabChangeBar
+                            .background(Rectangle()
+                                .fill(Color.white)
+                                .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
+                            )
+                        GeometryReader{ proxy in
+                            ScrollView(showsIndicators: false){
+                                LazyVStack(spacing: 16){
+                                    if let timelineList = questionVM.questionModel?.results{
+                                        ForEach(timelineList, id:\.pk){ questiondata in
+                                            ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
+                                                .onAppear{
+                                                    callNextTimeline(questiondata: questiondata)
+                                                }
+                                        }
                                     }
+                                    
                                 }
-                                
                             }
+                            .background(Color("Background inner"))
+                            // 2023.06.06 Clyde 높이 제한 추가
+                            .frame(height: proxy.size.height)
+                            .frame(maxHeight: .infinity)
                         }
-                        .background(Color("Background inner"))
-                        // 2023.06.06 Clyde 높이 제한 추가
-                        .frame(height: proxy.size.height)
-                        .frame(maxHeight: .infinity)
+                        
                     }
-                    
+                    .blur(radius: isClickedQuestion ? 2 : 0)
                 }
-                .blur(radius: isClickedQuestion ? 2 : 0)
-            }
 
-            if isClickedQuestion {
-                BlurView()
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        isClickedQuestion.toggle()
-                    }
-                    .background(Color("Background Overlay"))
-                    .opacity(0.7)
-                    .toolbar(.hidden ,for: .tabBar)
-            }
-            questionButton
-            
+                if isClickedQuestion {
+                    BlurView()
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            isClickedQuestion.toggle()
+                        }
+                        .background(Color("Background Overlay"))
+                        .opacity(0.7)
+                        .toolbar(.hidden ,for: .tabBar)
+                }
+                questionButton
                 
+                    
+            }
+            .navigationBarHidden(true)
         }
-        .navigationBarHidden(true)
         .onAppear(perform: {
             self.initTimelineView()
         })

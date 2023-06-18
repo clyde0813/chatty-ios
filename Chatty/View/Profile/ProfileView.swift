@@ -480,7 +480,7 @@ struct ProfileView: View {
                                     .frame(minHeight: 500,
                                            maxHeight: .infinity
                                            )
-                                //MARK: - lazyVstack
+                                //MARK: - 질문 lazyVstack
                                 LazyVStack(spacing: 16){
                                     if isQuestionEmpty == false{
                                         if let questionlist = questionVM.questionModel?.results {
@@ -597,21 +597,21 @@ struct ProfileView: View {
                 }
             }
             .onReceive(questionVM.refuseComplete) {
-                self.initProfileView()
+//                self.initProfileView()
                 self.refuseSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.refuseSuccess = false
                 }
             }
             .onReceive(questionVM.reportSuccess) {
-                self.initProfileView()
+//                self.initProfileView()
                 self.reportSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.reportSuccess = false
                 }
             }
             .onReceive(questionVM.deleteSuccess) {
-                self.initProfileView()
+//                self.initProfileView()
                 self.deleteSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.deleteSuccess = false
@@ -636,16 +636,13 @@ struct ProfileView: View {
                 questionEditorStatus = false
             }){
                 QuestionEditor(username: $username, questionVM: questionVM)
-                    .presentationDetents([.fraction(0.4)])
+                    .presentationDetents([.fraction(0.45)])
             }
             .sheet(isPresented: $isAnswerSheet, onDismiss: {
                 isAnswerSheet = false
             }) {
                 AnswerEditor(eventVM: eventVM)
                     .presentationDetents([.fraction(0.45)])
-                    .onDisappear{
-                        self.initProfileView()
-                    }
             }
             .onReceive(eventVM.deletePublisher){
                 questionVM.questionDelete(question_id: eventVM.data?.pk ?? 0)
@@ -670,6 +667,8 @@ struct ProfileView: View {
             }
         }
         .navigationBarHidden(true)
+        .onTapGesture {
+        }
         .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
                     if(value.startLocation.x < 20 && value.translation.width > 100) {
                         dismiss()

@@ -34,9 +34,10 @@ struct ArrivedCard: View {
                                     .foregroundColor(Color.gray)
                             }
                             .foregroundColor(Color("Main Primary"))
+                            Spacer()
                         }
                         else {
-                            HStack{
+                            HStack(alignment: .top,spacing: 0){
                                 NavigationLink {
                                     ProfileView(username: .constant(questiondata.author?.username ?? ""), isOwner: false)
                                 } label: {
@@ -60,6 +61,21 @@ struct ArrivedCard: View {
                                         Text("\(elapsedtime(time: questiondata.createdDate))")
                                             .font(Font.system(size: 12, weight: .semibold))
                                             .foregroundColor(Color.gray)
+                                        Spacer()
+                                        Button(action : {
+                                            eventVM.data = questiondata
+                                            eventVM.ShowSheet()
+                                            
+                                        }){
+                                            ZStack{
+                                                Image(systemName: "ellipsis")
+                                                    .foregroundColor(.black)
+                                                    .rotationEffect(.degrees(-90))
+                                                    .font(Font.system(size: 16, weight: .bold))
+                //                                    .padding(.bottom, questiondata.author == nil ? 0 : 40)
+                                            }
+                                            .frame(width:20, height: 20)
+                                        }
                                     }
                                     .padding(.bottom, 8)
                                     Text(questiondata.content)
@@ -68,24 +84,26 @@ struct ArrivedCard: View {
                                 }
                             }
                             .padding(.bottom, 16)
-                            .padding(.trailing, 15)
+//                            .padding(.trailing, 15)
                         }
-                        Spacer()
                         
-                        Button(action : {
-                            eventVM.data = questiondata
-                            eventVM.ShowSheet()
-                            
-                        }){
-                            ZStack{
-                                Image(systemName: "ellipsis")
-                                    .foregroundColor(.black)
-                                    .rotationEffect(.degrees(-90))
-                                    .font(Font.system(size: 16, weight: .bold))
-                                    .padding(.bottom, questiondata.author == nil ? 0 : 40)
+                        
+                        if questiondata.author == nil{
+                            Button(action : {
+                                eventVM.data = questiondata
+                                eventVM.ShowSheet()
+                                
+                            }){
+                                ZStack{
+                                    Image(systemName: "ellipsis")
+                                        .foregroundColor(.black)
+                                        .rotationEffect(.degrees(-90))
+                                        .font(Font.system(size: 16, weight: .bold))
+                                }
+                                .frame(width:20, height: 20)
                             }
-                            .frame(width:20, height: 20)
                         }
+                        
                     }
                 }
                 .padding(.bottom, 4)
@@ -95,6 +113,7 @@ struct ArrivedCard: View {
                         .padding(.bottom, 16)
                         .padding(.trailing, 15)
                 }
+                
                 HStack(spacing: 0){
                     Button(action:{
                         questionVM.questionRefuse(question_id: questiondata.pk)
