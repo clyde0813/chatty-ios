@@ -38,7 +38,7 @@ struct RegisterView: View {
     
     var body: some View {
         if registerVM.registerSuccess || UserDefaults.standard.bool(forKey: "isLoggedIn"){
-            MainView()
+//            MainView()
         } else {
             ZStack{
                 Color.white
@@ -279,6 +279,20 @@ struct RegisterView: View {
                         emailError.toggle()
                     }
                     
+                }
+            }
+            .onReceive(registerVM.$registerSuccess) { result in
+                if result {
+                    let window = UIApplication
+                        .shared
+                        .connectedScenes
+                        .flatMap { ($0 as? UIWindowScene)?.windows ?? []
+                        }
+                        .first{ $0.isKeyWindow}
+                    window?.rootViewController = UIHostingController(rootView: MainView().environmentObject(ChattyVM()))
+                    window?.makeKeyAndVisible()
+                }else{
+                    print("a")
                 }
             }
 
