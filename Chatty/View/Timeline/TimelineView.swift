@@ -44,6 +44,7 @@ struct TimelineView: View {
                                     }
                                     
                                 }
+                                .padding(.top, 10)
                             }
                             .background(Color("Background inner"))
                             // 2023.06.06 Clyde 높이 제한 추가

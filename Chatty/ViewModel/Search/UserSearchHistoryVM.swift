@@ -29,6 +29,7 @@ class UserSearchHistoryVM: ObservableObject {
     }
 
     func addSearch(keyword: String) {
+        deleteSearch(withKeyword: keyword)
         let newSearch = UserSearchHistory(context: coreDataManager.context)
         newSearch.date = Date()
         newSearch.keyword = keyword
@@ -36,6 +37,7 @@ class UserSearchHistoryVM: ObservableObject {
         do {
             try coreDataManager.context.save()
             userSearchHistory.append(newSearch)
+            self.fetchSearches()
         } catch {
             print("Failed to save search: \(error)")
         }
@@ -53,6 +55,7 @@ class UserSearchHistoryVM: ObservableObject {
             try coreDataManager.context.save()
 
             self.userSearchHistory = self.userSearchHistory.filter { $0.keyword != keyword }
+            self.fetchSearches()
         } catch {
             print("Failed to delete search: \(error)")
         }
@@ -65,6 +68,7 @@ class UserSearchHistoryVM: ObservableObject {
         do {
             try coreDataManager.context.execute(batchDeleteRequest)
             userSearchHistory.removeAll()
+            self.fetchSearches()
         } catch {
             print("Failed to delete all searches: \(error)")
         }

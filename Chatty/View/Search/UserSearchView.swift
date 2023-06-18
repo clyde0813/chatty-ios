@@ -18,6 +18,8 @@ struct UserSearchView: View {
     
     @State var keyword: String = ""
     
+    @State var currentPage : Int = 0
+    
     var body: some View {
         GeometryReader{ proxy in
             ZStack(alignment: .bottomTrailing){
@@ -52,8 +54,9 @@ extension UserSearchView {
                 .font(Font.system(size: 16, weight: .none))
             Spacer()
             Button(action:{
+                self.currentPage = 1
                 userSearchVM.genericListModel = nil
-                userSearchVM.userSearch(keyword: self.keyword)
+                userSearchVM.userSearch(keyword: self.keyword, page: 1)
             }) {
                 Image(systemName: "magnifyingglass")
                     .fontWeight(.semibold)
@@ -64,15 +67,16 @@ extension UserSearchView {
         .padding(.horizontal, 16)
         .frame(height: 50)
         .onChange(of: self.keyword) { data in
+            self.currentPage = 1
             userSearchVM.genericListModel = nil
-            userSearchVM.userSearch(keyword: self.keyword)
+            userSearchVM.userSearch(keyword: self.keyword, page: 1)
         }
     }
     
     var resultArea : some View {
         ScrollView {
-            VStack(spacing: 16) {
-                if self.keyword.isEmpty && !userSearchHistoryVM.userSearchHistory.isEmpty {
+            LazyVStack(spacing: 16) {
+                if self.keyword.isEmpty {
                     VStack{
                         HStack(alignment: .center){
                             Text("최근 검색")
@@ -87,7 +91,7 @@ extension UserSearchView {
                             }
                         }
                         VStack(spacing: 25){
-                            ForEach(userSearchHistoryVM.userSearchHistory, id:\.keyword) { data in
+                            ForEach(userSearchHistoryVM.userSearchHistory.reversed(), id:\.keyword) { data in
                                 HStack(spacing: 0){
                                     Button(action: {
                                         self.keyword = data.keyword ?? ""
@@ -96,10 +100,14 @@ extension UserSearchView {
                                             .font(Font.system(size: 16, weight: .none))
                                         Spacer()
                                     }
-                                    Image(systemName: "x.circle.fill")
-                                        .fontWeight(.semibold)
-                                        .font(.system(size: 20))
-                                        .foregroundColor(Color("Grey600"))
+                                    Button(action:{
+                                        userSearchHistoryVM.deleteSearch(withKeyword: data.keyword ?? "")
+                                    }){
+                                        Image(systemName: "x.circle.fill")
+                                            .fontWeight(.semibold)
+                                            .font(.system(size: 20))
+                                            .foregroundColor(Color("Grey600"))
+                                    }
                                 }
                             }
                         }
@@ -109,8 +117,8 @@ extension UserSearchView {
                     .frame(minHeight: 20)
                     .padding([.leading, .trailing], 24)
                     .padding([.top], 12)
-                } else if self.keyword.isEmpty && userSearchHistoryVM.userSearchHistory.isEmpty {
-                    EmptyView()
+//                } else if self.keyword.isEmpty && userSearchHistoryVM.userSearchHistory.isEmpty {
+//                    EmptyView()
                 }else if !self.keyword.isEmpty && userSearchVM.genericListModel?.results == nil {
                     ProgressView()
                 } else if let resultList = userSearchVM.genericListModel?.results {
@@ -140,37 +148,53 @@ extension UserSearchView {
                                         }
                                     }
                                 }
-                                .onSubmit {
-                                    userSearchHistoryVM.addSearch(keyword: data.username)
-                                    print("Core Data : \(userSearchHistoryVM.userSearchHistory)")
-                                }
+                                .simultaneousGesture(TapGesture().onEnded{
+                                    userSearchHistoryVM.addSearch(keyword: self.keyword)
+                                })
                                 Spacer()
                                 Button(action: {
                                     followVM.followPost(username: data.username)
                                     // 토글 들어갈 자리
                                 }){
                                     if data.followState {
-                                        Text("팔로우")
-                                            .font(.system(size:14, weight: .bold))
-                                            .frame(width: 45, height: 18)
-                                            .foregroundColor(Color.white)
-                                            .padding(.vertical,10)
-                                            .padding(.horizontal)
-                                            .background(
-                                                Capsule()
-                                                    .fill(Color("Pink Main"))
-                                            )
+                                        Button(action: {
+                                            followVM.followPost(username: data.username)
+                                            let index = userSearchVM.genericListModel?.results.firstIndex(where: {
+                                                $0.username == data.username
+                                            })
+                                            userSearchVM.genericListModel?.results[index!].followState.toggle()
+                                        }){
+                                            Text("팔로잉")
+                                                .font(.system(size:14, weight: .bold))
+                                                .frame(width: 45, height: 18)
+                                                .foregroundColor(Color.white)
+                                                .padding(.vertical,10)
+                                                .padding(.horizontal)
+                                                .background(
+                                                    Capsule()
+                                                        .fill(Color("Grey300"))
+                                                )
+                                        }
                                     } else {
-                                        Text("팔로잉")
-                                            .font(.system(size:14, weight: .bold))
-                                            .frame(width: 45, height: 18)
-                                            .foregroundColor(Color.white)
-                                            .padding(.vertical,10)
-                                            .padding(.horizontal)
-                                            .background(
-                                                Capsule()
-                                                    .fill(Color("Grey300"))
-                                            )
+                                        Button(action: {
+                                            followVM.followPost(username: data.username)
+                                            let index = userSearchVM.genericListModel?.results.firstIndex(where: {
+                                                $0.username == data.username
+                                            })
+                                            userSearchVM.genericListModel?.results[index!].followState.toggle()
+                                        }){
+                                            Text("팔로우")
+                                                .font(.system(size:14, weight: .bold))
+                                                .frame(width: 45, height: 18)
+                                                .foregroundColor(Color.white)
+                                                .padding(.vertical,10)
+                                                .padding(.horizontal)
+                                                .background(
+                                                    Capsule()
+                                                        .fill(Color("Pink Main"))
+                                                )
+                                        }
+ 
                                     }
                                 }
                                 //Follow button
@@ -179,15 +203,28 @@ extension UserSearchView {
                             .padding([.leading, .trailing], 16)
                             .padding([.top, .bottom], 12)
                         }
-                        .frame(width: .infinity, height: 72)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 72)
                         .mask(RoundedRectangle(cornerRadius: 20))
                         .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
                         .padding([.leading, .trailing], 20)
+                        .onAppear{
+                            callNextRseult(data: data)
+                        }
                     }
                 }
             }
             .padding(.top, 16)
         }
+    }
+    
+    func callNextRseult(data: ProfileModel){
+        print("callNextRseult() - run")
+        if userSearchVM.genericListModel?.results.isEmpty == false && userSearchVM.genericListModel?.next != nil && data.username == userSearchVM.genericListModel?.results.last?.username{
+            self.currentPage += 1
+            userSearchVM.userSearch(keyword: self.keyword, page: self.currentPage)
+        }
+        
     }
 }
 
