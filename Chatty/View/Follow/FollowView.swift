@@ -36,11 +36,7 @@ struct FollowView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear{
-            if currentTab == .follower {
-                followVM.followGet(username: username, page: 1,tab: "followers")
-            }else if currentTab == .following {
-                followVM.followGet(username: username, page: 1,tab: "followings")
-            }
+            initFollowView()
         }
         
     }
@@ -178,7 +174,10 @@ extension FollowView {
                                         }
                                     }
                                     Spacer()
-                                    if follow.followState {
+                                    if follow.username == KeyChain.read(key: "username")! {
+                                        
+                                    }
+                                    else if follow.followState {
                                         Button {
                                             followVM.followPost(username: follow.username)
                                             let index = followVM.followModel?.results.firstIndex(where: {
@@ -220,9 +219,6 @@ extension FollowView {
                                     callNextFollow(followData: follow)
                                 }
                             }
-                            .onAppear{
-                                print(currentTab)
-                            }
                         }
                     }
                 }
@@ -230,9 +226,6 @@ extension FollowView {
             // 2023.06.06 Clyde 높이 제한 추가
             .frame(height: proxy.size.height)
             .frame(maxHeight: .infinity)
-        }
-        .onChange(of: currentTab) { tab in
-            self.initFollowView()
         }
         .onReceive(followVM.isGetFollowSuccess){
             isProgressBar = false
@@ -245,7 +238,7 @@ extension FollowView {
 //MARK: - Methods
 extension FollowView {
     func initFollowView(){
-        followVM.followModel = nil
+        followVM.followModel?.results.removeAll()
         self.currentPage = 1
         followVM.followGet(username: username, page: self.currentPage, tab: currentTab.rawValue)
     }

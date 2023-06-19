@@ -18,7 +18,11 @@ struct TimelineView: View {
     @State var isSheet = false
     
     @StateObject var eventVM = ChattyEventVM()
-    //    @Binding var currentTab : BottomTab
+    
+    @State var isTimelineEmpty = true
+    
+    @State var isProgress = true
+    
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing){
@@ -31,27 +35,7 @@ struct TimelineView: View {
                                 .fill(Color.white)
                                 .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
                             )
-                        GeometryReader{ proxy in
-                            ScrollView(showsIndicators: false){
-                                LazyVStack(spacing: 16){
-                                    if let timelineList = questionVM.questionModel?.results{
-                                        ForEach(timelineList, id:\.pk){ questiondata in
-                                            ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
-                                                .onAppear{
-                                                    callNextTimeline(questiondata: questiondata)
-                                                }
-                                        }
-                                    }
-                                    
-                                }
-                                .padding(.top, 10)
-                            }
-                            .background(Color("Background inner"))
-                            // 2023.06.06 Clyde 높이 제한 추가
-                            .frame(height: proxy.size.height)
-                            .frame(maxHeight: .infinity)
-                        }
-                        
+                        timelineList
                     }
                     .blur(radius: isClickedQuestion ? 2 : 0)
                 }
@@ -66,15 +50,16 @@ struct TimelineView: View {
                         .opacity(0.7)
                         .toolbar(.hidden ,for: .tabBar)
                 }
+                
                 questionButton
                 
                     
             }
             .navigationBarHidden(true)
+            .onAppear(perform: {
+                self.initTimelineView()
+            })
         }
-        .onAppear(perform: {
-            self.initTimelineView()
-        })
         .onReceive(profileVM.$profileModel) { userInfo in
             guard let user = userInfo else { return }
             self.profile_image = user.profileImage
@@ -95,8 +80,9 @@ struct TimelineView: View {
     
 }
 
+//MARK: - Methods
 extension TimelineView {
-    //MARK: - Methods
+    
     
     func initTimelineView() {
         questionVM.questionModel?.results.removeAll()
@@ -115,12 +101,14 @@ extension TimelineView {
     }
 }
 
+//MARK: - Content
 extension TimelineView {
     var navBar : some View {
         HStack{
             NavigationLink {
                 ProfileView(username: .constant(KeyChain.read(key: "username")!), isOwner: true)
             } label: {
+                //profileVM.profileModel?.profileImage ?? ""
                 KFImage(URL(string: profile_image))
                     .resizable()
                     .scaledToFill()
@@ -200,15 +188,70 @@ extension TimelineView {
         }
         .padding(.top,10)
     }
-    
-//    var timelineLazyVstack : some View {
-//        ScrollView{
-//            LazyVStack(spacing: 16){
-//
-//            }
-//        }
-//        .background(Color("Background inner"))
-//    }
+ 
+    var timelineList : some View {
+        GeometryReader{ proxy in
+            ScrollView(showsIndicators: false){
+                if isProgress {
+                    VStack{
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                    .frame(width: proxy.size.width)
+                }else {
+                    if isTimelineEmpty {
+                        VStack{
+                            Spacer()
+                            Text("아직 팔로잉한 친구들이 받은질문이 없어요 ㅠㅠㅠ")
+                            Spacer()
+                        }
+                        .frame(width: proxy.size.width)
+                            
+                    }else{
+                        LazyVStack(spacing: 16){
+                            if let timelineList = questionVM.questionModel?.results{
+                                ForEach(timelineList, id:\.pk){ questiondata in
+                                    ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
+                                        .onAppear{
+                                            callNextTimeline(questiondata: questiondata)
+                                        }
+                                }
+                            }
+                        }
+                        .padding(.top, 10)
+                    }
+                }
+//                LazyVStack(spacing: 16){
+//                    if let timelineList = questionVM.questionModel?.results{
+//                        ForEach(timelineList, id:\.pk){ questiondata in
+//                            ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
+//                                .onAppear{
+//                                    callNextTimeline(questiondata: questiondata)
+//                                }
+//                        }
+//                    }
+//                }
+//                .padding(.top, 10)
+            }
+            .background(Color("Background inner"))
+            // 2023.06.06 Clyde 높이 제한 추가
+            .frame(height: proxy.size.height)
+            .frame(maxHeight: .infinity)
+            .refreshable {
+                self.initTimelineView()
+            }
+        }
+        .onReceive(questionVM.isSuccessGetQuestion){ result in
+            isProgress = false
+            if result {
+                isTimelineEmpty = false
+            }else {
+                isTimelineEmpty = true
+            }
+        }
+        
+    }
     
     var questionButton : some View {
         VStack(alignment: .trailing){
