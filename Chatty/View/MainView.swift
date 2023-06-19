@@ -1,10 +1,3 @@
-//
-//  MainView.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2023/02/23.
-//
-
 import SwiftUI
 
 
@@ -23,24 +16,6 @@ struct MainView: View {
     @State var currentTab : BottomTab = .home
     
     @State var logoutStatus : Bool = false
-    
-    @State private var shareView : Bool = false
-    
-    @State private var profileEditView : Bool = false
-    
-    @State private var profilePrivacyEditView : Bool = false
-    
-    @State private var profileView : Bool = false
-    
-    @State private var username : String = ""
-    
-    @State private var profile_name : String = ""
-    
-    @State private var profile_image : String = ""
-    
-    @State private var background_image : String = ""
-    
-    @State private var questiondata : ResultDetail?
         
     init(){
         UITabBar.appearance().backgroundColor = .white
@@ -55,7 +30,9 @@ struct MainView: View {
                         .tag(BottomTab.home)
                         .tabItem{
                             Image(systemName: "house.fill")
-                            Text("홈")}
+                            Text("홈")
+                        }
+                        
                     
 //                    CommunityView()
 //                        .tag(BottomTab.community)
@@ -67,7 +44,6 @@ struct MainView: View {
 //                        .tabItem{
 //                            Image(systemName: "trophy.fill")
 //                            Text("랭킹")}
-                    
                     MyPageView()
                         .tag(BottomTab.mypage)
                         .tabItem{
@@ -77,21 +53,6 @@ struct MainView: View {
                 .navigationBarHidden(true)
                 .onReceive(chattyVM.logoutSuccess){
                     self.logoutStatus = true
-                }
-                .onReceive(chattyVM.shareViewPass){
-                    self.username = chattyVM.username
-                    self.profile_name = chattyVM.profile_name
-                    self.profile_image = chattyVM.profile_image
-                    self.background_image = chattyVM.background_image
-                    self.questiondata = chattyVM.questiondata
-                    self.shareView = true
-                }
-                .onReceive(chattyVM.profilePressed){
-                    self.username = chattyVM.username
-                    self.profileView = true
-                }
-                .onReceive(chattyVM.profileEditPressed){
-                    self.profileEditView = true
                 }
                 .accentColor(Color.black)
                 .onChange(of: currentTab) { tab in

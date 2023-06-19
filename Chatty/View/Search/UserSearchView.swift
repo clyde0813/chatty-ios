@@ -25,10 +25,15 @@ struct UserSearchView: View {
             ZStack(alignment: .bottomTrailing){
                 VStack{
                     navBar
+                        .background(Rectangle()
+                            .fill(Color.white)
+                            .shadow(color: Color("Shadow Button"), radius: 2, x: 0, y: 3)
+                        )
                     resultArea
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color("Background inner"))
+//                        .background(Color("Background inner"))
                 }
+                
             }
             .onTapGesture {
                 endEditing()
