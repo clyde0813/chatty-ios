@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		001A01072A40A4DD009F7692 /* BlockedUsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001A01062A40A4DD009F7692 /* BlockedUsersView.swift */; };
+		001A010C2A40B49A009F7692 /* RefuseListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001A010B2A40B49A009F7692 /* RefuseListVM.swift */; };
+		001A01102A40BC6F009F7692 /* UserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001A010F2A40BC6F009F7692 /* UserOption.swift */; };
 		2E0B64892A3213F100EE7F90 /* QuestionVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B64882A3213F100EE7F90 /* QuestionVM.swift */; };
 		2E0B648E2A34E20000EE7F90 /* UserSearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B648D2A34E20000EE7F90 /* UserSearchVM.swift */; };
 		2E0B64912A34E24600EE7F90 /* UserSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B64902A34E24600EE7F90 /* UserSearchView.swift */; };
@@ -95,6 +98,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		001A01062A40A4DD009F7692 /* BlockedUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersView.swift; sourceTree = "<group>"; };
+		001A010B2A40B49A009F7692 /* RefuseListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseListVM.swift; sourceTree = "<group>"; };
+		001A010F2A40BC6F009F7692 /* UserOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserOption.swift; sourceTree = "<group>"; };
 		03CAD13A5370E1EBA2C783E3 /* Pods-Chatty-ChattyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatty-ChattyUITests.debug.xcconfig"; path = "Target Support Files/Pods-Chatty-ChattyUITests/Pods-Chatty-ChattyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		08ACB0F087F69EBB0E5E74FA /* Pods-ChattyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattyTests.release.xcconfig"; path = "Target Support Files/Pods-ChattyTests/Pods-ChattyTests.release.xcconfig"; sourceTree = "<group>"; };
 		2E0B64882A3213F100EE7F90 /* QuestionVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionVM.swift; sourceTree = "<group>"; };
@@ -202,6 +208,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		001A01052A40A4CA009F7692 /* BlockedUserView */ = {
+			isa = PBXGroup;
+			children = (
+				001A01062A40A4DD009F7692 /* BlockedUsersView.swift */,
+			);
+			path = BlockedUserView;
+			sourceTree = "<group>";
+		};
+		001A010A2A40B30A009F7692 /* RefuseListVM */ = {
+			isa = PBXGroup;
+			children = (
+				001A010B2A40B49A009F7692 /* RefuseListVM.swift */,
+			);
+			path = RefuseListVM;
+			sourceTree = "<group>";
+		};
 		2E0B5F5329B9660000E6FB48 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +284,7 @@
 		2E0B996A297F5CA900BDC534 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				001A010A2A40B30A009F7692 /* RefuseListVM */,
 				7726157D2A3E90C300DDE57B /* QuestionDetailVM */,
 				2E0B649D2A38FA5700EE7F90 /* EventVideModel */,
 				2E0B64942A36636100EE7F90 /* FollowVM.swift */,
@@ -288,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				2E23386E29ED9F4900DF6E2F /* QuestionOption.swift */,
+				001A010F2A40BC6F009F7692 /* UserOption.swift */,
 			);
 			path = Option;
 			sourceTree = "<group>";
@@ -419,6 +443,7 @@
 		2ED68B08295304BF007F5EA7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				001A01052A40A4CA009F7692 /* BlockedUserView */,
 				7726157A2A3E8FEA00DDE57B /* QuestionDetail */,
 				2E0B64982A36637C00EE7F90 /* Follow */,
 				2E0B648F2A34E23200EE7F90 /* Search */,
@@ -843,6 +868,7 @@
 				2E71BD4B29F55FF100D17200 /* ProfileEditView.swift in Sources */,
 				2E0B649A2A36637C00EE7F90 /* FollowView.swift in Sources */,
 				2E9D85BE29DBB657007C9904 /* ErrorModel.swift in Sources */,
+				001A01102A40BC6F009F7692 /* UserOption.swift in Sources */,
 				2EA1C7BE2A3C5DD800232CDB /* IntExtensions.swift in Sources */,
 				2EA1C7C52A3C5DD800232CDB /* TextExtensions.swift in Sources */,
 				2EA1C7C22A3C5DD800232CDB /* MessageBoxShape.swift in Sources */,
@@ -854,11 +880,13 @@
 				2E7E275D2A2C632300651366 /* ProfileVM.swift in Sources */,
 				2EDF750B29EE5947006D7257 /* ChattyShareView.swift in Sources */,
 				2E80F34129E2F65A002280D5 /* QuestionEditor.swift in Sources */,
+				001A01072A40A4DD009F7692 /* BlockedUsersView.swift in Sources */,
 				2EA1C7C02A3C5DD800232CDB /* MailExtensions.swift in Sources */,
 				2E71BD4629F4C6E300D17200 /* TestView.swift in Sources */,
 				7726157F2A3E90C300DDE57B /* QuestionDetailVM.swift in Sources */,
 				2E80F34A29E30A08002280D5 /* RoundedCornersShape.swift in Sources */,
 				2E0B996C297F5CB700BDC534 /* ChattyVM.swift in Sources */,
+				001A010C2A40B49A009F7692 /* RefuseListVM.swift in Sources */,
 				2E0B64912A34E24600EE7F90 /* UserSearchView.swift in Sources */,
 				2E80F33F29E2E70B002280D5 /* NewQuestionButton.swift in Sources */,
 				2EA1C7D32A3CE3F900232CDB /* UserSearchHistoryModel.xcdatamodeld in Sources */,
