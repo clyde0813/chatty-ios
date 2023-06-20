@@ -73,10 +73,10 @@ class QuestionVM : ObservableObject {
                     self.questionModel?.previous = data.previous
                 }
                 if data.results.isEmpty{
-                    print("데이터가 비어있어")
+                    print("QuestionVM- guestionGet() : 질문 데이터가 비어있어")
                     self.isSuccessGetQuestion.send(false)
                 }else{
-                    print("데이터가 들어있어")
+                    print("QuestionVM- guestionGet() : 데이터가 들어있어")
                     self.isSuccessGetQuestion.send(true)
                 }
                 
@@ -103,14 +103,12 @@ class QuestionVM : ObservableObject {
         let url = "https://chatty.kr/api/v1/chatty"
         var headers : HTTPHeaders = []
         
-        //2023.06.16 -신현호 차후,헤더에 토큰추가
         headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let params: Parameters = [
-            "target_profile" : username,
+            "username" : username,
             "content" : content,
             "anonymous_status" : anonymous
-            //2023.06.16 -신현호 차후, 파라미터에 익명체크여부 추가
         ]
         
         AF.request(url,
@@ -189,7 +187,7 @@ class QuestionVM : ObservableObject {
     
     //질문거절
     func questionRefuse(question_id: Int) {
-        let url = "https://chatty.kr/api/v1/chatty/refused"
+        let url = "https://chatty.kr/api/v1/chatty/refuse"
         var headers : HTTPHeaders = []
         headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
 
@@ -206,12 +204,10 @@ class QuestionVM : ObservableObject {
             switch response.result {
             case .success:
                 print("Refuse 성공")
-                
                 self.questionModel?.results.removeAll{
                     $0.pk == question_id
                 }
                 self.refuseComplete.send()
-                print("self.refuseComplete.send()")
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
             }
