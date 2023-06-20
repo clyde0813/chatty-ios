@@ -13,14 +13,33 @@ import Foundation
 class UserSearchVM: ObservableObject {
     @Published var genericListModel : GenericListModel<ProfileModel>? = nil
     
-    func userSearch(keyword: String, page: Int) {
+    @Published var inputText = ""
+    @Published var resultKeyword = ""
+    
+    var cancellable = Set<AnyCancellable>()
+    
+    init(){
+        bind()
+    }
+    
+    private func bind(){
+        $inputText
+            .removeDuplicates()
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] text in
+                self?.resultKeyword = text
+            } )
+            .store(in: &cancellable)
+    }
+    
+    func userSearch(page: Int) {
         let url = "https://chatty.kr/api/v1/user/search"
         var headers : HTTPHeaders = []
         
         headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let params: Parameters = [
-            "keyword" : keyword,
+            "keyword" : resultKeyword,
             "page" : page
         ]
         
