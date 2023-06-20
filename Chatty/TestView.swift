@@ -9,9 +9,22 @@ import SwiftUI
 import Kingfisher
 
 struct TestView: View {
+    @StateObject private var nativeViewModel = NativeViewModel()
     var body: some View {
-        EmptyView()
+        VStack{
+            AdsView(nativeAdViewModel: nativeViewModel)
+                .frame(width: 300,height: 50)
+        }
+        .onAppear {
+              refreshAd()
+            }
+            
+            
     }
+    
+    private func refreshAd() {
+        nativeViewModel.refreshAd()
+      }
 }
 
 struct TestView_Previews: PreviewProvider {

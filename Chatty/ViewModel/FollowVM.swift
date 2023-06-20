@@ -67,14 +67,14 @@ class FollowVM : ObservableObject{
         .response{ response in
             switch response.response?.statusCode {
             case 201 :
-                print("실패")
+                print("FollowVM - followPost() 201")
             case 200:
                 let index = self.followModel?.results.firstIndex(where: {
                     $0.username == username
                 })
                 self.followModel?.results[index!].followState.toggle()
             default :
-                print("error")
+                print(response.response?.statusCode ?? 0)
             }
         }
     }

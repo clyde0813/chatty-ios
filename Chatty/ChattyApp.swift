@@ -1,24 +1,27 @@
-//
-//  Chatty_SwiftApp.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2022/12/21.
-//
-
 import SwiftUI
 import FirebaseCore
 import FirebaseMessaging
 import UserNotifications
 import GoogleMobileAds
+//ios 15이상부턴 버그떄문에 이걸추가해서 1초 딜레이를 주라고함..
+import AppTrackingTransparency
 
 @main
 struct ChattyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
+//            TestView()
             IndexView().environmentObject(ChattyVM())
         }
     }
+//    init(){
+//        
+//        //ios 15이상부턴 버그떄문에 이걸추가해서 1초 딜레이를 주라고함..
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//              ATTrackingManager.requestTrackingAuthorization(completionHandler: { _ in })
+//            }
+//    }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -27,9 +30,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     // 앱이 켜졌을때
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
+        
         // 구글 애드몹 초기화
         GADMobileAds.sharedInstance().start(completionHandler: nil)
-        
         // Use Firebase library to configure APIs
         // 파이어베이스 설정
         FirebaseApp.configure()
