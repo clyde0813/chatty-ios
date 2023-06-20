@@ -21,6 +21,9 @@ class ChattyEventVM : ObservableObject {
     
     var answerPublisher = PassthroughSubject<(),Never>()
     
+    var userBlockPublisher = PassthroughSubject<(),Never>()
+    
+    
     func ShowSheet(){
         sheetPublisher.send()
     }
@@ -41,6 +44,9 @@ class ChattyEventVM : ObservableObject {
     }
     func answerQuestion(){
         answerPublisher.send()
+    }
+    func userBlock(){
+        userBlockPublisher.send()
     }
     
     

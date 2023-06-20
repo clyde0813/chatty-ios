@@ -18,7 +18,7 @@ struct MyPageView: View {
     @StateObject var profileVM = ProfileVM()
     
     var body: some View {
-        NavigationStack{
+        NavigationView{
             GeometryReader{ proxy in
                 ZStack{
                     Color.white
@@ -82,22 +82,6 @@ struct MyPageView: View {
                                                     .strokeBorder(Color("Pink Main"), lineWidth: 1)
                                             )
                                     }
-
-//                                    Button(action:{
-//                                        chattyVM.profileEditPressed.send()
-//                                    }){
-//                                        Text("프로필 수정")
-//                                            .font(.system(size:14, weight: .bold))
-//                                            .frame(height: 40)
-//                                            .frame(minWidth: 0,
-//                                                   maxWidth: .infinity
-//                                            )
-//                                            .foregroundColor(Color("Pink Main"))
-//                                            .background(
-//                                                Capsule()
-//                                                    .strokeBorder(Color("Pink Main"), lineWidth: 1)
-//                                            )
-//                                    }
                                 }
                                 .padding(16)
                             }
@@ -127,6 +111,7 @@ struct MyPageView: View {
                                 
                                 NavigationLink {
                                     PrivacyEditView()
+                                    
                                 } label: {
                                     Text("개인정보 수정")
                                         .font(Font.system(size: 16, weight: .none))
@@ -187,14 +172,18 @@ struct MyPageView: View {
     //                                    .font(Font.system(size: 16, weight: .none))
     //                            }
     //                            .frame(height: 48)
-    //                            HStack{
-    //                                Text("차단된 IP 및 계정 목록")
-    //                                    .font(Font.system(size: 16, weight: .none))
-    //                                Spacer()
-    //                                Image(systemName: "chevron.right")
-    //                                    .font(Font.system(size: 16, weight: .none))
-    //                            }
-    //                            .frame(height: 48)
+                                NavigationLink {
+                                    BlockedUsersView(profileVM: profileVM)
+                                } label: {
+                                    HStack{
+                                        Text("차단된 IP 및 계정 목록")
+                                            .font(Font.system(size: 16, weight: .none))
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(Font.system(size: 16, weight: .none))
+                                    }
+                                }
+                                .frame(height: 48)
     //                            HStack{
     //                                Text("신고 기록 및 처리 상태 확인")
     //                                    .font(Font.system(size: 16, weight: .none))
