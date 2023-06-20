@@ -12,11 +12,18 @@ import Foundation
 
 class ProfileVM : ObservableObject {    
     @Published var profileModel : ProfileModel? = nil
+    @Published var blockedUserModel : GenericListModel<ProfileModel>? = nil
     
     let token = TokenVM()
     
+    //MARK: - Publisher
     var profileEditSuccess = PassthroughSubject<(), Never>()
     
+    var userBlockSuccess = PassthroughSubject<(), Never>()
+    
+    
+    //MARK: - 함수
+    //Get profile
     func profileGet(username: String){
         let url = "https://chatty.kr/api/v1/user/profile/\(username)"
         
@@ -45,6 +52,7 @@ class ProfileVM : ObservableObject {
         }
     }
     
+    //update profile
     func profileEdit(username: String, profile_name: String, profile_message: String, profile_image: UIImage?, background_image: UIImage?){
         let url = "https://chatty.kr/api/v1/user/profile"
         
@@ -96,15 +104,17 @@ class ProfileVM : ObservableObject {
         }
     }
     
+    //set SumOfQuestion
     func SumOfQuestion() -> Int{
         return (profileModel?.questionCount.answered ?? 0) + (profileModel?.questionCount.unanswered ?? 0) + (profileModel?.questionCount.rejected ?? 0)
     }
     
+    //Post Follow
     func Follow(username : String) {
         let url = "https://chatty.kr/api/v1/user/follow"
         
         var headers : HTTPHeaders = []
-        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let parameters: [String: String] = [
             "username" : username
@@ -125,6 +135,112 @@ class ProfileVM : ObservableObject {
                 print("error")
             }
         }
+    }
+    
+    //Post UserBlock
+    func userBlock(username : String){
+        let url = "https://chatty.kr/api/v1/user/block"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json",
+                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let parameters: [String: String] = [
+            "username" : username
+        ]
+        
+        AF.request(url,
+                   method: .post,
+                   parameters: parameters,
+                   encoding: JSONEncoding.default,
+                   headers: headers)
+        .responseData { response in
+            switch response.result {
+            case .success(_):
+                print("ProfileVM - userBlock() : Success")
+                self.userBlockSuccess.send()
+            case .failure(_):
+                print("ProfileVM - userBlock() : Failed")
+                print(response)
+                if let data = response.data,
+                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
+                    print("Error Data : ", errorModel)
+                }
+            }
+        }
+    }
+    
+    //Delete userBlock
+    func DeleteUserBlock(username : String){
+        let url = "https://chatty.kr/api/v1/user/block"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json",
+                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let parameters: [String: String] = [
+            "username" : username
+        ]
+        
+        AF.request(url,
+                   method: .delete,
+                   parameters: parameters,
+                   encoding: JSONEncoding.default,
+                   headers: headers)
+        .responseData { response in
+            switch response.result {
+            case .success(_):
+                print("ProfileVM - DeleteUserBlock() : Success")
+                self.blockedUserModel?.results.removeAll(where: {
+                    $0.username == username
+                })
+            case .failure(_):
+                print("ProfileVM - DeleteUserBlock() : Failed")
+                print(response)
+                if let data = response.data,
+                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
+                    print("Error Data : ", errorModel)
+                }
+            }
+        }
+    }
+    
+    //Get BlockedUserList
+    func blockedUserListGet(){
+        let url = "https://chatty.kr/api/v1/user/block"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json",
+                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        AF.request(url,
+                   method: .get,
+                   encoding: JSONEncoding.default,
+                   headers: headers)
+        .responseDecodable(of: GenericListModel<ProfileModel>.self){ response in
+            switch response.result {
+            case .success(let data):
+                print("profileVM- blockedUserListGet() : Success")
+                if self.blockedUserModel == nil {
+                    self.blockedUserModel = data
+                }else{
+                    self.blockedUserModel?.results += data.results
+                    self.blockedUserModel?.next = data.next
+                    self.blockedUserModel?.previous = data.previous
+                }
+            case .failure(_):
+                print("profileVM- blockedUserListGet() : Failed")
+                print(response)
+                if let data = response.data,
+                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
+                    print("Error Data : ", errorModel)
+                }
+            }
+        }
+        
     }
     
 }

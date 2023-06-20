@@ -56,9 +56,13 @@ struct ProfileView: View {
     
     @State var deleteSuccess : Bool = false
     
+    @State var userBlockSuccess : Bool = false
+    
     @State var isSheet : Bool = false
     
     @State var isAnswerSheet : Bool = false
+    
+    @State var isUserSheet : Bool = false
     
     @GestureState private var dragOffset = CGSize.zero
 
@@ -78,7 +82,6 @@ struct ProfileView: View {
                             let minY = proxy.frame(in: .global).minY
 
                             DispatchQueue.main.async {
-
                                 self.offset = minY
                             }
 
@@ -91,6 +94,7 @@ struct ProfileView: View {
                                             width: size.width,
                                             height: minY > 0 ? 180 + minY : 180, alignment: .center
                                             )
+                                    
                                     HStack(spacing: 0) {
                                         Button(action:{
                                             dismiss()
@@ -108,26 +112,28 @@ struct ProfileView: View {
                                         .padding(.leading, 25)
                                         .padding(.bottom, 40)
                                         Spacer()
-                                        //2023.06.15 -신현호
-                                        //아직기능이없어서, 주석처리
-//                                        Button(action:{
-//                                            dismiss()
-//                                        }){
-//                                            Image(systemName: "ellipsis")
-//                                                .font(.system(size:16, weight: .bold))
-//                                                .foregroundColor(Color.white)
-//                                                .rotationEffect(.degrees(-90))
-//                                                .background(
-//                                                    Circle()
-//                                                        .fill(Color("Card Share Background"))
-//                                                        .frame(width: 32, height: 32)
-//                                                )
-//                                        }
-//                                        .padding(.trailing, 25)
-//                                        .padding(.bottom, 40)
+                                        
+                                        //MARK: - userOption Sheet On
+                                        Button(action:{
+                                            isUserSheet = true
+                                        }){
+                                            Image(systemName: "ellipsis")
+                                                .font(.system(size:16, weight: .bold))
+                                                .foregroundColor(Color.white)
+                                                .rotationEffect(.degrees(-90))
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color("Card Share Background"))
+                                                        .frame(width: 32, height: 32)
+                                                )
+                                        }
+                                        .padding(.trailing, 25)
+                                        .padding(.bottom, 40)
+                                        .opacity(profileVM.profileModel?.username == KeyChain.read(key: "username") ? 0 : 1)
                                     }
                                     BlurView()
                                         .opacity(blurViewOpacity())
+                                    
                                     HStack{
                                         Button(action:{
                                             dismiss()
@@ -143,6 +149,7 @@ struct ProfileView: View {
                                         }
                                         .padding(.leading, 25)
                                         .padding(.bottom, 10)
+                                        
                                         Spacer()
                                         VStack(alignment: .center, spacing: 8){
                                             Text("\(profileVM.profileModel?.profile_name ?? "")")
@@ -156,7 +163,7 @@ struct ProfileView: View {
                                         Spacer()
                                         
                                         Button(action:{
-                                            dismiss()
+                                            isUserSheet = true
                                         }){
                                             Image(systemName: "ellipsis")
                                                 .font(.system(size:16, weight: .bold))
@@ -170,14 +177,14 @@ struct ProfileView: View {
                                         }
                                         .padding(.trailing, 25)
                                         .padding(.bottom, 10)
-                                        //2023.06.16 -신현호
-                                        //아직기능이없어서, opacity 0으로줘서 클릭안되고, 안보이게함 비율때문에 opacity로 줌
-                                        .opacity(0)
+                                        .opacity(profileVM.profileModel?.username == KeyChain.read(key: "username") ? 0 : 1)
+                                        
                                     }
                                     // to slide from bottom added extra 60..
                                     .offset(y: 120)
                                     .offset(y: titleOffset > 100 ? 0 : -getTitleTextOffset())
                                     .opacity(titleOffset < 100 ? 1 : 0)
+                                    
                                 }
                                     .clipped()
                                 //offset이 -80 이하일 경우 background image 상단 dismiss 버튼 허용
@@ -508,7 +515,6 @@ struct ProfileView: View {
                                         }
                                     }
                                     else if isQuestionEmpty == true {
-                                        
                                         VStack(alignment: .center){
                                             VStack(spacing: 0){
                                                 Text("아직 받은 질문이 없어요!")
@@ -536,7 +542,6 @@ struct ProfileView: View {
                                         }
                                         .frame(width: proxy.size.width)
                                         .frame(maxHeight: .infinity)
-                                        
                                     }
                                     else {
                                         VStack(alignment: .center){
@@ -584,6 +589,11 @@ struct ProfileView: View {
                 if deleteSuccess {
                     ProfileErrorView(msg: "삭제가 완료되었습니다!")
                 }
+                
+                if userBlockSuccess {
+                    ProfileErrorView(msg: "차단이 완료되었습니다!")
+                }
+                
             }
             .ignoresSafeArea(.all, edges: .top)
             .onAppear{
@@ -597,21 +607,18 @@ struct ProfileView: View {
                 }
             }
             .onReceive(questionVM.refuseComplete) {
-//                self.initProfileView()
                 self.refuseSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.refuseSuccess = false
                 }
             }
             .onReceive(questionVM.reportSuccess) {
-//                self.initProfileView()
                 self.reportSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.reportSuccess = false
                 }
             }
             .onReceive(questionVM.deleteSuccess) {
-//                self.initProfileView()
                 self.deleteSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.deleteSuccess = false
@@ -621,6 +628,12 @@ struct ProfileView: View {
                 self.questionPostSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.questionPostSuccess = false
+                }
+            }
+            .onReceive(profileVM.userBlockSuccess){
+                self.userBlockSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.userBlockSuccess = false
                 }
             }
             .onReceive(eventVM.sheetPublisher){
@@ -644,6 +657,12 @@ struct ProfileView: View {
                 AnswerEditor(eventVM: eventVM)
                     .presentationDetents([.fraction(0.45)])
             }
+            .sheet(isPresented: $isUserSheet, onDismiss: {
+                isUserSheet = false
+            }) {
+                UserOption(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.2)])
+            }
             .onReceive(eventVM.deletePublisher){
                 questionVM.questionDelete(question_id: eventVM.data?.pk ?? 0)
             }
@@ -658,6 +677,9 @@ struct ProfileView: View {
             }
             .onReceive(eventVM.answerPublisher){
                 questionVM.answerPost(question_id: eventVM.data?.pk ?? 0, content: eventVM.data?.answerContent ?? "")
+            }
+            .onReceive(eventVM.userBlockPublisher){
+                profileVM.userBlock(username: profileVM.profileModel?.username ?? "" )
             }
             .refreshable {
                 self.initProfileView()
@@ -715,7 +737,6 @@ struct ProfileView: View {
     
     func callNextQuestion(questiondata: ResultDetail){
         print("callNextQuestion() - run")
-        print(questiondata)
         if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
             self.currentQuestionPage += 1
             questionVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)

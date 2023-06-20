@@ -32,6 +32,7 @@ class FollowVM : ObservableObject{
                 if self.followModel == nil {
                     self.followModel = data
                 }else{
+                    print("팔로우 팔로잉 데이터는 \n \(data.results)")
                     self.followModel?.results += data.results
                     self.followModel?.next = data.next
                     self.followModel?.previous = data.previous
@@ -68,35 +69,14 @@ class FollowVM : ObservableObject{
             case 201 :
                 print("실패")
             case 200:
-                print("성공")
+                let index = self.followModel?.results.firstIndex(where: {
+                    $0.username == username
+                })
+                self.followModel?.results[index!].followState.toggle()
             default :
                 print("error")
             }
         }
     }
-//    func followingGet(username: String, page : Int){
-//        let url = "https://chatty.kr/api/v1/user/profile/\(username)/followings"
-//        let params: Parameters = [
-//            "page" : page
-//        ]
-//        AF.request(url,
-//                   method: .get,
-//                   parameters: params,
-//                   encoding: JSONEncoding.default,
-//                   headers: ["Content-Type":"application/json", "Accept":"application/json"])
-//        .responseDecodable(of: FollowModel.self){ response in
-//            switch response.result {
-//            case .success(let data):
-//                print("Profile get : Success")
-//                self.followModel = data
-//            case .failure(_):
-//                print("Profile get : Failed")
-//                print(response)
-//                if let data = response.data,
-//                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
-//                    print("Error Data : ", errorModel)
-//                }
-//            }
-//        }
-//    }
+
 }

@@ -180,10 +180,6 @@ extension FollowView {
                                     else if follow.followState {
                                         Button {
                                             followVM.followPost(username: follow.username)
-                                            let index = followVM.followModel?.results.firstIndex(where: {
-                                                $0.username == follow.username
-                                            })
-                                            followVM.followModel?.results[index!].followState.toggle()
                                         } label: {
                                             Text("취소")
                                                 .font(Font.system(size: 14, weight: .bold))
@@ -197,10 +193,6 @@ extension FollowView {
                                     } else {
                                         Button {
                                             followVM.followPost(username: follow.username)
-                                            let index = followVM.followModel?.results.firstIndex(where: {
-                                                $0.username == follow.username
-                                            })
-                                            followVM.followModel?.results[index!].followState.toggle()
                                         } label: {
                                             Text("팔로우")
                                                 .font(Font.system(size: 14, weight: .bold))
