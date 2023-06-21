@@ -10,6 +10,8 @@
 		001A01072A40A4DD009F7692 /* BlockedUsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001A01062A40A4DD009F7692 /* BlockedUsersView.swift */; };
 		001A010C2A40B49A009F7692 /* RefuseListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001A010B2A40B49A009F7692 /* RefuseListVM.swift */; };
 		001A01102A40BC6F009F7692 /* UserOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001A010F2A40BC6F009F7692 /* UserOption.swift */; };
+		00B8DDA42A424A3300731D31 /* AdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B8DDA32A424A3300731D31 /* AdsView.swift */; };
+		00B8DDA62A424DB100731D31 /* GADTSmallTemplateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00B8DDA52A424DB100731D31 /* GADTSmallTemplateView.xib */; };
 		2E0B64892A3213F100EE7F90 /* QuestionVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B64882A3213F100EE7F90 /* QuestionVM.swift */; };
 		2E0B648E2A34E20000EE7F90 /* UserSearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B648D2A34E20000EE7F90 /* UserSearchVM.swift */; };
 		2E0B64912A34E24600EE7F90 /* UserSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B64902A34E24600EE7F90 /* UserSearchView.swift */; };
@@ -104,6 +106,8 @@
 		001A01062A40A4DD009F7692 /* BlockedUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersView.swift; sourceTree = "<group>"; };
 		001A010B2A40B49A009F7692 /* RefuseListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefuseListVM.swift; sourceTree = "<group>"; };
 		001A010F2A40BC6F009F7692 /* UserOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserOption.swift; sourceTree = "<group>"; };
+		00B8DDA32A424A3300731D31 /* AdsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsView.swift; sourceTree = "<group>"; };
+		00B8DDA52A424DB100731D31 /* GADTSmallTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GADTSmallTemplateView.xib; sourceTree = "<group>"; };
 		03CAD13A5370E1EBA2C783E3 /* Pods-Chatty-ChattyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatty-ChattyUITests.debug.xcconfig"; path = "Target Support Files/Pods-Chatty-ChattyUITests/Pods-Chatty-ChattyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		08ACB0F087F69EBB0E5E74FA /* Pods-ChattyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattyTests.release.xcconfig"; path = "Target Support Files/Pods-ChattyTests/Pods-ChattyTests.release.xcconfig"; sourceTree = "<group>"; };
 		2E0B64882A3213F100EE7F90 /* QuestionVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionVM.swift; sourceTree = "<group>"; };
@@ -228,6 +232,15 @@
 				001A010B2A40B49A009F7692 /* RefuseListVM.swift */,
 			);
 			path = RefuseListVM;
+			sourceTree = "<group>";
+		};
+		00B8DDA02A42499700731D31 /* Ads */ = {
+			isa = PBXGroup;
+			children = (
+				00B8DDA52A424DB100731D31 /* GADTSmallTemplateView.xib */,
+				00B8DDA32A424A3300731D31 /* AdsView.swift */,
+			);
+			path = Ads;
 			sourceTree = "<group>";
 		};
 		2E0B5F5329B9660000E6FB48 /* Profile */ = {
@@ -545,6 +558,7 @@
 			isa = PBXGroup;
 			children = (
 				2E4A87F62A42854E000180E2 /* Ads */,
+				00B8DDA02A42499700731D31 /* Ads */,
 				2EA1C7CE2A3CDB9000232CDB /* Manager */,
 				2EA1C7C62A3CD82200232CDB /* DataModel */,
 				2E5243E62A02387F009C4E64 /* GoogleService-Info.plist */,
@@ -752,6 +766,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E4A87F92A42854E000180E2 /* GADTSmallTemplateView.xib in Resources */,
+				00B8DDA62A424DB100731D31 /* GADTSmallTemplateView.xib in Resources */,
 				2EE6CB3A2952F4F400E281A0 /* Preview Assets.xcassets in Resources */,
 				2E5243E72A02387F009C4E64 /* GoogleService-Info.plist in Resources */,
 				2E8747EC29FF373C00839360 /* SUIT-Heavy.ttf in Resources */,
@@ -943,6 +958,7 @@
 				2EB0689C2A2626B0002E9D7A /* RegisterVM.swift in Sources */,
 				2EB0689A2A262551002E9D7A /* LoginVM.swift in Sources */,
 				2E4A87FA2A42854E000180E2 /* AdsView.swift in Sources */,
+				00B8DDA42A424A3300731D31 /* AdsView.swift in Sources */,
 				2ED68B172954952D007F5EA7 /* RegisterView.swift in Sources */,
 				2ED68B0B29530550007F5EA7 /* LoginView.swift in Sources */,
 				2E80F33929E1DA5A002280D5 /* ArrivedCard.swift in Sources */,
