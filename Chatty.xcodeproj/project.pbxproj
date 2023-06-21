@@ -25,6 +25,9 @@
 		2E23386F29ED9F4900DF6E2F /* QuestionOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E23386E29ED9F4900DF6E2F /* QuestionOption.swift */; };
 		2E3114DA2A08A5870052B309 /* EULAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3114D92A08A5870052B309 /* EULAView.swift */; };
 		2E3114DC2A08CB930052B309 /* PrivacyEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3114DB2A08CB930052B309 /* PrivacyEditView.swift */; };
+		2E4A87F92A42854E000180E2 /* GADTSmallTemplateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E4A87F72A42854E000180E2 /* GADTSmallTemplateView.xib */; };
+		2E4A87FA2A42854E000180E2 /* AdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4A87F82A42854E000180E2 /* AdsView.swift */; };
+		2E4A88002A428F36000180E2 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4A87FF2A428F36000180E2 /* AdBannerView.swift */; };
 		2E5243E72A02387F009C4E64 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E5243E62A02387F009C4E64 /* GoogleService-Info.plist */; };
 		2E5F21F429AD4D31003B2A14 /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F21F329AD4D31003B2A14 /* TokenModel.swift */; };
 		2E5F21FA29AD5002003B2A14 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F21F929AD5002003B2A14 /* ProfileModel.swift */; };
@@ -120,6 +123,9 @@
 		2E245E6729E5C44800B37189 /* Chatty-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Chatty-Info.plist"; sourceTree = SOURCE_ROOT; };
 		2E3114D92A08A5870052B309 /* EULAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EULAView.swift; sourceTree = "<group>"; };
 		2E3114DB2A08CB930052B309 /* PrivacyEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyEditView.swift; sourceTree = "<group>"; };
+		2E4A87F72A42854E000180E2 /* GADTSmallTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GADTSmallTemplateView.xib; sourceTree = "<group>"; };
+		2E4A87F82A42854E000180E2 /* AdsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdsView.swift; sourceTree = "<group>"; };
+		2E4A87FF2A428F36000180E2 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		2E5243E62A02387F009C4E64 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2E5F21F329AD4D31003B2A14 /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
 		2E5F21F929AD5002003B2A14 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
@@ -314,6 +320,16 @@
 				001A010F2A40BC6F009F7692 /* UserOption.swift */,
 			);
 			path = Option;
+			sourceTree = "<group>";
+		};
+		2E4A87F62A42854E000180E2 /* Ads */ = {
+			isa = PBXGroup;
+			children = (
+				2E4A87F72A42854E000180E2 /* GADTSmallTemplateView.xib */,
+				2E4A87F82A42854E000180E2 /* AdsView.swift */,
+				2E4A87FF2A428F36000180E2 /* AdBannerView.swift */,
+			);
+			path = Ads;
 			sourceTree = "<group>";
 		};
 		2E5F21FB29AD6147003B2A14 /* Keychain */ = {
@@ -528,6 +544,7 @@
 		2EE6CB312952F4F300E281A0 /* Chatty */ = {
 			isa = PBXGroup;
 			children = (
+				2E4A87F62A42854E000180E2 /* Ads */,
 				2EA1C7CE2A3CDB9000232CDB /* Manager */,
 				2EA1C7C62A3CD82200232CDB /* DataModel */,
 				2E5243E62A02387F009C4E64 /* GoogleService-Info.plist */,
@@ -734,6 +751,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E4A87F92A42854E000180E2 /* GADTSmallTemplateView.xib in Resources */,
 				2EE6CB3A2952F4F400E281A0 /* Preview Assets.xcassets in Resources */,
 				2E5243E72A02387F009C4E64 /* GoogleService-Info.plist in Resources */,
 				2E8747EC29FF373C00839360 /* SUIT-Heavy.ttf in Resources */,
@@ -876,6 +894,7 @@
 				2E9D03A729A6A27A0042F0AE /* ProfileView.swift in Sources */,
 				2E9D03A529A691FD0042F0AE /* MainView.swift in Sources */,
 				2EA1C7C42A3C5DD800232CDB /* NavigationUtil.swift in Sources */,
+				2E4A88002A428F36000180E2 /* AdBannerView.swift in Sources */,
 				2E5F21FD29AD615F003B2A14 /* Keychain.swift in Sources */,
 				2E7E275D2A2C632300651366 /* ProfileVM.swift in Sources */,
 				2EDF750B29EE5947006D7257 /* ChattyShareView.swift in Sources */,
@@ -923,6 +942,7 @@
 				2E9D03A929A6A2B90042F0AE /* CommunityView.swift in Sources */,
 				2EB0689C2A2626B0002E9D7A /* RegisterVM.swift in Sources */,
 				2EB0689A2A262551002E9D7A /* LoginVM.swift in Sources */,
+				2E4A87FA2A42854E000180E2 /* AdsView.swift in Sources */,
 				2ED68B172954952D007F5EA7 /* RegisterView.swift in Sources */,
 				2ED68B0B29530550007F5EA7 /* LoginView.swift in Sources */,
 				2E80F33929E1DA5A002280D5 /* ArrivedCard.swift in Sources */,

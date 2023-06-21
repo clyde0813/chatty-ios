@@ -12,19 +12,19 @@ struct TestView: View {
     @StateObject private var nativeViewModel = NativeViewModel()
     var body: some View {
         VStack{
-            AdsView(nativeAdViewModel: nativeViewModel)
-                .frame(width: 300,height: 50)
+            AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: UIScreen.main.bounds.width)
         }
-        .onAppear {
-              refreshAd()
-            }
-            
-            
+        
+        //        .onAppear {
+        //              refreshAd()
+        //            }
+        //
+        //    }
+        //
+        //    private func refreshAd() {
+        //        nativeViewModel.refreshAd()
+        //      }
     }
-    
-    private func refreshAd() {
-        nativeViewModel.refreshAd()
-      }
 }
 
 struct TestView_Previews: PreviewProvider {

@@ -104,7 +104,8 @@ extension UserSearchView {
                             ForEach(userSearchHistoryVM.userSearchHistory.reversed(), id:\.keyword) { data in
                                 HStack(spacing: 0){
                                     Button(action: {
-                                        self.keyword = data.keyword ?? ""
+                                        userSearchVM.inputText = data.keyword ?? ""
+                                        userSearchVM.resultKeyword = data.keyword ?? ""
                                     }){
                                         Text("\(data.keyword ?? "")")
                                             .font(Font.system(size: 16, weight: .none))
@@ -159,7 +160,7 @@ extension UserSearchView {
                                     }
                                 }
                                 .simultaneousGesture(TapGesture().onEnded{
-                                    userSearchHistoryVM.addSearch(keyword: self.keyword)
+                                    userSearchHistoryVM.addSearch(keyword: userSearchVM.resultKeyword)
                                 })
                                 Spacer()
                                 Button(action: {

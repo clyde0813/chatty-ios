@@ -494,7 +494,7 @@ struct ProfileView: View {
                                 LazyVStack(spacing: 16){
                                     if isQuestionEmpty == false{
                                         if let questionlist = questionVM.questionModel?.results {
-                                            ForEach(questionlist, id:\.pk){ questiondata in
+                                            ForEach(Array(questionlist.enumerated()), id:\.offset){ index, questiondata in
                                                 if self.currentPostTab == .responsedTab {
                                                     ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, eventVM : eventVM)
                                                         .onAppear{
@@ -519,6 +519,12 @@ struct ProfileView: View {
                                                         }
                                                 }
                                                 
+                                                if index % 4 == 0 && index != 0 {
+                                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
+                                                        .onAppear{
+                                                            print("Ad added")
+                                                        }
+                                                }
                                             }
                                            
                                             

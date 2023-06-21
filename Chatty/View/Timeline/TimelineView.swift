@@ -11,6 +11,7 @@ struct TimelineView: View {
     @State var currentTab : Timeline_Hot_Tab =  .timeline
     @StateObject var profileVM = ProfileVM()
     @StateObject var questionVM = QuestionVM()
+    @StateObject var eventVM = ChattyEventVM()
     @State var profile_image = ""
     @State var isClickedQuestion = false
     @State var currentPage = 1
@@ -20,13 +21,11 @@ struct TimelineView: View {
     
     
     @State var isSheet = false
-    
-    @StateObject var eventVM = ChattyEventVM()
-    
+        
     @State var isTimelineEmpty = true
     
     @State var isProgress = true
-    
+        
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing){
@@ -216,19 +215,21 @@ extension TimelineView {
                             
                     }else{
                         LazyVStack(spacing: 16){
-                            
                             if let timelineList = questionVM.questionModel?.results{
-                                ForEach(timelineList, id:\.pk){ questiondata in
-                                    
+                                ForEach(Array(timelineList.enumerated()), id:\.offset){ index, questiondata in
                                     ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
                                         .onAppear{
                                             callNextTimeline(questiondata: questiondata)
                                         }
-                                    
+                                    if index % 4 == 0 && index != 0 {
+                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
+                                            .onAppear{
+                                                print("Ad added")
+                                            }
+                                    }
                                 }
                                 //MARK: - 시험삼아 광고 생성
-                                AdsView(nativeAdViewModel: googleAdsVM)
-                                    .frame(width: proxy.size.width-32,height: 300)
+
                                     
                             }
                         }
