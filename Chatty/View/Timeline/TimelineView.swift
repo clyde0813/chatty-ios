@@ -16,6 +16,8 @@ struct TimelineView: View {
     @State var isClickedQuestion = false
     @State var currentPage = 1
     
+    @State var copyButtonPressed = false
+    
     //MARK: - 광고를위한 VM
     @StateObject var googleAdsVM = NativeViewModel()
     
@@ -206,14 +208,37 @@ extension TimelineView {
                     .frame(width: proxy.size.width)
                 }else {
                     if isTimelineEmpty {
-                        VStack{
-                            Spacer()
-                            Text("아직 팔로잉한 친구들이 받은질문이 없어요 ㅠㅠㅠ")
-                            Spacer()
+                        VStack(alignment: .center){
+                            VStack(spacing: 0){
+                                Text("팔로워가 아직 받은 질문이 없어요!")
+                                    .font(.system(size: 16, weight: .none))
+                                    .padding(.bottom, 13)
+                                Button(action:{
+                                    UIPasteboard.general.string = "chatty.kr/\(profileVM.profileModel?.username ?? "")"
+                                    self.copyButtonPressed = true
+                                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                                        self.copyButtonPressed = false
+                                    }
+                                }){
+                                    Text("내 프로필 링크 복사하기")
+                                        .font(.system(size:16, weight: .bold))
+                                        .frame(height: 40)
+                                        .frame(width: 194)
+                                        .foregroundColor(Color.white)
+                                        .background(
+                                            Capsule()
+                                                .fill( LinearGradient(gradient: Gradient(colors: [Color("MainGradient1"), Color("MainGradient2"),Color("MainGradient3")]), startPoint: .trailing, endPoint: .leading))
+                                        )
+                                }
+                            }
+                            .padding(.top, 80)
                         }
                         .frame(width: proxy.size.width)
+                        .frame(maxHeight: .infinity)
+                        
                             
-                    }else{
+                    }
+                    else{
                         LazyVStack(spacing: 16){
                             if let timelineList = questionVM.questionModel?.results{
                                 ForEach(Array(timelineList.enumerated()), id:\.offset){ index, questiondata in
@@ -235,6 +260,10 @@ extension TimelineView {
                         }
                         .padding(.top, 10)
                     }
+                }
+                
+                if copyButtonPressed {
+                    ProfileErrorView(msg: "복사 완료!")
                 }
                 //MARK: - 2023.06.21 - 신현호
                 // 아직은 기능이없어서 주석처리
