@@ -500,11 +500,6 @@ struct ProfileView: View {
                                                         .onAppear{
                                                             callNextQuestion(questiondata: questiondata)
                                                         }
-//                                                    if isShowAds {
-//                                                        //MARK: - 광고넣는 코드
-//                                                        AdsView(nativeAdViewModel: googleAdsVM)
-//                                                            .frame(width: proxy.size.width-32,height: 250)
-//                                                    }
                                                 }
                                                 else if self.currentPostTab == .arrivedTab {
                                                     ArrivedCard(width: proxy.size.width - 32, questionVM: questionVM, questiondata: questiondata, eventVM: eventVM)
