@@ -46,7 +46,7 @@ class QuestionVM : ObservableObject {
         }
         
         if questionType == "refused" {
-            urlPath = "refused"
+            urlPath = "refuse"
             headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         }
         

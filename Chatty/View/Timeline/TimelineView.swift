@@ -1,6 +1,6 @@
 import SwiftUI
 import Kingfisher
-
+import UIKit
 
 enum Timeline_Hot_Tab {
     case timeline,hotQuestion
@@ -14,6 +14,10 @@ struct TimelineView: View {
     @State var profile_image = ""
     @State var isClickedQuestion = false
     @State var currentPage = 1
+    
+    //MARK: - 광고를위한 VM
+    @StateObject var googleAdsVM = NativeViewModel()
+    
     
     @State var isSheet = false
     
@@ -57,6 +61,8 @@ struct TimelineView: View {
             }
             .navigationBarHidden(true)
             .onAppear(perform: {
+                //MARK: - 광고초기화
+                googleAdsVM.refreshAd()
                 self.initTimelineView()
             })
         }
@@ -161,30 +167,30 @@ extension TimelineView {
                 .accentColor(.black)
             }
             Spacer()
-            ZStack(alignment: .bottom){
-                Button(action: {
-                    currentTab = .hotQuestion
-                }){
-                    if currentTab == .hotQuestion {
-                        VStack(alignment: .center, spacing: 0){
-                            Text("지금 핫한 질문")
-                                .font(Font.system(size: 16, weight: .bold))
-                                .accentColor(.black)
-                                .padding(.bottom, 9)
-                            Rectangle()
-                                .fill(Color("Main Secondary"))
-                                .frame(width: 50, height: 3)
-                        }
-                    } else {
-                        Text("지금 핫한 질문")
-                            .font(Font.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 12)
-                    }
-                }
-                .accentColor(.black)
-            }
-            Spacer()
+//            ZStack(alignment: .bottom){
+//                Button(action: {
+//                    currentTab = .hotQuestion
+//                }){
+//                    if currentTab == .hotQuestion {
+//                        VStack(alignment: .center, spacing: 0){
+//                            Text("지금 핫한 질문")
+//                                .font(Font.system(size: 16, weight: .bold))
+//                                .accentColor(.black)
+//                                .padding(.bottom, 9)
+//                            Rectangle()
+//                                .fill(Color("Main Secondary"))
+//                                .frame(width: 50, height: 3)
+//                        }
+//                    } else {
+//                        Text("지금 핫한 질문")
+//                            .font(Font.system(size: 16, weight: .semibold))
+//                            .foregroundColor(Color.gray)
+//                            .padding(.bottom, 12)
+//                    }
+//                }
+//                .accentColor(.black)
+//            }
+//            Spacer()
         }
         .padding(.top,10)
     }
@@ -210,18 +216,27 @@ extension TimelineView {
                             
                     }else{
                         LazyVStack(spacing: 16){
+                            
                             if let timelineList = questionVM.questionModel?.results{
                                 ForEach(timelineList, id:\.pk){ questiondata in
+                                    
                                     ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
                                         .onAppear{
                                             callNextTimeline(questiondata: questiondata)
                                         }
+                                    
                                 }
+                                //MARK: - 시험삼아 광고 생성
+                                AdsView(nativeAdViewModel: googleAdsVM)
+                                    .frame(width: proxy.size.width-32,height: 300)
+                                    
                             }
                         }
                         .padding(.top, 10)
                     }
                 }
+                //MARK: - 2023.06.21 - 신현호
+                // 아직은 기능이없어서 주석처리
 //                LazyVStack(spacing: 16){
 //                    if let timelineList = questionVM.questionModel?.results{
 //                        ForEach(timelineList, id:\.pk){ questiondata in
@@ -272,22 +287,23 @@ extension TimelineView {
                         .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
                         .font(Font.system(size: 16, weight: .bold))
                     }
-
-                    Button {
-                        print("!!")
-                    } label: {
-                        HStack{
-                            Image(systemName: "plus")
-                            Text("최근 질문한 친구에게")
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical,14)
-                        .background(Color("Main Primary"))
-                        .foregroundColor(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 99))
-                        .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
-                        .font(Font.system(size: 16, weight: .bold))
-                    }
+                    //MARK: - 2023.06.21 - 신현호
+                    // 아직은 기능이없어서 주석처리
+//                    Button {
+//                        print("!!")
+//                    } label: {
+//                        HStack{
+//                            Image(systemName: "plus")
+//                            Text("최근 질문한 친구에게")
+//                        }
+//                        .padding(.horizontal, 16)
+//                        .padding(.vertical,14)
+//                        .background(Color("Main Primary"))
+//                        .foregroundColor(.white)
+//                        .clipShape(RoundedRectangle(cornerRadius: 99))
+//                        .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
+//                        .font(Font.system(size: 16, weight: .bold))
+//                    }
                 }
                 .padding([.bottom, .trailing], 16)
             }else{
