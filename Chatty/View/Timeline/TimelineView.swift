@@ -9,20 +9,20 @@ enum Timeline_Hot_Tab {
 struct TimelineView: View {
     
     @State var currentTab : Timeline_Hot_Tab =  .timeline
+    
     @StateObject var profileVM = ProfileVM()
     @StateObject var questionVM = QuestionVM()
     @StateObject var eventVM = ChattyEventVM()
+    
     @State var profile_image = ""
+    
     @State var isClickedQuestion = false
+    
     @State var currentPage = 1
     
     @State var copyButtonPressed = false
     
-    //MARK: - 광고를위한 VM
-//    @StateObject var googleAdsVM = NativeViewModel()
-    
-    @StateObject var nativeAds = NativeVM()
-    
+//    @StateObject var nativeAds = NativeVM()
     
     @State var isSheet = false
         
@@ -65,8 +65,7 @@ struct TimelineView: View {
             .navigationBarHidden(true)
             .onAppear(perform: {
                 //MARK: - 광고초기화
-//                googleAdsVM.refreshAd()
-                nativeAds.refreshAd()
+//                nativeAds.refreshAd()
                 self.initTimelineView()
             })
         }
@@ -92,7 +91,6 @@ struct TimelineView: View {
 
 //MARK: - Methods
 extension TimelineView {
-    
     
     func initTimelineView() {
         questionVM.questionModel?.results.removeAll()
@@ -250,14 +248,12 @@ extension TimelineView {
                                             callNextTimeline(questiondata: questiondata)
                                         }
                                     if index % 4 == 0 && index != 0 {
-                                        Native(vm: nativeAds)
-                                            .frame(width: proxy.size.width - 32,height:130)
                                         ///2023.06.22 - 신현호
-                                        ///기존베너광고 주석처리
-//                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
-//                                            .onAppear{
-//                                                print("Ad added")
-//                                            }
+                                        ///native광고 탐라에서 자꾸오류나서 일단주석
+//                                        Native(vm: nativeAds)
+//                                            .frame(width: 300 ,height:130)
+                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
+                                        
                                     }
                                 }
                                 //MARK: - 시험삼아 광고 생성
@@ -265,7 +261,7 @@ extension TimelineView {
                                     
                             }
                         }
-                        .padding(.top, 10)
+                        .padding([.top,.bottom], 10)
                     }
                 }
                 
