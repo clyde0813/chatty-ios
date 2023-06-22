@@ -19,7 +19,9 @@ struct TimelineView: View {
     @State var copyButtonPressed = false
     
     //MARK: - 광고를위한 VM
-    @StateObject var googleAdsVM = NativeViewModel()
+//    @StateObject var googleAdsVM = NativeViewModel()
+    
+    @StateObject var nativeAds = NativeVM()
     
     
     @State var isSheet = false
@@ -63,7 +65,8 @@ struct TimelineView: View {
             .navigationBarHidden(true)
             .onAppear(perform: {
                 //MARK: - 광고초기화
-                googleAdsVM.refreshAd()
+//                googleAdsVM.refreshAd()
+                nativeAds.refreshAd()
                 self.initTimelineView()
             })
         }
@@ -247,10 +250,14 @@ extension TimelineView {
                                             callNextTimeline(questiondata: questiondata)
                                         }
                                     if index % 4 == 0 && index != 0 {
-                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
-                                            .onAppear{
-                                                print("Ad added")
-                                            }
+                                        Native(vm: nativeAds)
+                                            .frame(width: proxy.size.width - 32,height:130)
+                                        ///2023.06.22 - 신현호
+                                        ///기존베너광고 주석처리
+//                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
+//                                            .onAppear{
+//                                                print("Ad added")
+//                                            }
                                     }
                                 }
                                 //MARK: - 시험삼아 광고 생성

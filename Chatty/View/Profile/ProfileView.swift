@@ -64,7 +64,10 @@ struct ProfileView: View {
     @State var isUserSheet : Bool = false
     
     //MARK: - 광고를 위한 VM
-    @StateObject var googleAdsVM = NativeViewModel()
+//    @StateObject var googleAdsVM = NativeViewModel()
+    
+    @StateObject private var nativeAds = NativeVM()
+    
     @State var isShowAds : Bool = false
     
     @GestureState private var dragOffset = CGSize.zero
@@ -515,10 +518,12 @@ struct ProfileView: View {
                                                 }
                                                 
                                                 if index % 4 == 0 && index != 0 {
-                                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
-                                                        .onAppear{
-                                                            print("Ad added")
-                                                        }
+                                                    Native(vm: nativeAds)
+                                                        .frame(width: proxy.size.width - 32,height:130)
+//                                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
+//                                                        .onAppear{
+//                                                            print("Ad added")
+//                                                        }
                                                 }
                                             }
                                            
@@ -613,7 +618,8 @@ struct ProfileView: View {
             .ignoresSafeArea(.all, edges: .top)
             .onAppear{
                 //MARK: - 광고넣넣기전 초기화
-                googleAdsVM.refreshAd()
+//                googleAdsVM.refreshAd()
+                nativeAds.refreshAd()
                 self.initProfileView()
             }
             .onReceive(questionVM.isSuccessGetQuestion){ result in
