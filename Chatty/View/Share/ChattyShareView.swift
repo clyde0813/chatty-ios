@@ -23,17 +23,17 @@ struct ChattyShareView: View {
 //
 //    @Binding var questiondata : ResultDetail?
     
-    var username : String
-    
-    var profile_name : String
-    
-    var profile_image : String
-
-    var background_image : String
-    
-    var content : String
-    
-    var anseredContent : String
+//    var username : String
+//
+//    var profile_name : String
+//
+//    var profile_image : String
+//
+//    var background_image : String
+//
+//    var content : String
+//
+//    var anseredContent : String
     
     @State private var hideButton = false
     
@@ -43,7 +43,7 @@ struct ChattyShareView: View {
         GeometryReader{ proxy in
             ZStack(alignment: .bottom){
                 ZStack(alignment: .bottom){
-                    KFImage(URL(string: "\(background_image)"))
+                    KFImage(URL(string: "\(eventVM.data?.profile.backgroundImage ?? "")"))
                         .resizable()
                         .scaledToFill()
                         .padding(-30)
@@ -54,17 +54,50 @@ struct ChattyShareView: View {
                         ZStack{
                             Color("Card Share Background")
                             VStack(alignment: .leading, spacing: 0){
-                                HStack(spacing: 0){
-                                    Text("To ")
-                                        .font(Font.system(size: 12, weight: .semibold))
-                                    Text("@\(username)")
-                                        .font(Font.system(size: 12, weight: .bold))
-                                    Spacer()
+                                if eventVM.data?.author == nil {
+                                    HStack(spacing: 0){
+                                        Text("To ")
+                                            .font(Font.system(size: 12, weight: .semibold))
+                                        Text("@\(eventVM.data?.profile.username ?? "")")
+                                            .font(Font.system(size: 12, weight: .bold))
+                                        Spacer()
+                                    }
+                                    .padding(.bottom, 4)
+                                    
+                                    Text(eventVM.data?.content ?? "")
+                                        .font(Font.system(size: 16, weight: .semibold))
+                                        .padding(.bottom, 24)
+                                }else{
+                                    HStack{
+                                        KFImage(URL(string:eventVM.data?.author?.profileImage ?? ""))
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 45, height: 45)
+                                                .clipShape(Circle())
+                                                .overlay(Circle()
+                                                    .stroke(Color.white, lineWidth: 3))
+                                                .clipped()
+                                                .padding(.trailing, 8)
+                                        
+                                        VStack(alignment: .leading, spacing: 0){
+                                            HStack(spacing: 4){
+                                                Text(eventVM.data?.author?.profileName ?? "")
+                                                    .font(.system(size:12, weight: .bold))
+                                                Text("@\(eventVM.data?.author?.username ?? "")")
+                                                    .font(Font.system(size: 12, weight: .semibold))
+                                                Spacer()
+                                            }
+                                            .padding(.bottom, 4)
+                                            Text(eventVM.data?.content ?? "")
+                                                .font(Font.system(size: 16, weight: .semibold))
+                                                .padding(.bottom, 24)
+                                        }
+                                    }
+                                    .padding(.bottom,8)
                                 }
-                                .padding(.bottom, 4)
-                                Text(content)
-                                    .font(Font.system(size: 16, weight: .semibold))
-                                    .padding(.bottom, 24)
+                                
+                                
+                                
                                 HStack(alignment: .top, spacing: 0){
                                     //답변 표현 화살표
                                     Image(systemName: "arrow.turn.down.right")
@@ -73,7 +106,7 @@ struct ChattyShareView: View {
                                         .padding(.top, 4)
                                         .padding(.trailing, 12)
                                     //Profile 사진
-                                    KFImage(URL(string: "\(profile_image)"))
+                                    KFImage(URL(string: "\(eventVM.data?.profile.profileImage ?? "")"))
                                         .resizable()
                                         .scaledToFill()
                                         .frame(width: 48, height: 48)
@@ -82,11 +115,11 @@ struct ChattyShareView: View {
                                         .padding(.trailing, 8)
                                     VStack(alignment: .leading, spacing: 0){
                                         HStack(spacing: 4){
-                                            Text("\(profile_name)")
+                                            Text("\(eventVM.data?.profile.profileName ?? "")")
                                                 .font(Font.system(size: 16, weight: .bold))
                                         }
                                         .padding(.bottom, 8)
-                                        Text(anseredContent)
+                                        Text(eventVM.data?.answerContent ?? "")
                                             .font(Font.system(size: 16, weight: .none))
                                     }
                                 }

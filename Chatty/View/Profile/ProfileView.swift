@@ -23,7 +23,7 @@ struct ProfileView: View {
     
     @Binding var username: String
     
-    @State var selectFollow : followTab = .follower
+    @State var isActivateNavigation = false
     
     @State var isOwner: Bool
     
@@ -55,6 +55,8 @@ struct ProfileView: View {
     
     @State var deleteSuccess : Bool = false
     
+    @State var answerSuccess : Bool = false
+    
     @State var userBlockSuccess : Bool = false
     
     @State var isSheet : Bool = false
@@ -83,14 +85,14 @@ struct ProfileView: View {
                         
                         
                         GeometryReader { proxy -> AnyView in
-                            
+
                             // Sticky Header...
                             let minY = proxy.frame(in: .global).minY
-                            
+
                             DispatchQueue.main.async {
                                 self.offset = minY
                             }
-                            
+
                             return AnyView(
                                 ZStack{
                                     KFImage(URL(string: profileVM.profileModel?.backgroundImage ?? ""))
@@ -100,7 +102,7 @@ struct ProfileView: View {
                                             width: size.width,
                                             height: minY > 0 ? 180 + minY : 180, alignment: .center
                                         )
-                                    
+
                                     HStack(spacing: 0) {
                                         Button(action:{
                                             dismiss()
@@ -118,7 +120,7 @@ struct ProfileView: View {
                                         .padding(.leading, 25)
                                         .padding(.bottom, 40)
                                         Spacer()
-                                        
+
                                         //MARK: - userOption Sheet On
                                         Button(action:{
                                             isUserSheet = true
@@ -139,7 +141,7 @@ struct ProfileView: View {
                                     }
                                     BlurView()
                                         .opacity(blurViewOpacity())
-                                    
+
                                     HStack{
                                         Button(action:{
                                             dismiss()
@@ -155,19 +157,19 @@ struct ProfileView: View {
                                         }
                                         .padding(.leading, 25)
                                         .padding(.bottom, 10)
-                                        
+
                                         Spacer()
                                         VStack(alignment: .center, spacing: 8){
                                             Text("\(profileVM.profileModel?.profile_name ?? "")")
                                                 .font(Font.system(size: 18, weight: .bold))
                                                 .foregroundColor(Color.white)
-                                            
+
                                             Text("답변완료 \(profileVM.profileModel?.questionCount.answered ?? 0)개")
                                                 .font(Font.system(size: 14, weight: .bold))
                                                 .foregroundColor(Color.white)
                                         }
                                         Spacer()
-                                        
+
                                         Button(action:{
                                             isUserSheet = true
                                         }){
@@ -184,13 +186,13 @@ struct ProfileView: View {
                                         .padding(.trailing, 25)
                                         .padding(.bottom, 10)
                                         .opacity(profileVM.profileModel?.username == KeyChain.read(key: "username") ? 0 : 1)
-                                        
+
                                     }
                                     // to slide from bottom added extra 60..
                                     .offset(y: 120)
                                     .offset(y: titleOffset > 100 ? 0 : -getTitleTextOffset())
                                     .opacity(titleOffset < 100 ? 1 : 0)
-                                    
+
                                 }
                                     .clipped()
                                 //offset이 -80 이하일 경우 background image 상단 dismiss 버튼 허용
@@ -198,7 +200,7 @@ struct ProfileView: View {
                                 // Stretchy Header...
                                     .frame(height: minY > 0 ? 180 + minY : nil)
                                     .offset(y: minY > 0 ? -minY : -minY < 80 ? 0 : -minY - 80)
-                                
+
                             )}
                         .frame(height: 180)
                         .zIndex(1)
@@ -292,9 +294,9 @@ struct ProfileView: View {
                                     
                                     //MARK: - follow/following
                                     HStack{
-                                        //2022.06.11 신현호
+
                                         NavigationLink {
-                                            FollowView(username: $username,currentTab: followTab.follower)
+                                            FollowView(username: $username, currentTab: followTab.follower , eventVM: eventVM)
                                         } label: {
                                             Text("\(profileVM.profileModel?.follower ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -304,9 +306,9 @@ struct ProfileView: View {
                                                 .padding(.trailing, 20)
                                                 .foregroundColor(.black)
                                         }
-                                        //                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follower})
+                                        
                                         NavigationLink {
-                                            FollowView(username: $username,currentTab: followTab.following)
+                                            FollowView(username: $username, currentTab: followTab.following, eventVM: eventVM)
                                         } label: {
                                             Text("\(profileVM.profileModel?.following ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -315,7 +317,6 @@ struct ProfileView: View {
                                                 .font(Font.system(size: 14, weight: .light))
                                                 .foregroundColor(.black)
                                         }
-                                        //                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .following})
                                     }
                                 }
                                 .padding([.leading, .trailing], 16)
@@ -496,8 +497,8 @@ struct ProfileView: View {
                                 //MARK: - 질문 lazyVstack
                                 LazyVStack(spacing: 16){
                                     if isQuestionEmpty == false{
-                                        if let questionlist = questionVM.questionModel?.results {
-                                            ForEach(Array(questionlist.enumerated()), id:\.offset){ index, questiondata in
+                                        if questionVM.questionModel?.results != nil{
+                                            ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id: \.element.pk){ index, questiondata in
                                                 if self.currentPostTab == .responsedTab {
                                                     ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, eventVM : eventVM)
                                                         .onAppear{
@@ -507,6 +508,8 @@ struct ProfileView: View {
                                                 else if self.currentPostTab == .arrivedTab {
                                                     ArrivedCard(width: proxy.size.width - 32, questionVM: questionVM, questiondata: questiondata, eventVM: eventVM)
                                                         .onAppear{
+                                                            print(index)
+                                                            print(questiondata)
                                                             callNextQuestion(questiondata: questiondata)
                                                         }
                                                 }
@@ -516,22 +519,10 @@ struct ProfileView: View {
                                                             callNextQuestion(questiondata: questiondata)
                                                         }
                                                 }
-                                                
-                                                if index % 4 == 0 && index != 0 {
-                                                    Native(vm: nativeAds)
-                                                        .frame(width: proxy.size.width - 32,height:130)
-//                                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
-//                                                        .onAppear{
-//                                                            print("Ad added")
-//                                                        }
+                                                if index % 4 == 0 && index != 0{
+                                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                                 }
                                             }
-                                           
-                                            
-                                            
-                                            
-                                            
-                                            
                                         }
                                     }
                                     else if isQuestionEmpty == true {
@@ -574,6 +565,7 @@ struct ProfileView: View {
                                 }
                                 .padding([.top, .bottom])
                                 
+                                
                             }
                             .zIndex(0)
                         }
@@ -612,6 +604,10 @@ struct ProfileView: View {
                 
                 if userBlockSuccess {
                     ProfileErrorView(msg: "차단이 완료되었습니다!")
+                }
+                
+                if answerSuccess {
+                    ProfileErrorView(msg: "답변을 완료했습니다!")
                 }
                 
             }
@@ -653,6 +649,12 @@ struct ProfileView: View {
                 self.questionPostSuccess = true
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                     self.questionPostSuccess = false
+                }
+            }
+            .onReceive(questionVM.answerComplete){
+                self.answerSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.answerSuccess = false
                 }
             }
             .onReceive(profileVM.userBlockSuccess){
@@ -725,6 +727,52 @@ struct ProfileView: View {
         
     }
     
+
+    func callNextQuestion(questiondata: ResultDetail){
+        print("callNextQuestion() - run")
+        if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
+            self.currentQuestionPage += 1
+            self.isShowAds = true
+            questionVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
+        }
+        
+        
+    }
+    
+    func initProfileView() {
+        print("run itit")
+        self.questionEmpty = false
+        questionVM.questionModel = nil
+        self.currentQuestionPage = 1
+        profileVM.profileGet(username: username)
+        questionVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+    }
+}
+
+struct ProfileErrorView : View {
+    @State var msg : String
+    var body: some View{
+        VStack{
+            Spacer()
+            HStack{
+                Spacer()
+                Text(msg)
+                    .frame(width: 310, height: 40)
+                    .foregroundColor(Color.white)
+                    .background(Color("Error Background"))
+                    .cornerRadius(16)
+                    .padding(.bottom, 50)
+                Spacer()
+            }
+        }
+    }
+}
+
+
+
+
+//MARK: - Offset Methods
+extension ProfileView {
     func getOffset()->CGFloat{
         
         let progress = (-offset / 80) * 20
@@ -760,50 +808,4 @@ struct ProfileView: View {
         
         return Double(-offset > 80 ? progress : 0)
     }
-    
-    func callNextQuestion(questiondata: ResultDetail){
-        print("callNextQuestion() - run")
-        if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
-            self.currentQuestionPage += 1
-            self.isShowAds = true
-            questionVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
-        }
-        
-        
-    }
-    
-    func initProfileView() {
-        print("run itit")
-        self.questionEmpty = false
-        questionVM.questionModel?.results.removeAll()
-        self.currentQuestionPage = 1
-        profileVM.profileGet(username: username)
-        questionVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
-    }
 }
-
-struct ProfileErrorView : View {
-    @State var msg : String
-    var body: some View{
-        VStack{
-            Spacer()
-            HStack{
-                Spacer()
-                Text(msg)
-                    .frame(width: 310, height: 40)
-                    .foregroundColor(Color.white)
-                    .background(Color("Error Background"))
-                    .cornerRadius(16)
-                    .padding(.bottom, 50)
-                Spacer()
-            }
-        }
-    }
-}
-
-
-//struct ProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProfileView(username: .constant("TestAccount1"), isOwner: true).environmentObject(ChattyVM())
-//    }
-//}

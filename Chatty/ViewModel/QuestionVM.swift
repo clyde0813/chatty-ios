@@ -67,6 +67,7 @@ class QuestionVM : ObservableObject {
                 print("questionGet() - success")
                 if self.questionModel == nil {
                     self.questionModel = data
+                    print(" questionGet() \n \(self.questionModel?.results)")
                 }else{
                     self.questionModel?.results += data.results
                     self.questionModel?.next = data.next
@@ -129,7 +130,7 @@ class QuestionVM : ObservableObject {
     
     //질문신고
     func questionReport(question_id: Int) {
-        let url = "https://chatty.kr/api/v1/chatty"
+        let url = "https://chatty.kr/api/v1/chatty/report"
         var headers : HTTPHeaders = []
         headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
@@ -138,17 +139,14 @@ class QuestionVM : ObservableObject {
         ]
         
         AF.request(url,
-                   method: .delete,
+                   method: .post,
                    parameters: params,
                    encoding: JSONEncoding(options: []),
                    headers: headers)
         .responseData { response in
             switch response.result {
             case .success:
-                print("Report & Delete 성공")
-                self.questionModel?.results.removeAll{
-                    $0.pk == question_id
-                }
+                print("Report 성공")
                 self.reportSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
@@ -175,9 +173,13 @@ class QuestionVM : ObservableObject {
             switch response.result {
             case .success:
                 print("DELETE 성공")
-                self.questionModel?.results.removeAll{
+                print("question_id는 \(question_id)")
+                let index = self.questionModel?.results.firstIndex(where: {
                     $0.pk == question_id
-                }
+                })
+                
+                self.questionModel?.results.removeAll(where: { $0.pk == question_id })
+                
                 self.deleteSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")

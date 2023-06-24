@@ -52,49 +52,94 @@ struct QuestionOption: View {
                     .cornerRadius(16)
                 }
                 .fullScreenCover(isPresented: $isSaveImage){
-                    ChattyShareView(eventVM: eventVM, username: eventVM.data?.profile.username ?? "", profile_name: eventVM.data?.profile.profileName ?? "", profile_image: eventVM.data?.profile.profileImage ?? "", background_image: eventVM.data?.profile.backgroundImage ?? "", content: eventVM.data?.content ?? "", anseredContent: eventVM.data?.answerContent ?? "")
+                    ChattyShareView(eventVM: eventVM)
                 }
                 
-                Button(action:{
-                    dismiss()
-                    eventVM.reportQuestion()
-                }){
-                    HStack(spacing: 8){
-                        Image(systemName: "light.beacon.max")
-                            .font(Font.system(size: 16, weight: .bold))
-                        Text("신고 & 차단하기")
-                            .font(.system(size: 16, weight: .bold))
+                if eventVM.data?.profile.username == KeyChain.read(key: "username") {
+                    Button(action:{
+                        dismiss()
+                        eventVM.reportQuestion()
+                    }){
+                        HStack(spacing: 8){
+                            Image(systemName: "light.beacon.max")
+                                .font(Font.system(size: 16, weight: .bold))
+                            Text("신고 & 차단하기")
+                                .font(.system(size: 16, weight: .bold))
+                        }
+                        .frame(height: 60)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .foregroundColor(Color("Pink Dark"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color("Pink Dark"), lineWidth: 2)
+                        )
                     }
-                    .frame(height: 60)
-                    .frame(
-                        minWidth: 0,
-                        maxWidth: .infinity
-                    )
-                    .foregroundColor(Color("Pink Dark"))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color("Pink Dark"), lineWidth: 2)
-                    )
-                }
-                .padding([.leading, .trailing, .bottom], 3)
-                Button(action:{
-                    dismiss()
-                    eventVM.deleteQuestion()
-                }){
-                    HStack(spacing: 8){
-                        Image(systemName: "trash.fill")
-                            .font(Font.system(size: 16, weight: .bold))
-                        Text("삭제하기")
-                            .font(.system(size: 16, weight: .bold))
+                    .padding([.leading, .trailing, .bottom], 3)
+                    Button(action:{
+                        dismiss()
+                        eventVM.deleteQuestion()
+                    }){
+                        HStack(spacing: 8){
+                            Image(systemName: "trash.fill")
+                                .font(Font.system(size: 16, weight: .bold))
+                            Text("삭제하기")
+                                .font(.system(size: 16, weight: .bold))
+                        }
+                        .frame(height: 60)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .foregroundColor(Color.white)
+                        .background(Color("Grey900"))
+                        .cornerRadius(16)
                     }
-                    .frame(height: 60)
-                    .frame(
-                        minWidth: 0,
-                        maxWidth: .infinity
-                    )
-                    .foregroundColor(Color.white)
-                    .background(Color("Grey900"))
-                    .cornerRadius(16)
+                }else{
+                    Button(action:{
+                        dismiss()
+                        eventVM.reportQuestion()
+                    }){
+                        HStack(spacing: 8){
+                            Image(systemName: "light.beacon.max")
+                                .font(Font.system(size: 16, weight: .bold))
+                            Text("신고 & 차단하기")
+                                .font(.system(size: 16, weight: .bold))
+                        }
+                        .frame(height: 60)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .foregroundColor(Color("Pink Dark"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color("Pink Dark"), lineWidth: 2)
+                        )
+                    }
+                    .padding([.leading, .trailing, .bottom], 3)
+                    Button(action:{
+                        dismiss()
+                        eventVM.deleteQuestion()
+                    }){
+                        HStack(spacing: 8){
+                            Image(systemName: "trash.fill")
+                                .font(Font.system(size: 16, weight: .bold))
+                            Text("삭제하기")
+                                .font(.system(size: 16, weight: .bold))
+                        }
+                        .frame(height: 60)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .foregroundColor(Color.white)
+                        .background(Color("Grey900"))
+                        .cornerRadius(16)
+                    }
+                    .opacity(0)
                 }
             }
             .clipped()

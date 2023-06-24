@@ -18,6 +18,7 @@ struct TimelineView: View {
     
     @State var copyButtonPressed = false
     
+    @State var reportSuccess = false
     //MARK: - 광고를위한 VM
 //    @StateObject var googleAdsVM = NativeViewModel()
     
@@ -59,7 +60,10 @@ struct TimelineView: View {
                 }
                 
                 questionButton
-                
+                if reportSuccess {
+                    
+                    ProfileErrorView(msg: "신고 접수가 완료되었습니다!")
+                }
                     
             }
             .navigationBarHidden(true)
@@ -79,7 +83,16 @@ struct TimelineView: View {
         }
         .sheet(isPresented: $isSheet, onDismiss: {isSheet = false}) {
             QuestionOption(eventVM: eventVM)
-                .presentationDetents([.fraction(0.4)])
+                .presentationDetents([.fraction(0.37)])
+        }
+        .onReceive(eventVM.reportPublisher){
+            questionVM.questionReport(question_id: eventVM.data?.pk ?? 0)
+        }
+        .onReceive(questionVM.reportSuccess){
+            self.reportSuccess = true
+            Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                self.reportSuccess = false
+            }
         }
         
     }
@@ -272,6 +285,7 @@ extension TimelineView {
                 if copyButtonPressed {
                     ProfileErrorView(msg: "복사 완료!")
                 }
+                
                 //MARK: - 2023.06.21 - 신현호
                 // 아직은 기능이없어서 주석처리
 //                LazyVStack(spacing: 16){

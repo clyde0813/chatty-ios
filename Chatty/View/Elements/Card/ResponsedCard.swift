@@ -212,6 +212,8 @@ struct ResponsedCard: View {
                             Text("•")
                                 .font(Font.system(size: 12, weight: .semibold))
                                 .foregroundColor(Color.gray)
+                            
+                            //MARK: - answeredDate로 수정해야함...
                             Text("\(elapsedtime(time: questiondata.createdDate))")
                                 .font(Font.system(size: 12, weight: .semibold))
                                 .foregroundColor(Color.gray)
