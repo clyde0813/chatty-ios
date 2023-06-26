@@ -5,7 +5,9 @@ class ChattyEventVM : ObservableObject {
     
     var data : ResultDetail? = nil
     
-    var sheetPublisher = PassthroughSubject<(),Never>()
+    var mySheetPublisher = PassthroughSubject<(),Never>()
+    
+    var otherUserSheetPublisher = PassthroughSubject<(),Never>()
     
     var answerSheetPublisher = PassthroughSubject<(),Never>()
 
@@ -31,7 +33,10 @@ class ChattyEventVM : ObservableObject {
     
     //MARK: - push Event In ProfileView
     func ShowSheet(){
-        sheetPublisher.send()
+        mySheetPublisher.send()
+    }
+    func ShowOtherUserSheet(){
+        otherUserSheetPublisher.send()
     }
     func saveImage(){
         ImageSavePublisher.send()

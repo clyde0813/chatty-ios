@@ -10,10 +10,10 @@ struct FollowOption: View {
     var body: some View {
         ZStack{
             Color.white
-            VStack(alignment: .leading, spacing: 16){
+            VStack(alignment: .leading, spacing: 20){
                 HStack(spacing: 0){
                     Text("팔로워를 삭제하시겠어요?")
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.system(size: 22, weight: .bold))
                     Spacer()
                     Button(action: {
                         dismiss()
@@ -61,9 +61,8 @@ struct FollowOption: View {
                     .cornerRadius(16)
                     
                 }
-                
-                
-//                .padding([.leading, .trailing, .bottom], 3)
+                Spacer()
+//                    .clipped()
             }
 //            .clipped()
             .padding(.top,20)

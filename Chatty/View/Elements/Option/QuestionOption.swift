@@ -33,29 +33,30 @@ struct QuestionOption: View {
                             .font(Font.system(size: 16, weight: .bold))
                     }
                 }
-                Button(action: {
-                    isSaveImage = true
-                }){
-                    HStack(spacing: 8){
-                        Image(systemName: "photo.fill")
-                            .font(Font.system(size: 16, weight: .bold))
-                        Text("이미지 저장")
-                            .font(.system(size: 16, weight: .bold))
-                    }
-                    .frame(height: 60)
-                    .frame(
-                        minWidth: 0,
-                        maxWidth: .infinity
-                    )
-                    .foregroundColor(Color.white)
-                    .background(Color("Main Primary"))
-                    .cornerRadius(16)
-                }
-                .fullScreenCover(isPresented: $isSaveImage){
-                    ChattyShareView(eventVM: eventVM)
-                }
+                
                 
                 if eventVM.data?.profile.username == KeyChain.read(key: "username") {
+                    Button(action: {
+                        isSaveImage = true
+                    }){
+                        HStack(spacing: 8){
+                            Image(systemName: "photo.fill")
+                                .font(Font.system(size: 16, weight: .bold))
+                            Text("이미지 저장")
+                                .font(.system(size: 16, weight: .bold))
+                        }
+                        .frame(height: 60)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity
+                        )
+                        .foregroundColor(Color.white)
+                        .background(Color("Main Primary"))
+                        .cornerRadius(16)
+                    }
+                    .fullScreenCover(isPresented: $isSaveImage){
+                        ChattyShareView(eventVM: eventVM)
+                    }
                     Button(action:{
                         dismiss()
                         eventVM.reportQuestion()
@@ -78,6 +79,7 @@ struct QuestionOption: View {
                         )
                     }
                     .padding([.leading, .trailing, .bottom], 3)
+                    
                     Button(action:{
                         dismiss()
                         eventVM.deleteQuestion()
@@ -97,7 +99,9 @@ struct QuestionOption: View {
                         .background(Color("Grey900"))
                         .cornerRadius(16)
                     }
-                }else{
+                    
+                }
+                else{
                     Button(action:{
                         dismiss()
                         eventVM.reportQuestion()
@@ -120,26 +124,7 @@ struct QuestionOption: View {
                         )
                     }
                     .padding([.leading, .trailing, .bottom], 3)
-                    Button(action:{
-                        dismiss()
-                        eventVM.deleteQuestion()
-                    }){
-                        HStack(spacing: 8){
-                            Image(systemName: "trash.fill")
-                                .font(Font.system(size: 16, weight: .bold))
-                            Text("삭제하기")
-                                .font(.system(size: 16, weight: .bold))
-                        }
-                        .frame(height: 60)
-                        .frame(
-                            minWidth: 0,
-                            maxWidth: .infinity
-                        )
-                        .foregroundColor(Color.white)
-                        .background(Color("Grey900"))
-                        .cornerRadius(16)
-                    }
-                    .opacity(0)
+                    .clipped()
                 }
             }
             .clipped()

@@ -153,7 +153,7 @@ struct ChattyShareView: View {
                         HStack(spacing: 0) {
                             Button(action:{
                                 chattyVM.questionOptionStatus = false
-                                eventVM.sheetPublisher.send()
+                                eventVM.mySheetPublisher.send()
                                 presentationMode.wrappedValue.dismiss()
                             }){
                                 Image(systemName: "arrow.left")

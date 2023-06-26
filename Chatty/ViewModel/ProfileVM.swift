@@ -14,6 +14,7 @@ class ProfileVM : ObservableObject {
     @Published var profileModel : ProfileModel? = nil
     @Published var blockedUserModel : GenericListModel<ProfileModel>? = nil
     
+    
     let token = TokenVM()
     
     //MARK: - Publisher
@@ -21,6 +22,7 @@ class ProfileVM : ObservableObject {
     
     var userBlockSuccess = PassthroughSubject<(), Never>()
     
+    var isBlocked = PassthroughSubject<(),Never>()
     
     //MARK: - 함수
     //Get profile
@@ -37,11 +39,14 @@ class ProfileVM : ObservableObject {
                    encoding: JSONEncoding.default,
                    headers: headers)
         .responseDecodable(of: ProfileModel.self){ response in
-            switch response.result {
-            case .success(let data):
+            switch response.response?.statusCode {
+            case 200 :
                 print("Profile get : Success")
-                self.profileModel = data
-            case .failure(_):
+                self.profileModel = response.value
+            case 400:
+                print("Profile get : isBlocked User")
+                self.isBlocked.send()
+            default:
                 print("Profile get : Failed")
                 print(response)
                 if let data = response.data,
@@ -160,6 +165,7 @@ class ProfileVM : ObservableObject {
             case .success(_):
                 print("ProfileVM - userBlock() : Success")
                 self.userBlockSuccess.send()
+                self.profileModel?.blockState = true
             case .failure(_):
                 print("ProfileVM - userBlock() : Failed")
                 print(response)
@@ -193,9 +199,15 @@ class ProfileVM : ObservableObject {
             switch response.result {
             case .success(_):
                 print("ProfileVM - DeleteUserBlock() : Success")
+                
+                //차단유저 리스트에서 차단해제 하였을경우를 대비해서
                 self.blockedUserModel?.results.removeAll(where: {
                     $0.username == username
                 })
+                
+                //프로필을 들어가서 해제했을경우를 대비해서
+                self.profileModel?.blockState.toggle()
+                
             case .failure(_):
                 print("ProfileVM - DeleteUserBlock() : Failed")
                 print(response)
@@ -224,13 +236,13 @@ class ProfileVM : ObservableObject {
             switch response.result {
             case .success(let data):
                 print("profileVM- blockedUserListGet() : Success")
-                if self.blockedUserModel == nil {
-                    self.blockedUserModel = data
-                }else{
-                    self.blockedUserModel?.results += data.results
-                    self.blockedUserModel?.next = data.next
-                    self.blockedUserModel?.previous = data.previous
-                }
+//                if self.blockedUserModel == nil {
+                self.blockedUserModel = data
+//                }else{
+//                    self.blockedUserModel?.results += data.results
+//                    self.blockedUserModel?.next = data.next
+//                    self.blockedUserModel?.previous = data.previous
+//                }
             case .failure(_):
                 print("profileVM- blockedUserListGet() : Failed")
                 print(response)

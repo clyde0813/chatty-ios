@@ -21,69 +21,6 @@ struct ResponsedCard: View {
         ZStack{
             Color.white
             VStack(alignment: .leading, spacing: 0){
-//                HStack(spacing: 0){
-//                    if questiondata.author != nil {
-//                        HStack(alignment: .top, spacing: 0){
-//                            NavigationLink {
-//                                ProfileView(username: .constant(questiondata.author?.username ?? ""), isOwner: false)
-//                            } label: {
-//                                KFImage(URL(string:"\(questiondata.author?.profileImage ?? "" )"))
-//                                    .resizable()
-//                                    .scaledToFill()
-//                                    .frame(width: 45, height: 45)
-//                                    .clipShape(Circle())
-//                                    .overlay(Circle()
-//                                        .stroke(Color.white, lineWidth: 3))
-//                                    .clipped()
-//                                    .padding(.trailing, 8)
-//                            }
-//                            VStack(alignment: .leading, spacing: 0){
-//                                HStack(spacing: 4){
-//                                    Text(questiondata.author?.profileName ?? "")
-//                                        .font(Font.system(size: 16, weight: .bold))
-//                                    Text("•")
-//                                        .font(Font.system(size: 12, weight: .semibold))
-//                                        .foregroundColor(Color.gray)
-//                                    Text("\(elapsedtime(time: questiondata.createdDate))")
-//                                        .font(Font.system(size: 12, weight: .semibold))
-//                                        .foregroundColor(Color.gray)
-//                                    Spacer()
-//                                }
-//                                .padding(.bottom, 8)
-//                                Text(questiondata.content)
-//                                    .font(Font.system(size: 16, weight: .none))
-//                                    .padding(.trailing, 5)
-//                            }
-//                        }
-//                    } else {
-//                        HStack(spacing: 0){
-//                            Text("From @")
-//                                .font(.system(size:12))
-//                            Text("익명")
-//                                .font(.system(size:12, weight: .bold))
-//                            Spacer()
-//                        }
-//                        .foregroundColor(Color("Main Primary"))
-//                    }
-//                    Button {
-//                        eventVM.ShowSheet()
-//                        eventVM.data = questiondata
-//                    } label: {
-//                        Image(systemName: "ellipsis")
-//                            .foregroundColor(.black)
-//                            .rotationEffect(.degrees(-90))
-//                            .font(Font.system(size: 16, weight: .bold))
-//                            .frame(width: 20, height: 20)
-//                    }
-//                }
-//                .padding(.bottom, 4)
-//                //질문 내용
-//                if questiondata.author == nil {
-//                    Text("\(questiondata.content)")
-//                        .font(Font.system(size: 16, weight: .none))
-//                        .padding(.bottom, 16)
-//                        .padding(.trailing, 15)
-//                }
                 HStack{
                     HStack {
                         if questiondata.author == nil {
@@ -132,8 +69,13 @@ struct ResponsedCard: View {
                                         Spacer()
                                         Button(action : {
                                             eventVM.data = questiondata
-                                            eventVM.ShowSheet()
-                                            
+                                            if questiondata.profile.username == KeyChain.read(key: "username")! {
+                                                print("showMySheet!!")
+                                                eventVM.ShowSheet()
+                                            }else {
+                                                print("showOtherUserSheet!!")
+                                                eventVM.ShowOtherUserSheet()
+                                            }
                                         }){
                                             ZStack{
                                                 Image(systemName: "ellipsis")
@@ -159,8 +101,15 @@ struct ResponsedCard: View {
                         if questiondata.author == nil{
                             Button(action : {
                                 eventVM.data = questiondata
-                                eventVM.ShowSheet()
                                 
+                                if questiondata.profile.username == KeyChain.read(key: "username")! {
+                                    print("showMySheet!!")
+                                    eventVM.ShowSheet()
+                                }else {
+                                    print("showOtherUserSheet!!")
+                                    eventVM.ShowOtherUserSheet()
+                                }
+
                             }){
                                 ZStack{
                                     Image(systemName: "ellipsis")
@@ -214,7 +163,7 @@ struct ResponsedCard: View {
                                 .foregroundColor(Color.gray)
                             
                             //MARK: - answeredDate로 수정해야함...
-                            Text("\(elapsedtime(time: questiondata.createdDate))")
+                            Text("\(elapsedtime(time: questiondata.answeredDate ?? "2022-12-09T12:19:30"))")
                                 .font(Font.system(size: 12, weight: .semibold))
                                 .foregroundColor(Color.gray)
                         }

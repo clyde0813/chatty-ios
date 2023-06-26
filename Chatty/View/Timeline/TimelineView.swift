@@ -19,18 +19,17 @@ struct TimelineView: View {
     @State var copyButtonPressed = false
     
     @State var reportSuccess = false
-    //MARK: - 광고를위한 VM
-//    @StateObject var googleAdsVM = NativeViewModel()
     
-    @StateObject var nativeAds = NativeVM()
+    //    @StateObject var nativeAds = NativeVM()
     
+    @State var showMySheet = false
     
-    @State var isSheet = false
-        
+    @State var showOtherUserSheet = false
+    
     @State var isTimelineEmpty = true
     
     @State var isProgress = true
-        
+    
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing){
@@ -46,8 +45,9 @@ struct TimelineView: View {
                         timelineList
                     }
                     .blur(radius: isClickedQuestion ? 2 : 0)
+                    
                 }
-
+                
                 if isClickedQuestion {
                     BlurView()
                         .ignoresSafeArea()
@@ -64,26 +64,33 @@ struct TimelineView: View {
                     
                     ProfileErrorView(msg: "신고 접수가 완료되었습니다!")
                 }
-                    
+                
             }
             .navigationBarHidden(true)
-            .onAppear(perform: {
-                //MARK: - 광고초기화
-//                googleAdsVM.refreshAd()
-                nativeAds.refreshAd()
-                self.initTimelineView()
-            })
         }
+        .onAppear(perform: {
+            //MARK: - 광고초기화
+            //                googleAdsVM.refreshAd()
+            //                nativeAds.refreshAd()
+            self.initTimelineView()
+        })
         .onReceive(profileVM.$profileModel) { userInfo in
             guard let user = userInfo else { return }
             self.profile_image = user.profileImage
         }
-        .onReceive(eventVM.sheetPublisher){
-            isSheet = true
+        .onReceive(eventVM.mySheetPublisher){
+            showMySheet = true
         }
-        .sheet(isPresented: $isSheet, onDismiss: {isSheet = false}) {
+        .onReceive(eventVM.otherUserSheetPublisher){
+            showOtherUserSheet = true
+        }
+        .sheet(isPresented: $showMySheet, onDismiss: {showMySheet = false}) {
             QuestionOption(eventVM: eventVM)
-                .presentationDetents([.fraction(0.37)])
+                .presentationDetents([.fraction(0.4)])
+        }
+        .sheet(isPresented: $showOtherUserSheet, onDismiss: {showOtherUserSheet = false}) {
+            QuestionOption(eventVM: eventVM)
+                .presentationDetents([.fraction(0.2)])
         }
         .onReceive(eventVM.reportPublisher){
             questionVM.questionReport(question_id: eventVM.data?.pk ?? 0)
@@ -108,7 +115,7 @@ extension TimelineView {
     
     
     func initTimelineView() {
-        questionVM.questionModel?.results.removeAll()
+        questionVM.questionModel = nil
         self.currentPage = 1
         profileVM.profileGet(username: KeyChain.read(key: "username")!)
         questionVM.timelineGet(page: self.currentPage)
@@ -116,11 +123,10 @@ extension TimelineView {
     
     func callNextTimeline(questiondata : ResultDetail){
         print("callNextQuestion() - run")
-        
         if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
             self.currentPage += 1
             questionVM.timelineGet(page: self.currentPage)
-         }
+        }
     }
 }
 
@@ -184,34 +190,34 @@ extension TimelineView {
                 .accentColor(.black)
             }
             Spacer()
-//            ZStack(alignment: .bottom){
-//                Button(action: {
-//                    currentTab = .hotQuestion
-//                }){
-//                    if currentTab == .hotQuestion {
-//                        VStack(alignment: .center, spacing: 0){
-//                            Text("지금 핫한 질문")
-//                                .font(Font.system(size: 16, weight: .bold))
-//                                .accentColor(.black)
-//                                .padding(.bottom, 9)
-//                            Rectangle()
-//                                .fill(Color("Main Secondary"))
-//                                .frame(width: 50, height: 3)
-//                        }
-//                    } else {
-//                        Text("지금 핫한 질문")
-//                            .font(Font.system(size: 16, weight: .semibold))
-//                            .foregroundColor(Color.gray)
-//                            .padding(.bottom, 12)
-//                    }
-//                }
-//                .accentColor(.black)
-//            }
-//            Spacer()
+            //            ZStack(alignment: .bottom){
+            //                Button(action: {
+            //                    currentTab = .hotQuestion
+            //                }){
+            //                    if currentTab == .hotQuestion {
+            //                        VStack(alignment: .center, spacing: 0){
+            //                            Text("지금 핫한 질문")
+            //                                .font(Font.system(size: 16, weight: .bold))
+            //                                .accentColor(.black)
+            //                                .padding(.bottom, 9)
+            //                            Rectangle()
+            //                                .fill(Color("Main Secondary"))
+            //                                .frame(width: 50, height: 3)
+            //                        }
+            //                    } else {
+            //                        Text("지금 핫한 질문")
+            //                            .font(Font.system(size: 16, weight: .semibold))
+            //                            .foregroundColor(Color.gray)
+            //                            .padding(.bottom, 12)
+            //                    }
+            //                }
+            //                .accentColor(.black)
+            //            }
+            //            Spacer()
         }
         .padding(.top,10)
     }
- 
+    
     var timelineList : some View {
         GeometryReader{ proxy in
             ScrollView(showsIndicators: false){
@@ -252,30 +258,18 @@ extension TimelineView {
                         .frame(width: proxy.size.width)
                         .frame(maxHeight: .infinity)
                         
-                            
+                        
                     }
                     else{
                         LazyVStack(spacing: 16){
-                            if let timelineList = questionVM.questionModel?.results{
-                                ForEach(Array(timelineList.enumerated()), id:\.offset){ index, questiondata in
-                                    ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
-                                        .onAppear{
-                                            callNextTimeline(questiondata: questiondata)
-                                        }
-                                    if index % 4 == 0 && index != 0 {
-                                        Native(vm: nativeAds)
-                                            .frame(width: proxy.size.width - 32,height:130)
-                                        ///2023.06.22 - 신현호
-                                        ///기존베너광고 주석처리
-//                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
-//                                            .onAppear{
-//                                                print("Ad added")
-//                                            }
+                            ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id:\.element.pk){ index, questiondata in
+                                ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
+                                    .onAppear{
+                                        callNextTimeline(questiondata: questiondata)
                                     }
+                                if index % 4 == 0 && index != 0 {
+                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                 }
-                                //MARK: - 시험삼아 광고 생성
-
-                                    
                             }
                         }
                         .padding(.top, 10)
@@ -288,17 +282,17 @@ extension TimelineView {
                 
                 //MARK: - 2023.06.21 - 신현호
                 // 아직은 기능이없어서 주석처리
-//                LazyVStack(spacing: 16){
-//                    if let timelineList = questionVM.questionModel?.results{
-//                        ForEach(timelineList, id:\.pk){ questiondata in
-//                            ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
-//                                .onAppear{
-//                                    callNextTimeline(questiondata: questiondata)
-//                                }
-//                        }
-//                    }
-//                }
-//                .padding(.top, 10)
+                //                LazyVStack(spacing: 16){
+                //                    if let timelineList = questionVM.questionModel?.results{
+                //                        ForEach(timelineList, id:\.pk){ questiondata in
+                //                            ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
+                //                                .onAppear{
+                //                                    callNextTimeline(questiondata: questiondata)
+                //                                }
+                //                        }
+                //                    }
+                //                }
+                //                .padding(.top, 10)
             }
             .background(Color("Background inner"))
             // 2023.06.06 Clyde 높이 제한 추가
@@ -316,6 +310,7 @@ extension TimelineView {
                 isTimelineEmpty = true
             }
         }
+        
         
     }
     
@@ -340,21 +335,21 @@ extension TimelineView {
                     }
                     //MARK: - 2023.06.21 - 신현호
                     // 아직은 기능이없어서 주석처리
-//                    Button {
-//                        print("!!")
-//                    } label: {
-//                        HStack{
-//                            Image(systemName: "plus")
-//                            Text("최근 질문한 친구에게")
-//                        }
-//                        .padding(.horizontal, 16)
-//                        .padding(.vertical,14)
-//                        .background(Color("Main Primary"))
-//                        .foregroundColor(.white)
-//                        .clipShape(RoundedRectangle(cornerRadius: 99))
-//                        .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
-//                        .font(Font.system(size: 16, weight: .bold))
-//                    }
+                    //                    Button {
+                    //                        print("!!")
+                    //                    } label: {
+                    //                        HStack{
+                    //                            Image(systemName: "plus")
+                    //                            Text("최근 질문한 친구에게")
+                    //                        }
+                    //                        .padding(.horizontal, 16)
+                    //                        .padding(.vertical,14)
+                    //                        .background(Color("Main Primary"))
+                    //                        .foregroundColor(.white)
+                    //                        .clipShape(RoundedRectangle(cornerRadius: 99))
+                    //                        .shadow(color: Color("Shadow Button"), radius: 5, x: 0, y: 6)
+                    //                        .font(Font.system(size: 16, weight: .bold))
+                    //                    }
                 }
                 .padding([.bottom, .trailing], 16)
             }else{

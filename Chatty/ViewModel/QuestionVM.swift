@@ -1,10 +1,3 @@
-//
-//  QuestionVM.swift
-//  Chatty
-//
-//  Created by Clyde on 2023/06/08.
-//
-
 import Foundation
 import Alamofire
 import Combine
@@ -33,24 +26,19 @@ class QuestionVM : ObservableObject {
         var urlPath : String = ""
         var headers : HTTPHeaders = []
         
-        print(questionType, " - called")
-        
         if questionType == "responsed" {
             urlPath = "user/\(username)"
-            headers = ["Content-Type":"application/json", "Accept":"application/json"]
         }
-        
-        if questionType == "arrived" {
+        else if questionType == "arrived" {
             urlPath = "arrived"
-            headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         }
-        
-        if questionType == "refused" {
+        else if questionType == "refused" {
             urlPath = "refuse"
-            headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         }
         
         let url = "https://chatty.kr/api/v1/chatty/" + urlPath
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let params: Parameters = [
             "page": page
@@ -64,24 +52,34 @@ class QuestionVM : ObservableObject {
         .responseDecodable(of: QuestionModel.self){ response in
             switch response.result {
             case .success(let data):
-                print("questionGet() - success")
-                if self.questionModel == nil {
-                    self.questionModel = data
-                    print(" questionGet() \n \(self.questionModel?.results)")
-                }else{
-                    self.questionModel?.results += data.results
-                    self.questionModel?.next = data.next
-                    self.questionModel?.previous = data.previous
+                
+                guard let stateCode = response.response?.statusCode else { return }
+                
+                if stateCode == 200 {
+                    print("QuestionVM - questionGet() - 200")
+                    if self.questionModel == nil {
+                        self.questionModel = data
+                    }else{
+                        self.questionModel?.results += data.results
+                        self.questionModel?.next = data.next
+                        self.questionModel?.previous = data.previous
+                    }
                 }
-                if data.results.isEmpty{
+                else if stateCode == 400 {
+                    print("QuestionVM - questionGet() - 400")
+                }
+
+                if self.questionModel?.results.isEmpty == true{
                     print("QuestionVM- guestionGet() : 질문 데이터가 비어있어")
                     self.isSuccessGetQuestion.send(false)
                 }else{
                     print("QuestionVM- guestionGet() : 데이터가 들어있어")
+                    print(self.questionModel?.results)
                     self.isSuccessGetQuestion.send(true)
                 }
                 
             case .failure(_):
+                print("실패! 원인은! \n\(response)")
                 if let data = response.data,
                    let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
                     if errorModel.status_code == 401 {
@@ -174,9 +172,6 @@ class QuestionVM : ObservableObject {
             case .success:
                 print("DELETE 성공")
                 print("question_id는 \(question_id)")
-                let index = self.questionModel?.results.firstIndex(where: {
-                    $0.pk == question_id
-                })
                 
                 self.questionModel?.results.removeAll(where: { $0.pk == question_id })
                 
@@ -258,7 +253,7 @@ class QuestionVM : ObservableObject {
             }
         }
     }
-    
+        
     func timelineGet(page: Int){
         let url : String = "https://chatty.kr/api/v1/chatty/timeline"
         
@@ -312,4 +307,5 @@ class QuestionVM : ObservableObject {
             }
         }
     }
+    
 }
