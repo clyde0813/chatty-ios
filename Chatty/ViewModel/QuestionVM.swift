@@ -3,10 +3,33 @@ import Alamofire
 import Combine
 import Foundation
 
+//class APIService {
+//    func timelineGet(page: Int) -> AnyPublisher<QuestionModel, Error> {
+//        let urlString = "https://chatty.kr/api/v1/chatty/timeline?page=\(page)"
+//        guard let url = URL(string: urlString) else {
+//            return Fail(error: NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
+//                .eraseToAnyPublisher()
+//        }
+//
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "GET"
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.addValue("application/json", forHTTPHeaderField: "Accept")
+//        request.addValue("Bearer " + KeyChain.read(key: "access_token")!, forHTTPHeaderField: "Authorization")
+//
+//        return URLSession.shared.dataTaskPublisher(for: request)
+//            .map { $0.data }
+//            .decode(type: QuestionModel.self, decoder: JSONDecoder())
+//            .eraseToAnyPublisher()
+//    }
+//}
+
 class QuestionVM : ObservableObject {
-    var subscription = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
     //새로추가
     @Published var questionModel : QuestionModel? = nil
+    
+    @Published var isLoading = false
     let token = TokenVM()
     //새로추가
     var questionPostSuccess = PassthroughSubject<(), Never>()
@@ -20,6 +43,8 @@ class QuestionVM : ObservableObject {
     var answerComplete = PassthroughSubject<(), Never>()
     //새로추가
     var isSuccessGetQuestion = PassthroughSubject<Bool, Never>()
+
+//    private let apiService = APIService()
     
     //MARK: - 카드뷰에서 쓰일 함수들
     func questionGet(questionType: String, username: String, page: Int){
@@ -283,13 +308,15 @@ class QuestionVM : ObservableObject {
                     self.questionModel?.next = data.next
                     self.questionModel?.previous = data.previous
                 }
+                
                 if data.results.isEmpty{
                     print("timeline이  비어있어")
-                    self.isSuccessGetQuestion.send(false)
+                    self.isSuccessGetQuestion.send(true)
                 }else{
                     print("timeline이 들어있어")
-                    self.isSuccessGetQuestion.send(true)
+                    self.isSuccessGetQuestion.send(false)
                 }
+                
             case .failure(_):
                 print("Profile get : Failed")
                 if let data = response.data,
@@ -308,4 +335,44 @@ class QuestionVM : ObservableObject {
         }
     }
     
+//    func timelineGetFromGPT(page: Int) {
+//        isLoading = true
+//
+//            apiService.timelineGet(page: page)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .finished:
+//                        if self?.questionModel?.results.isEmpty == true {
+//                            print("Timeline is empty")
+//                            self?.isSuccessGetQuestion.send(true)
+//                        } else {
+//                            print("Timeline is not empty")
+//                            self?.isSuccessGetQuestion.send(false)
+//                        }
+//                        self?.isLoading = false
+//                    case .failure(let error):
+//                        print("Timeline get failed: \(error)")
+//                    }
+////                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+////                        self?.isLoading = false
+////                    }
+//                }, receiveValue: { [weak self] questionModel in
+//                    print("Timeline get success")
+//                    print(questionModel)
+//                    if self?.questionModel == nil {
+//                        self?.questionModel = questionModel
+//                    } else {
+//                        if let results = self?.questionModel?.results {
+//                            self?.questionModel?.results = results + questionModel.results
+//                        } else {
+//                            self?.questionModel?.results = questionModel.results
+//                        }
+//                        self?.questionModel?.next = questionModel.next
+//                        self?.questionModel?.previous = questionModel.previous
+//                    }
+//                })
+//                .store(in: &cancellables)
+//        }
+//
 }

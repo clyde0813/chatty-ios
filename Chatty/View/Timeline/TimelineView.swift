@@ -58,10 +58,9 @@ struct TimelineView: View {
                         .opacity(0.7)
                         .toolbar(.hidden ,for: .tabBar)
                 }
-                
                 questionButton
+                
                 if reportSuccess {
-                    
                     ProfileErrorView(msg: "신고 접수가 완료되었습니다!")
                 }
                 
@@ -115,17 +114,22 @@ extension TimelineView {
     
     
     func initTimelineView() {
+        print("init")
         questionVM.questionModel = nil
         self.currentPage = 1
         profileVM.profileGet(username: KeyChain.read(key: "username")!)
         questionVM.timelineGet(page: self.currentPage)
+
     }
     
     func callNextTimeline(questiondata : ResultDetail){
-        print("callNextQuestion() - run")
+        
         if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
+            print("callNextQuestion() - run")
             self.currentPage += 1
             questionVM.timelineGet(page: self.currentPage)
+            
+
         }
     }
 }
@@ -228,7 +232,8 @@ extension TimelineView {
                         Spacer()
                     }
                     .frame(width: proxy.size.width)
-                }else {
+                }
+                else {
                     if isTimelineEmpty {
                         VStack(alignment: .center){
                             VStack(spacing: 0){
@@ -262,7 +267,7 @@ extension TimelineView {
                     }
                     else{
                         LazyVStack(spacing: 16){
-                            ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id:\.element.pk){ index, questiondata in
+                            ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id:\.offset){ index, questiondata in
                                 ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
                                     .onAppear{
                                         callNextTimeline(questiondata: questiondata)
@@ -271,8 +276,12 @@ extension TimelineView {
                                     AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                 }
                             }
+                            if isProgress {
+                                ProgressView()
+                            }
                         }
                         .padding(.top, 10)
+                        
                     }
                 }
                 
@@ -298,16 +307,18 @@ extension TimelineView {
             // 2023.06.06 Clyde 높이 제한 추가
             .frame(height: proxy.size.height)
             .frame(maxHeight: .infinity)
+//            .allowsHitTesting(!questionVM.isLoading)
             .refreshable {
                 self.initTimelineView()
             }
+             
         }
         .onReceive(questionVM.isSuccessGetQuestion){ result in
             isProgress = false
             if result {
-                isTimelineEmpty = false
-            }else {
                 isTimelineEmpty = true
+            }else {
+                isTimelineEmpty = false
             }
         }
         
