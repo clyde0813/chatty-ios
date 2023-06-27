@@ -9,22 +9,27 @@ enum Timeline_Hot_Tab {
 struct TimelineView: View {
     
     @State var currentTab : Timeline_Hot_Tab =  .timeline
+    
     @StateObject var profileVM = ProfileVM()
     @StateObject var questionVM = QuestionVM()
     @StateObject var eventVM = ChattyEventVM()
+    
     @State var profile_image = ""
+    
     @State var isClickedQuestion = false
+    
     @State var currentPage = 1
     
     @State var copyButtonPressed = false
     
     @State var reportSuccess = false
     
-    //    @StateObject var nativeAds = NativeVM()
-    
     @State var showMySheet = false
     
     @State var showOtherUserSheet = false
+
+//    @StateObject var nativeAds = NativeVM()
+
     
     @State var isTimelineEmpty = true
     
@@ -66,13 +71,12 @@ struct TimelineView: View {
                 
             }
             .navigationBarHidden(true)
+            .onAppear(perform: {
+                //MARK: - 광고초기화
+//                nativeAds.refreshAd()
+                self.initTimelineView()
+            })
         }
-        .onAppear(perform: {
-            //MARK: - 광고초기화
-            //                googleAdsVM.refreshAd()
-            //                nativeAds.refreshAd()
-            self.initTimelineView()
-        })
         .onReceive(profileVM.$profileModel) { userInfo in
             guard let user = userInfo else { return }
             self.profile_image = user.profileImage
@@ -111,7 +115,6 @@ struct TimelineView: View {
 
 //MARK: - Methods
 extension TimelineView {
-    
     
     func initTimelineView() {
         print("init")
@@ -262,8 +265,6 @@ extension TimelineView {
                         }
                         .frame(width: proxy.size.width)
                         .frame(maxHeight: .infinity)
-                        
-                        
                     }
                     else{
                         LazyVStack(spacing: 16){
@@ -276,15 +277,10 @@ extension TimelineView {
                                     AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                 }
                             }
-                            if isProgress {
-                                ProgressView()
-                            }
                         }
                         .padding(.top, 10)
-                        
                     }
                 }
-                
                 if copyButtonPressed {
                     ProfileErrorView(msg: "복사 완료!")
                 }
