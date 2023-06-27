@@ -5,12 +5,12 @@ class ChattyEventVM : ObservableObject {
     
     var data : ResultDetail? = nil
     
-    var sheetPublisher = PassthroughSubject<(),Never>()
+    var mySheetPublisher = PassthroughSubject<(),Never>()
+    
+    var otherUserSheetPublisher = PassthroughSubject<(),Never>()
     
     var answerSheetPublisher = PassthroughSubject<(),Never>()
-    
-    
-    
+
     var ImageSavePublisher = PassthroughSubject<(),Never>()
     
     var deletePublisher = PassthroughSubject<(),Never>()
@@ -23,9 +23,20 @@ class ChattyEventVM : ObservableObject {
     
     var userBlockPublisher = PassthroughSubject<(),Never>()
     
+    //MARK: - Follower / Followings Event
     
+    var followerData : ProfileModel? = nil
+    
+    var followerDeletePublisher = PassthroughSubject<(),Never>()
+    
+    
+    
+    //MARK: - push Event In ProfileView
     func ShowSheet(){
-        sheetPublisher.send()
+        mySheetPublisher.send()
+    }
+    func ShowOtherUserSheet(){
+        otherUserSheetPublisher.send()
     }
     func saveImage(){
         ImageSavePublisher.send()
@@ -50,5 +61,9 @@ class ChattyEventVM : ObservableObject {
     }
     
     
-
+    
+    //MARK: - push Event In FollowView
+    func DeleteFollower(){
+        followerDeletePublisher.send()
+    }
 }

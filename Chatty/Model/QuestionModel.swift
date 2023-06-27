@@ -7,9 +7,16 @@
 
 import Foundation
 
-struct QuestionModel: Codable {
+struct QuestionModel: Codable  {
     var next, previous: Int?
     var results: [ResultDetail]
+    
+    enum CodingKeys : String, CodingKey {
+        case next = "next"
+        case previous = "previous"
+        case results = "results"
+    }
+    
     
 }
 
@@ -31,6 +38,7 @@ struct ResultDetail: Codable {
         case profile, author, content
         case answerContent = "answer_content"
     }
+    
 }
 
 struct Profile: Codable {

@@ -1,19 +1,35 @@
-//
-//  QuestionVM.swift
-//  Chatty
-//
-//  Created by Clyde on 2023/06/08.
-//
-
 import Foundation
 import Alamofire
 import Combine
 import Foundation
 
+//class APIService {
+//    func timelineGet(page: Int) -> AnyPublisher<QuestionModel, Error> {
+//        let urlString = "https://chatty.kr/api/v1/chatty/timeline?page=\(page)"
+//        guard let url = URL(string: urlString) else {
+//            return Fail(error: NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
+//                .eraseToAnyPublisher()
+//        }
+//
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "GET"
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.addValue("application/json", forHTTPHeaderField: "Accept")
+//        request.addValue("Bearer " + KeyChain.read(key: "access_token")!, forHTTPHeaderField: "Authorization")
+//
+//        return URLSession.shared.dataTaskPublisher(for: request)
+//            .map { $0.data }
+//            .decode(type: QuestionModel.self, decoder: JSONDecoder())
+//            .eraseToAnyPublisher()
+//    }
+//}
+
 class QuestionVM : ObservableObject {
-    var subscription = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
     //새로추가
     @Published var questionModel : QuestionModel? = nil
+    
+    @Published var isLoading = false
     let token = TokenVM()
     //새로추가
     var questionPostSuccess = PassthroughSubject<(), Never>()
@@ -27,30 +43,27 @@ class QuestionVM : ObservableObject {
     var answerComplete = PassthroughSubject<(), Never>()
     //새로추가
     var isSuccessGetQuestion = PassthroughSubject<Bool, Never>()
+
+//    private let apiService = APIService()
     
     //MARK: - 카드뷰에서 쓰일 함수들
     func questionGet(questionType: String, username: String, page: Int){
         var urlPath : String = ""
         var headers : HTTPHeaders = []
         
-        print(questionType, " - called")
-        
         if questionType == "responsed" {
             urlPath = "user/\(username)"
-            headers = ["Content-Type":"application/json", "Accept":"application/json"]
         }
-        
-        if questionType == "arrived" {
+        else if questionType == "arrived" {
             urlPath = "arrived"
-            headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         }
-        
-        if questionType == "refused" {
+        else if questionType == "refused" {
             urlPath = "refuse"
-            headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         }
         
         let url = "https://chatty.kr/api/v1/chatty/" + urlPath
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
         let params: Parameters = [
             "page": page
@@ -64,23 +77,34 @@ class QuestionVM : ObservableObject {
         .responseDecodable(of: QuestionModel.self){ response in
             switch response.result {
             case .success(let data):
-                print("questionGet() - success")
-                if self.questionModel == nil {
-                    self.questionModel = data
-                }else{
-                    self.questionModel?.results += data.results
-                    self.questionModel?.next = data.next
-                    self.questionModel?.previous = data.previous
+                
+                guard let stateCode = response.response?.statusCode else { return }
+                
+                if stateCode == 200 {
+                    print("QuestionVM - questionGet() - 200")
+                    if self.questionModel == nil {
+                        self.questionModel = data
+                    }else{
+                        self.questionModel?.results += data.results
+                        self.questionModel?.next = data.next
+                        self.questionModel?.previous = data.previous
+                    }
                 }
-                if data.results.isEmpty{
+                else if stateCode == 400 {
+                    print("QuestionVM - questionGet() - 400")
+                }
+
+                if self.questionModel?.results.isEmpty == true{
                     print("QuestionVM- guestionGet() : 질문 데이터가 비어있어")
                     self.isSuccessGetQuestion.send(false)
                 }else{
                     print("QuestionVM- guestionGet() : 데이터가 들어있어")
+                    print(self.questionModel?.results)
                     self.isSuccessGetQuestion.send(true)
                 }
                 
             case .failure(_):
+                print("실패! 원인은! \n\(response)")
                 if let data = response.data,
                    let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
                     if errorModel.status_code == 401 {
@@ -129,7 +153,7 @@ class QuestionVM : ObservableObject {
     
     //질문신고
     func questionReport(question_id: Int) {
-        let url = "https://chatty.kr/api/v1/chatty"
+        let url = "https://chatty.kr/api/v1/chatty/report"
         var headers : HTTPHeaders = []
         headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
         
@@ -138,17 +162,14 @@ class QuestionVM : ObservableObject {
         ]
         
         AF.request(url,
-                   method: .delete,
+                   method: .post,
                    parameters: params,
                    encoding: JSONEncoding(options: []),
                    headers: headers)
         .responseData { response in
             switch response.result {
             case .success:
-                print("Report & Delete 성공")
-                self.questionModel?.results.removeAll{
-                    $0.pk == question_id
-                }
+                print("Report 성공")
                 self.reportSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
@@ -175,9 +196,10 @@ class QuestionVM : ObservableObject {
             switch response.result {
             case .success:
                 print("DELETE 성공")
-                self.questionModel?.results.removeAll{
-                    $0.pk == question_id
-                }
+                print("question_id는 \(question_id)")
+                
+                self.questionModel?.results.removeAll(where: { $0.pk == question_id })
+                
                 self.deleteSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
@@ -256,7 +278,7 @@ class QuestionVM : ObservableObject {
             }
         }
     }
-    
+        
     func timelineGet(page: Int){
         let url : String = "https://chatty.kr/api/v1/chatty/timeline"
         
@@ -286,13 +308,15 @@ class QuestionVM : ObservableObject {
                     self.questionModel?.next = data.next
                     self.questionModel?.previous = data.previous
                 }
+                
                 if data.results.isEmpty{
                     print("timeline이  비어있어")
-                    self.isSuccessGetQuestion.send(false)
+                    self.isSuccessGetQuestion.send(true)
                 }else{
                     print("timeline이 들어있어")
-                    self.isSuccessGetQuestion.send(true)
+                    self.isSuccessGetQuestion.send(false)
                 }
+                
             case .failure(_):
                 print("Profile get : Failed")
                 if let data = response.data,
@@ -310,4 +334,45 @@ class QuestionVM : ObservableObject {
             }
         }
     }
+    
+//    func timelineGetFromGPT(page: Int) {
+//        isLoading = true
+//
+//            apiService.timelineGet(page: page)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .finished:
+//                        if self?.questionModel?.results.isEmpty == true {
+//                            print("Timeline is empty")
+//                            self?.isSuccessGetQuestion.send(true)
+//                        } else {
+//                            print("Timeline is not empty")
+//                            self?.isSuccessGetQuestion.send(false)
+//                        }
+//                        self?.isLoading = false
+//                    case .failure(let error):
+//                        print("Timeline get failed: \(error)")
+//                    }
+////                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+////                        self?.isLoading = false
+////                    }
+//                }, receiveValue: { [weak self] questionModel in
+//                    print("Timeline get success")
+//                    print(questionModel)
+//                    if self?.questionModel == nil {
+//                        self?.questionModel = questionModel
+//                    } else {
+//                        if let results = self?.questionModel?.results {
+//                            self?.questionModel?.results = results + questionModel.results
+//                        } else {
+//                            self?.questionModel?.results = questionModel.results
+//                        }
+//                        self?.questionModel?.next = questionModel.next
+//                        self?.questionModel?.previous = questionModel.previous
+//                    }
+//                })
+//                .store(in: &cancellables)
+//        }
+//
 }

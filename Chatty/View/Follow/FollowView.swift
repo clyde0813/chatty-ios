@@ -5,6 +5,8 @@ enum followTab :String {
     case follower = "followers"
     case following = "followings"
     
+    
+    
 }
 
 struct FollowView: View {
@@ -12,33 +14,53 @@ struct FollowView: View {
     
     @Binding var username : String
     
-    @State var currentTab : followTab
-
+    @State var currentTab : followTab 
+    
+    
     @StateObject var followVM = FollowVM()
+    
+    @ObservedObject var eventVM : ChattyEventVM
     
     @State var currentPage = 1
     
     @State var isProgressBar = true
     
+    @State var isClickFollowerDelete = false
+    
+    
     var body: some View {
-        VStack{
+        ZStack{
             VStack{
-                navView
-                tabChangeBar
+                VStack{
+                    navView
+                    tabChangeBar
+                }
+                .background(Rectangle()
+                    .fill(Color.white)
+                    .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
+                )
+                
+                followList
+                Spacer()
             }
-            .background(Rectangle()
-                .fill(Color.white)
-                .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
-            )
+            .onAppear{
+                initFollowView()
+            }
+            .blur(radius: isClickFollowerDelete ? 2 : 0)
+            //Blur 처리
+            if isClickFollowerDelete {
+                BlurView()
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        isClickFollowerDelete.toggle()
+                    }
+                    .background(Color("Background Overlay"))
+                    .opacity(0.7)
+                    .toolbar(.hidden ,for: .tabBar)
+            }
             
-            followList
-            Spacer()
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear{
-            initFollowView()
-        }
-        
     }
 }
 
@@ -71,11 +93,11 @@ extension FollowView {
             Spacer()
             ZStack(alignment: .bottom){
                 Button(action: {
-                    self.currentTab = .follower
+                    currentTab = .follower
                     self.initFollowView()
-                    print(currentTab)
+                    print("탭체인지! \(self.currentTab)")
                 }){
-                    if self.currentTab == .follower {
+                    if currentTab == .follower {
                         VStack(alignment: .center, spacing: 0){
                             Text("팔로워")
                                 .font(Font.system(size: 16, weight: .bold))
@@ -101,11 +123,11 @@ extension FollowView {
             Spacer()
             ZStack(alignment: .bottom){
                 Button(action: {
-                    self.currentTab = .following
+                    currentTab = .following
                     self.initFollowView()
-                    print(currentTab)
+                    print("탭체인지! \(self.currentTab)")
                 }){
-                    if self.currentTab == .following {
+                    if currentTab == .following {
                         VStack(alignment: .center, spacing: 0){
                             Text("팔로잉")
                                 .font(Font.system(size: 16, weight: .bold))
@@ -137,83 +159,306 @@ extension FollowView {
     var followList : some View {
         GeometryReader{ proxy in
             ScrollView(showsIndicators: false){
-                LazyVStack(spacing: 0){
-                    if isProgressBar {
-                        VStack{
-                            Spacer()
-                            ProgressView()
-                            Spacer()
-                        }
+                if isProgressBar {
+                    VStack{
+                        Spacer()
+                        ProgressView()
+                        Spacer()
                     }
-                    else{
-                        if let followList = followVM.followModel?.results {
-                            ForEach(followList, id:\.username) { follow in
-                                HStack(spacing: 24){
-                                    HStack{
-                                        //profile image & ID + Profile Name Area
-                                        NavigationLink {
-                                            ProfileView(username: .constant(follow.username), isOwner: false)
-                                        } label: {
-                                            HStack(spacing: 12){
-                                                KFImage(URL(string:follow.profileImage))
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .frame(width: 48, height: 48)
-                                                    .clipShape(Circle())
-                                                    .clipped()
-                                                    .padding(.trailing, 8)
-                                                VStack(alignment: .leading, spacing: 4){
-                                                    Text(follow.profile_name)
-                                                        .font(Font.system(size: 14, weight: .semibold))
-                                                        .foregroundColor(Color.black)
-                                                    Text("@\(follow.username)")
-                                                        .font(Font.system(size: 11, weight: .light))
-                                                        .foregroundColor(Color("Text Light Secondary"))
+                }
+                else {
+                    //내 팔로우 뷰 일 경우
+                    if username == KeyChain.read(key: "username"){
+                        if currentTab == .follower {
+                            if let followList = followVM.followModel?.results {
+                                LazyVStack(spacing: 0){
+                                    ForEach(followList, id:\.username) { follower in
+                                        HStack(spacing: 24){
+                                            HStack{
+                                                //profile image & ID + Profile Name Area
+                                                NavigationLink {
+                                                    ProfileView(username: .constant(follower.username), isOwner: false)
+                                                } label: {
+                                                    HStack(spacing: 6){
+                                                        KFImage(URL(string:follower.profileImage))
+                                                            .resizable()
+                                                            .scaledToFill()
+                                                            .frame(width: 48, height: 48)
+                                                            .clipShape(Circle())
+                                                            .clipped()
+                                                            .padding(.trailing, 8)
+                                                        
+                                                        Text(follower.profile_name)
+                                                            .font(Font.system(size: 14, weight: .semibold))
+                                                            .foregroundColor(Color.black)
+                                                        
+                                                        //맞팔로우한 사람일때
+                                                        if follower.followState {
+                                                            Text("•")
+                                                                .font(Font.system(size: 14, weight: .bold))
+                                                            Text("맞팔로워")
+                                                                .font(Font.system(size: 14, weight: .bold))
+                                                                .foregroundColor(Color("Main Secondary"))
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            Spacer()
+                                            if follower.username == KeyChain.read(key: "username")! {
+                                                //다른사람의 팔로우,팔로워리스트 볼떄 본인의프로필은 뭐가 안나와야하니 아무것도처리안해둠
+                                            }
+                                            
+                                            Button {
+                                                eventVM.followerData = follower
+                                                withAnimation {
+                                                    self.isClickFollowerDelete = true
+                                                }
+                                            } label: {
+                                                Text("삭제")
+                                                    .font(Font.system(size: 14, weight: .bold))
+                                                    .foregroundColor(Color("Orange Main"))
+                                                    .frame(width:80, height: 30)
+                                                    .padding(.vertical,4)
+                                                    .background(
+                                                        Capsule()
+                                                            .strokeBorder(Color("Orange Main"), lineWidth: 1)
+                                                    )
+                                            }
+                                            
+                                        }
+                                        .padding([.leading, .trailing], 32)
+                                        .padding([.top, .bottom], 12)
+                                        .onAppear{
+                                            callNextFollow(followData: follower)
+                                        }
+                                    }
+                                    .onAppear{
+                                        print("난 followers 부름")
+                                    }
+                                }
+                            }
+                        }
+                        else if currentTab == .following{
+                            if let followList = followVM.followModel?.results{
+                                LazyVStack(spacing: 0){
+                                    ForEach(followList, id:\.username) { following in
+                                        HStack(spacing: 24){
+                                            HStack{
+                                                //profile image & ID + Profile Name Area
+                                                NavigationLink {
+                                                    ProfileView(username: .constant(following.username), isOwner: false)
+                                                } label: {
+                                                    HStack(spacing: 6){
+                                                        KFImage(URL(string:following.profileImage))
+                                                            .resizable()
+                                                            .scaledToFill()
+                                                            .frame(width: 48, height: 48)
+                                                            .clipShape(Circle())
+                                                            .clipped()
+                                                            .padding(.trailing, 8)
+                                                        
+                                                        Text(following.profile_name)
+                                                            .font(Font.system(size: 14, weight: .semibold))
+                                                            .foregroundColor(Color.black)
+                                                    }
+                                                }
+                                            }
+                                            Spacer()
+                                            
+                                            if following.followState {
+                                                Button {
+                                                    followVM.followPost(username: following.username)
+                                                } label: {
+                                                    Text("팔로잉")
+                                                        .font(Font.system(size: 14, weight: .bold))
+                                                        .foregroundColor(Color.white)
+                                                        .frame(width:80, height: 28)
+                                                        .padding(.vertical,4)
+                                                        .background(Capsule()
+                                                            .foregroundColor(Color("Grey300"))
+                                                        )
+                                                }
+                                            } else {
+                                                Button {
+                                                    followVM.followPost(username: following.username)
+                                                } label: {
+                                                    Text("팔로우")
+                                                        .font(Font.system(size: 14, weight: .bold))
+                                                        .foregroundColor(Color.white)
+                                                        .frame(width:80, height: 30)
+                                                        .padding(.vertical,4)
+                                                        .background(Capsule()
+                                                            .foregroundColor(Color("Main Secondary"))
+                                                        )
                                                 }
                                             }
                                         }
-                                    }
-                                    Spacer()
-                                    if follow.username == KeyChain.read(key: "username")! {
-                                        
-                                    }
-                                    else if follow.followState {
-                                        Button {
-                                            followVM.followPost(username: follow.username)
-                                        } label: {
-                                            Text("취소")
-                                                .font(Font.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .frame(width:80, height: 28)
-                                                .padding(.vertical,4)
-                                                .background(Capsule()
-                                                    .foregroundColor(Color("Grey300"))
-                                                )
+                                        .padding([.leading, .trailing], 32)
+                                        .padding([.top, .bottom], 12)
+                                        .onAppear{
+                                            callNextFollow(followData: following)
                                         }
-                                    } else {
-                                        Button {
-                                            followVM.followPost(username: follow.username)
-                                        } label: {
-                                            Text("팔로우")
-                                                .font(Font.system(size: 14, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .frame(width:80, height: 30)
-                                                .padding(.vertical,4)
-                                                .background(Capsule()
-                                                    .foregroundColor(Color("Main Secondary"))
-                                                )
-                                        }
+                                    }
+                                    .onAppear{
+                                        currentTab = .following
                                     }
                                 }
-                                .padding([.leading, .trailing], 32)
-                                .padding([.top, .bottom], 12)
-                                .onAppear{
-                                    callNextFollow(followData: follow)
+                            }
+                        }
+                    }
+                    //다른사람의 팔로우 뷰 일 경우
+                    else {
+                        if currentTab == .follower {
+                            if let followList = followVM.followModel?.results {
+                                LazyVStack(spacing: 0){
+                                    ForEach(followList, id:\.username) { follower in
+                                        HStack(spacing: 24){
+                                            HStack{
+                                                //profile image & ID + Profile Name Area
+                                                NavigationLink {
+                                                    ProfileView(username: .constant(follower.username), isOwner: false)
+                                                } label: {
+                                                    HStack(spacing: 6){
+                                                        KFImage(URL(string:follower.profileImage))
+                                                            .resizable()
+                                                            .scaledToFill()
+                                                            .frame(width: 48, height: 48)
+                                                            .clipShape(Circle())
+                                                            .clipped()
+                                                            .padding(.trailing, 8)
+                                                        
+                                                        Text(follower.profile_name)
+                                                            .font(Font.system(size: 14, weight: .semibold))
+                                                            .foregroundColor(Color.black)
+                                                        
+                                                        //맞팔로우한 사람일때
+                                                        if follower.followState {
+                                                            Text("•")
+                                                                .font(Font.system(size: 14, weight: .bold))
+                                                            Text("맞팔로워")
+                                                                .font(Font.system(size: 14, weight: .bold))
+                                                                .foregroundColor(Color("Main Secondary"))
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            Spacer()
+                                            if follower.username == KeyChain.read(key: "username")! {
+                                                
+                                            }
+                                            else if follower.followState {
+                                                Button {
+                                                    followVM.followPost(username: follower.username)
+                                                } label: {
+                                                    Text("팔로잉")
+                                                        .font(Font.system(size: 14, weight: .bold))
+                                                        .foregroundColor(Color.white)
+                                                        .frame(width:80, height: 28)
+                                                        .padding(.vertical,4)
+                                                        .background(Capsule()
+                                                            .foregroundColor(Color("Grey300"))
+                                                        )
+                                                }
+                                            } else {
+                                                Button {
+                                                    followVM.followPost(username: follower.username)
+                                                } label: {
+                                                    Text("팔로우")
+                                                        .font(Font.system(size: 14, weight: .bold))
+                                                        .foregroundColor(Color.white)
+                                                        .frame(width:80, height: 30)
+                                                        .padding(.vertical,4)
+                                                        .background(Capsule()
+                                                            .foregroundColor(Color("Main Secondary"))
+                                                        )
+                                                }
+                                            }
+                                            
+                                        }
+                                        .padding([.leading, .trailing], 32)
+                                        .padding([.top, .bottom], 12)
+                                        .onAppear{
+                                            callNextFollow(followData: follower)
+                                        }
+                                    }
+                                    .onAppear{
+                                        print("난 followers 부름")
+                                    }
+                                }
+                            }
+                        }
+                        else if currentTab == .following{
+                            if let followList = followVM.followModel?.results{
+                                LazyVStack(spacing: 0){
+                                    ForEach(followList, id:\.username) { following in
+                                        HStack(spacing: 24){
+                                            HStack{
+                                                //profile image & ID + Profile Name Area
+                                                NavigationLink {
+                                                    ProfileView(username: .constant(following.username), isOwner: false)
+                                                } label: {
+                                                    HStack(spacing: 6){
+                                                        KFImage(URL(string:following.profileImage))
+                                                            .resizable()
+                                                            .scaledToFill()
+                                                            .frame(width: 48, height: 48)
+                                                            .clipShape(Circle())
+                                                            .clipped()
+                                                            .padding(.trailing, 8)
+                                                        
+                                                        Text(following.profile_name)
+                                                            .font(Font.system(size: 14, weight: .semibold))
+                                                            .foregroundColor(Color.black)
+                                                    }
+                                                }
+                                            }
+                                            Spacer()
+                                            if following.username == KeyChain.read(key: "username")! {
+                                                
+                                            }
+                                            else if following.followState {
+                                                Button {
+                                                    followVM.followPost(username: following.username)
+                                                } label: {
+                                                    Text("팔로잉")
+                                                        .font(Font.system(size: 14, weight: .bold))
+                                                        .foregroundColor(Color.white)
+                                                        .frame(width:80, height: 28)
+                                                        .padding(.vertical,4)
+                                                        .background(Capsule()
+                                                            .foregroundColor(Color("Grey300"))
+                                                        )
+                                                }
+                                            } else {
+                                                Button {
+                                                    followVM.followPost(username: following.username)
+                                                } label: {
+                                                    Text("팔로우")
+                                                        .font(Font.system(size: 14, weight: .bold))
+                                                        .foregroundColor(Color.white)
+                                                        .frame(width:80, height: 30)
+                                                        .padding(.vertical,4)
+                                                        .background(Capsule()
+                                                            .foregroundColor(Color("Main Secondary"))
+                                                        )
+                                                }
+                                            }
+                                        }
+                                        .padding([.leading, .trailing], 32)
+                                        .padding([.top, .bottom], 12)
+                                        .onAppear{
+                                            callNextFollow(followData: following)
+                                        }
+                                    }
+                                    .onAppear{
+                                        currentTab = .following
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                
             }
             // 2023.06.06 Clyde 높이 제한 추가
             .frame(height: proxy.size.height)
@@ -222,9 +467,19 @@ extension FollowView {
         .onReceive(followVM.isGetFollowSuccess){
             isProgressBar = false
         }
+        .sheet(isPresented: $isClickFollowerDelete, onDismiss: {
+            isClickFollowerDelete = false
+        }) {
+            FollowOption(eventVM: eventVM)
+                .presentationDetents([.fraction(0.35)])
+        }
+        .onReceive(eventVM.followerDeletePublisher) {
+            followVM.DeleteFollower(username: eventVM.followerData?.username ?? "")
+        }
+        
         
     }
-        
+    
 }
 
 //MARK: - Methods

@@ -122,35 +122,35 @@ extension QuestionDetailView {
                 .accentColor(.black)
             }
             Spacer()
-            ZStack(alignment: .bottom){
-                Button(action: {
-                    self.currentTab = .ranker
-                }){
-                    if self.currentTab == .ranker {
-                        VStack(alignment: .center, spacing: 0){
-                            Text("랭커")
-                                .font(Font.system(size: 16, weight: .bold))
-                                .accentColor(.black)
-                                .padding(.bottom, 9)
-                            Rectangle()
-                                .fill(Color("Main Secondary"))
-                                .frame(width: 50, height: 3)
-                        }
-                    } else {
-                        VStack{
-                            Text("랭커")
-                                .font(Font.system(size: 16, weight: .semibold))
-                                .foregroundColor(Color.gray)
-                            Rectangle()
-                                .fill(Color("Main Secondary"))
-                                .frame(width: 50, height: 0)
-                        }
-                        
-                    }
-                }
-                .accentColor(.black)
-            }
-            Spacer()
+//            ZStack(alignment: .bottom){
+//                Button(action: {
+//                    self.currentTab = .ranker
+//                }){
+//                    if self.currentTab == .ranker {
+//                        VStack(alignment: .center, spacing: 0){
+//                            Text("랭커")
+//                                .font(Font.system(size: 16, weight: .bold))
+//                                .accentColor(.black)
+//                                .padding(.bottom, 9)
+//                            Rectangle()
+//                                .fill(Color("Main Secondary"))
+//                                .frame(width: 50, height: 3)
+//                        }
+//                    } else {
+//                        VStack{
+//                            Text("랭커")
+//                                .font(Font.system(size: 16, weight: .semibold))
+//                                .foregroundColor(Color.gray)
+//                            Rectangle()
+//                                .fill(Color("Main Secondary"))
+//                                .frame(width: 50, height: 0)
+//                        }
+//
+//                    }
+//                }
+//                .accentColor(.black)
+//            }
+//            Spacer()
         }
         .padding(.top,10)
     }

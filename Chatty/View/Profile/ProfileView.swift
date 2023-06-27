@@ -23,8 +23,6 @@ struct ProfileView: View {
     
     @Binding var username: String
     
-    @State var selectFollow : followTab = .follower
-    
     @State var isOwner: Bool
     
     @State var offset: CGFloat = 0
@@ -55,13 +53,19 @@ struct ProfileView: View {
     
     @State var deleteSuccess : Bool = false
     
+    @State var answerSuccess : Bool = false
+    
     @State var userBlockSuccess : Bool = false
     
-    @State var isSheet : Bool = false
+    @State var showMySheet : Bool = false
+    
+    @State var showOtherUserSheet : Bool = false
     
     @State var isAnswerSheet : Bool = false
     
     @State var isUserSheet : Bool = false
+    
+    @State var isMeBlocked : Bool = false
     
     //MARK: - 광고를 위한 VM
 //    @StateObject var googleAdsVM = NativeViewModel()
@@ -80,17 +84,16 @@ struct ProfileView: View {
                 ScrollView(.vertical, showsIndicators: false, content: {
                     // ScrollView content VStack
                     VStack(spacing: 0){
-                        
-                        
+
                         GeometryReader { proxy -> AnyView in
-                            
+
                             // Sticky Header...
                             let minY = proxy.frame(in: .global).minY
-                            
+
                             DispatchQueue.main.async {
                                 self.offset = minY
                             }
-                            
+
                             return AnyView(
                                 ZStack{
                                     KFImage(URL(string: profileVM.profileModel?.backgroundImage ?? ""))
@@ -100,7 +103,7 @@ struct ProfileView: View {
                                             width: size.width,
                                             height: minY > 0 ? 180 + minY : 180, alignment: .center
                                         )
-                                    
+
                                     HStack(spacing: 0) {
                                         Button(action:{
                                             dismiss()
@@ -118,7 +121,7 @@ struct ProfileView: View {
                                         .padding(.leading, 25)
                                         .padding(.bottom, 40)
                                         Spacer()
-                                        
+
                                         //MARK: - userOption Sheet On
                                         Button(action:{
                                             isUserSheet = true
@@ -139,7 +142,7 @@ struct ProfileView: View {
                                     }
                                     BlurView()
                                         .opacity(blurViewOpacity())
-                                    
+
                                     HStack{
                                         Button(action:{
                                             dismiss()
@@ -155,19 +158,19 @@ struct ProfileView: View {
                                         }
                                         .padding(.leading, 25)
                                         .padding(.bottom, 10)
-                                        
+
                                         Spacer()
                                         VStack(alignment: .center, spacing: 8){
                                             Text("\(profileVM.profileModel?.profile_name ?? "")")
                                                 .font(Font.system(size: 18, weight: .bold))
                                                 .foregroundColor(Color.white)
-                                            
+
                                             Text("답변완료 \(profileVM.profileModel?.questionCount.answered ?? 0)개")
                                                 .font(Font.system(size: 14, weight: .bold))
                                                 .foregroundColor(Color.white)
                                         }
                                         Spacer()
-                                        
+
                                         Button(action:{
                                             isUserSheet = true
                                         }){
@@ -184,13 +187,13 @@ struct ProfileView: View {
                                         .padding(.trailing, 25)
                                         .padding(.bottom, 10)
                                         .opacity(profileVM.profileModel?.username == KeyChain.read(key: "username") ? 0 : 1)
-                                        
+
                                     }
                                     // to slide from bottom added extra 60..
                                     .offset(y: 120)
                                     .offset(y: titleOffset > 100 ? 0 : -getTitleTextOffset())
                                     .opacity(titleOffset < 100 ? 1 : 0)
-                                    
+
                                 }
                                     .clipped()
                                 //offset이 -80 이하일 경우 background image 상단 dismiss 버튼 허용
@@ -198,7 +201,7 @@ struct ProfileView: View {
                                 // Stretchy Header...
                                     .frame(height: minY > 0 ? 180 + minY : nil)
                                     .offset(y: minY > 0 ? -minY : -minY < 80 ? 0 : -minY - 80)
-                                
+
                             )}
                         .frame(height: 180)
                         .zIndex(1)
@@ -222,46 +225,72 @@ struct ProfileView: View {
                                             .padding(.top, -50)
                                         Spacer()
                                         ZStack{
-                                            //2022.06.13 -신현호
+                                            //타인의 프로필일 경우
                                             if profileVM.profileModel?.username != KeyChain.read(key: "username"){
-                                                Button {
-                                                    profileVM.Follow(username: profileVM.profileModel?.username ?? "")
-                                                    //2022.06.13 -신현호
-                                                    profileVM.profileModel?.followState.toggle()
-                                                    //2022.06.15 -신현호
-                                                    if profileVM.profileModel?.followState == true {
-                                                        profileVM.profileModel?.follower += 1
-                                                    }else{
-                                                        profileVM.profileModel?.follower -= 1
+                                                if profileVM.profileModel?.blockState == true{
+                                                    Button {
+                                                        profileVM.DeleteUserBlock(username: profileVM.profileModel?.username ?? "")
+                                                    } label: {
+                                                        Text("차단해제")
+                                                            .font(.system(size:14, weight: .bold))
+                                                            .frame(height: 40)
+                                                            .frame(width: 90)
+                                                            .foregroundColor(.white)
+                                                            .background(
+                                                                Capsule()
+                                                                    .fill(Color("Grey400"))
+                                                                
+                                                            )
                                                     }
-                                                } label: {
-                                                    if let followState = profileVM.profileModel?.followState {
-                                                        if !followState {
-                                                            Text("팔로우")
-                                                                .font(.system(size:14, weight: .bold))
-                                                                .frame(height: 40)
-                                                                .frame(width: 90)
-                                                                .foregroundColor(.white)
-                                                                .background(
-                                                                    Capsule()
-                                                                        .fill(Color("Pink Main"))
-                                                                )
+
+                                                }
+                                                else{
+                                                    Button {
+                                                        profileVM.Follow(username: profileVM.profileModel?.username ?? "")
+                                                        //2022.06.13 -신현호
+                                                        profileVM.profileModel?.followState.toggle()
+                                                        //2022.06.15 -신현호
+                                                        
+                                                        if profileVM.profileModel?.followState == true {
+                                                            profileVM.profileModel?.follower += 1
                                                         }else{
-                                                            //2022.06.15 -신현호
-                                                            Text("팔로우취소")
-                                                                .font(.system(size:14, weight: .bold))
-                                                                .frame(height: 40)
-                                                                .frame(width: 90)
-                                                                .foregroundColor(.white)
-                                                                .background(
-                                                                    Capsule()
-                                                                        .fill(Color("Grey400"))
-                                                                    //                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
-                                                                )
+                                                            profileVM.profileModel?.follower -= 1
                                                         }
+                                                        
+                                                    } label: {
+                                                        if let followState = profileVM.profileModel?.followState {
+                                                            if !followState {
+                                                                Text("팔로우")
+                                                                    .font(.system(size:14, weight: .bold))
+                                                                    .frame(height: 40)
+                                                                    .frame(width: 90)
+                                                                    .foregroundColor(.white)
+                                                                    .background(
+                                                                        Capsule()
+                                                                            .fill(Color("Pink Main"))
+                                                                    )
+                                                            }else{
+                                                                //2022.06.15 -신현호
+                                                                Text("팔로우취소")
+                                                                    .font(.system(size:14, weight: .bold))
+                                                                    .frame(height: 40)
+                                                                    .frame(width: 90)
+                                                                    .foregroundColor(.white)
+                                                                    .background(
+                                                                        Capsule()
+                                                                            .fill(Color("Grey400"))
+                                                                    )
+                                                            }
+                                                        }
+                                                        
+                                                        
                                                     }
                                                 }
-                                            } else {
+                                                
+                                            }
+                                            
+                                            //본인의 프로필일경우
+                                            else {
                                                 NavigationLink {
                                                     ProfileEditView(profileVM: profileVM)
                                                 } label: {
@@ -292,9 +321,9 @@ struct ProfileView: View {
                                     
                                     //MARK: - follow/following
                                     HStack{
-                                        //2022.06.11 신현호
+
                                         NavigationLink {
-                                            FollowView(username: $username,currentTab: followTab.follower)
+                                            FollowView(username: $username, currentTab: followTab.follower , eventVM: eventVM)
                                         } label: {
                                             Text("\(profileVM.profileModel?.follower ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -304,9 +333,9 @@ struct ProfileView: View {
                                                 .padding(.trailing, 20)
                                                 .foregroundColor(.black)
                                         }
-                                        //                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .follower})
+                                        
                                         NavigationLink {
-                                            FollowView(username: $username,currentTab: followTab.following)
+                                            FollowView(username: $username, currentTab: followTab.following, eventVM: eventVM)
                                         } label: {
                                             Text("\(profileVM.profileModel?.following ?? 0)")
                                                 .font(Font.system(size: 18, weight: .bold))
@@ -315,7 +344,6 @@ struct ProfileView: View {
                                                 .font(Font.system(size: 14, weight: .light))
                                                 .foregroundColor(.black)
                                         }
-                                        //                                        .simultaneousGesture(TapGesture().onEnded {selectFollow = .following})
                                     }
                                 }
                                 .padding([.leading, .trailing], 16)
@@ -350,24 +378,22 @@ struct ProfileView: View {
                                 .padding(.top, 10)
                             }
                             .overlay(
-                                
+
                                 GeometryReader{proxy -> Color in
-                                    
+
                                     let minY = proxy.frame(in: .global).minY
-                                    
+
                                     DispatchQueue.main.async {
                                         self.titleOffset = minY
                                     }
                                     return Color.clear
                                 }
                                     .frame(width: 0, height: 0)
-                                
+
                                 ,alignment: .top
                             )
+                            
                             //프로필 정보 영역 end
-                            
-                            
-                            
                             VStack(spacing: 0){
                                 HStack(alignment: .bottom, spacing: 0){
                                     ZStack(alignment: .bottom){
@@ -472,17 +498,17 @@ struct ProfileView: View {
                             .offset(y: tabBarOffset < 90 ? -tabBarOffset + 90 : 0)
                             .overlay(
                                 GeometryReader{reader -> Color in
-                                    
+
                                     let minY = reader.frame(in: .global).minY
-                                    
+
                                     DispatchQueue.main.async {
                                         self.tabBarOffset = minY
                                     }
-                                    
+
                                     return Color.clear
                                 }
                                     .frame(width: 0, height: 0)
-                                
+
                                 ,alignment: .top
                             )
                             .zIndex(1)
@@ -496,8 +522,7 @@ struct ProfileView: View {
                                 //MARK: - 질문 lazyVstack
                                 LazyVStack(spacing: 16){
                                     if isQuestionEmpty == false{
-                                        if let questionlist = questionVM.questionModel?.results {
-                                            ForEach(Array(questionlist.enumerated()), id:\.offset){ index, questiondata in
+                                            ForEach(Array((questionVM.questionModel?.results ?? [] ).enumerated()), id:\.element.pk){ index, questiondata in
                                                 if self.currentPostTab == .responsedTab {
                                                     ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, eventVM : eventVM)
                                                         .onAppear{
@@ -516,23 +541,10 @@ struct ProfileView: View {
                                                             callNextQuestion(questiondata: questiondata)
                                                         }
                                                 }
-                                                
-                                                if index % 4 == 0 && index != 0 {
-                                                    Native(vm: nativeAds)
-                                                        .frame(width: proxy.size.width - 32,height:130)
-//                                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
-//                                                        .onAppear{
-//                                                            print("Ad added")
-//                                                        }
+                                                if index % 4 == 0 && index != 0{
+                                                    AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                                 }
                                             }
-                                           
-                                            
-                                            
-                                            
-                                            
-                                            
-                                        }
                                     }
                                     else if isQuestionEmpty == true {
                                         VStack(alignment: .center){
@@ -574,13 +586,14 @@ struct ProfileView: View {
                                 }
                                 .padding([.top, .bottom])
                                 
+                                
                             }
                             .zIndex(0)
                         }
                         .zIndex(-offset > 80 ? 0 : 1)
                     }
                 })
-                if !(profileVM.profileModel?.username == KeyChain.read(key: "username")) {
+                if !(profileVM.profileModel?.username == KeyChain.read(key: "username")) && profileVM.profileModel?.blockState == false {
                     Button(action: {
                         self.questionEditorStatus = true
                     }
@@ -614,6 +627,10 @@ struct ProfileView: View {
                     ProfileErrorView(msg: "차단이 완료되었습니다!")
                 }
                 
+                if answerSuccess {
+                    ProfileErrorView(msg: "답변을 완료했습니다!")
+                }
+                
             }
             .ignoresSafeArea(.all, edges: .top)
             .onAppear{
@@ -628,65 +645,36 @@ struct ProfileView: View {
                 } else {
                     self.isQuestionEmpty = true
                 }
-                
-                
             }
             .onReceive(questionVM.refuseComplete) {
                 self.refuseSuccess = true
-                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                scheduleTimer(duration: 2){
                     self.refuseSuccess = false
                 }
             }
             .onReceive(questionVM.reportSuccess) {
                 self.reportSuccess = true
-                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                scheduleTimer(duration: 2){
                     self.reportSuccess = false
                 }
             }
             .onReceive(questionVM.deleteSuccess) {
                 self.deleteSuccess = true
-                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                scheduleTimer(duration: 2){
                     self.deleteSuccess = false
                 }
             }
             .onReceive(questionVM.questionPostSuccess){
                 self.questionPostSuccess = true
-                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                scheduleTimer(duration: 2){
                     self.questionPostSuccess = false
                 }
             }
-            .onReceive(profileVM.userBlockSuccess){
-                self.userBlockSuccess = true
-                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
-                    self.userBlockSuccess = false
+            .onReceive(questionVM.answerComplete){
+                self.answerSuccess = true
+                scheduleTimer(duration: 2){
+                    self.answerSuccess = false
                 }
-            }
-            .onReceive(eventVM.sheetPublisher){
-                isSheet.toggle()
-            }
-            .sheet(isPresented: $isSheet, onDismiss: {
-                isSheet = false
-            }) {
-                QuestionOption(eventVM: eventVM)
-                    .presentationDetents([.fraction(0.4)])
-            }
-            .sheet(isPresented: $questionEditorStatus,onDismiss:{
-                questionEditorStatus = false
-            }){
-                QuestionEditor(username: $username, questionVM: questionVM)
-                    .presentationDetents([.fraction(0.45)])
-            }
-            .sheet(isPresented: $isAnswerSheet, onDismiss: {
-                isAnswerSheet = false
-            }) {
-                AnswerEditor(eventVM: eventVM)
-                    .presentationDetents([.fraction(0.45)])
-            }
-            .sheet(isPresented: $isUserSheet, onDismiss: {
-                isUserSheet = false
-            }) {
-                UserOption(eventVM: eventVM)
-                    .presentationDetents([.fraction(0.2)])
             }
             .onReceive(eventVM.deletePublisher){
                 questionVM.questionDelete(question_id: eventVM.data?.pk ?? 0)
@@ -706,6 +694,74 @@ struct ProfileView: View {
             .onReceive(eventVM.userBlockPublisher){
                 profileVM.userBlock(username: profileVM.profileModel?.username ?? "" )
             }
+            .onReceive(eventVM.mySheetPublisher){
+                showMySheet.toggle()
+            }
+            .onReceive(eventVM.otherUserSheetPublisher){
+                showOtherUserSheet.toggle()
+            }
+            .onReceive(profileVM.userBlockSuccess){
+                self.userBlockSuccess = true
+                scheduleTimer(duration: 2){
+                    self.userBlockSuccess = false
+                }
+            }
+            .onReceive(profileVM.isBlocked){
+                isMeBlocked = true
+            }
+            .sheet(isPresented: $showMySheet) {
+                QuestionOption(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.4)])
+                    .onDisappear{
+                        showMySheet = false
+                    }
+            }
+            .sheet(isPresented: $showOtherUserSheet) {
+                QuestionOption(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.2)])
+                    .onDisappear{
+                        showOtherUserSheet = false
+                    }
+            }
+            .sheet(isPresented: $questionEditorStatus){
+                QuestionEditor(username: $username, questionVM: questionVM)
+                    .presentationDetents([.fraction(0.45)])
+                    .onDisappear{
+                        questionEditorStatus = false
+                    }
+            }
+            .sheet(isPresented: $questionEditorStatus){
+                QuestionEditor(username: $username, questionVM: questionVM)
+                    .presentationDetents([.fraction(0.45)])
+                    .onDisappear{
+                        questionEditorStatus = false
+                    }
+            }
+            .sheet(isPresented: $isAnswerSheet) {
+                AnswerEditor(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.45)])
+                    .onDisappear{
+                        isAnswerSheet = false
+                    }
+            }
+            .sheet(isPresented: $isUserSheet){
+                UserOption(eventVM: eventVM)
+                    .presentationDetents([.fraction(0.2)])
+                    .onDisappear{
+                        isUserSheet = false
+                    }
+            }
+            
+            .alert(isPresented: $isMeBlocked){
+                Alert(
+                    title: Text("Error"),
+                    message: Text("사용자를 찾을수 없습니다."),
+                    dismissButton: .default(Text("확인"))
+                    {
+                        dismiss()
+                    }
+                )
+            }
             .refreshable {
                 self.initProfileView()
             }
@@ -722,9 +778,64 @@ struct ProfileView: View {
                 dismiss()
             }
         }))
+        .blur(radius: isMeBlocked ? 2 : 0)
+        
+    }
+
+}
+
+//MARK: - ErrorView
+struct ProfileErrorView : View {
+    @State var msg : String
+    var body: some View{
+        VStack{
+            Spacer()
+            HStack{
+                Spacer()
+                Text(msg)
+                    .frame(width: 310, height: 40)
+                    .foregroundColor(Color.white)
+                    .background(Color("Error Background"))
+                    .cornerRadius(16)
+                    .padding(.bottom, 50)
+                Spacer()
+            }
+        }
+    }
+}
+
+//MARK: - Methods
+extension ProfileView{
+    private func callNextQuestion(questiondata: ResultDetail){
+        print("callNextQuestion() - run")
+        if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
+            self.currentQuestionPage += 1
+            questionVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
+        }
+        
         
     }
     
+    private func initProfileView() {
+        print("run itit")
+        self.questionEmpty = false
+        questionVM.questionModel = nil
+        self.currentQuestionPage = 1
+        profileVM.profileGet(username: username)
+        questionVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
+    }
+    
+    private func scheduleTimer(duration: TimeInterval, completion: @escaping () -> Void) {
+        Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { timer in
+            completion()
+        }
+    }
+}
+
+
+
+//MARK: - Offset Methods
+extension ProfileView {
     func getOffset()->CGFloat{
         
         let progress = (-offset / 80) * 20
@@ -760,50 +871,4 @@ struct ProfileView: View {
         
         return Double(-offset > 80 ? progress : 0)
     }
-    
-    func callNextQuestion(questiondata: ResultDetail){
-        print("callNextQuestion() - run")
-        if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
-            self.currentQuestionPage += 1
-            self.isShowAds = true
-            questionVM.questionGet(questionType: questionType,username: username, page: self.currentQuestionPage)
-        }
-        
-        
-    }
-    
-    func initProfileView() {
-        print("run itit")
-        self.questionEmpty = false
-        questionVM.questionModel?.results.removeAll()
-        self.currentQuestionPage = 1
-        profileVM.profileGet(username: username)
-        questionVM.questionGet(questionType: questionType, username: username, page: self.currentQuestionPage)
-    }
 }
-
-struct ProfileErrorView : View {
-    @State var msg : String
-    var body: some View{
-        VStack{
-            Spacer()
-            HStack{
-                Spacer()
-                Text(msg)
-                    .frame(width: 310, height: 40)
-                    .foregroundColor(Color.white)
-                    .background(Color("Error Background"))
-                    .cornerRadius(16)
-                    .padding(.bottom, 50)
-                Spacer()
-            }
-        }
-    }
-}
-
-
-//struct ProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProfileView(username: .constant("TestAccount1"), isOwner: true).environmentObject(ChattyVM())
-//    }
-//}

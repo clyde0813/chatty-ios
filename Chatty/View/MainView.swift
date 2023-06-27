@@ -9,7 +9,7 @@ enum BottomTab {
 struct MainView: View {
     @EnvironmentObject var chattyVM: ChattyVM
     
-    @Environment(\.dismiss) var dismissgit
+    @Environment(\.dismiss) var dismiss
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -33,6 +33,12 @@ struct MainView: View {
                             Text("홈")
                         }
                         
+                    MyPageView()
+                        .tag(BottomTab.mypage)
+                        .tabItem{
+                            Image(systemName: "person.crop.circle.fill")
+                            Text("마이페이지")
+                        }
                     
 //                    CommunityView()
 //                        .tag(BottomTab.community)
@@ -44,11 +50,7 @@ struct MainView: View {
 //                        .tabItem{
 //                            Image(systemName: "trophy.fill")
 //                            Text("랭킹")}
-                    MyPageView()
-                        .tag(BottomTab.mypage)
-                        .tabItem{
-                            Image(systemName: "person.crop.circle.fill")
-                            Text("마이페이지")}
+                    
                 }
                 .navigationBarHidden(true)
                 .onReceive(chattyVM.logoutSuccess){
@@ -56,9 +58,9 @@ struct MainView: View {
                 }
                 .accentColor(Color.black)
                 .onChange(of: currentTab) { tab in
-                    if tab == .home {
-                        NavigationUtil.popToRootView()
-                    }
+                    
+                    NavigationUtil.popToRootView()
+                    dismiss()
                 }
         }
     }

@@ -12,6 +12,7 @@ struct ArrivedCard: View {
 
     @ObservedObject var eventVM : ChattyEventVM
     
+    
     var body: some View {
         ZStack{
             Color.white
