@@ -74,8 +74,6 @@ struct ChattyShareView: View {
                                                 .scaledToFill()
                                                 .frame(width: 45, height: 45)
                                                 .clipShape(Circle())
-                                                .overlay(Circle()
-                                                    .stroke(Color.white, lineWidth: 3))
                                                 .clipped()
                                                 .padding(.trailing, 8)
                                         

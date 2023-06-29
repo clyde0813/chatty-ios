@@ -78,6 +78,7 @@
 		2EE6CB332952F4F300E281A0 /* ChattyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE6CB322952F4F300E281A0 /* ChattyApp.swift */; };
 		2EE6CB372952F4F400E281A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EE6CB362952F4F400E281A0 /* Assets.xcassets */; };
 		2EE6CB3A2952F4F400E281A0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EE6CB392952F4F400E281A0 /* Preview Assets.xcassets */; };
+		2EE75B5D2A4ABCD30093D9EC /* FollowOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE75B5C2A4ABCD30093D9EC /* FollowOption.swift */; };
 		2EF5AC9429AF01AB0019A37D /* Chatty_LoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF5AC9329AF01AB0019A37D /* Chatty_LoginTests.swift */; };
 		2EF5AC9629AF01DF0019A37D /* ChattyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF5AC9529AF01DF0019A37D /* ChattyTests.swift */; };
 		7726157C2A3E8FEA00DDE57B /* QuestionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7726157B2A3E8FEA00DDE57B /* QuestionDetailView.swift */; };
@@ -181,6 +182,7 @@
 		2EE6CB392952F4F400E281A0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2EE6CB3F2952F4F400E281A0 /* ChattyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE6CB492952F4F500E281A0 /* ChattyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EE75B5C2A4ABCD30093D9EC /* FollowOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowOption.swift; sourceTree = "<group>"; };
 		2EF5AC9329AF01AB0019A37D /* Chatty_LoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chatty_LoginTests.swift; sourceTree = "<group>"; };
 		2EF5AC9529AF01DF0019A37D /* ChattyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChattyTests.swift; sourceTree = "<group>"; };
 		7726157B2A3E8FEA00DDE57B /* QuestionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionDetailView.swift; sourceTree = "<group>"; };
@@ -332,6 +334,7 @@
 		2E23386D29ED9F3000DF6E2F /* Option */ = {
 			isa = PBXGroup;
 			children = (
+				2EE75B5C2A4ABCD30093D9EC /* FollowOption.swift */,
 				2E23386E29ED9F4900DF6E2F /* QuestionOption.swift */,
 				001A010F2A40BC6F009F7692 /* UserOption.swift */,
 			);
@@ -899,6 +902,7 @@
 				2EA1C7C22A3C5DD800232CDB /* MessageBoxShape.swift in Sources */,
 				2E9D03AB29A6A2C30042F0AE /* RankingView.swift in Sources */,
 				2E9D03A729A6A27A0042F0AE /* ProfileView.swift in Sources */,
+				2EE75B5D2A4ABCD30093D9EC /* FollowOption.swift in Sources */,
 				2E9D03A529A691FD0042F0AE /* MainView.swift in Sources */,
 				2EA1C7C42A3C5DD800232CDB /* NavigationUtil.swift in Sources */,
 				2E5F21FD29AD615F003B2A14 /* Keychain.swift in Sources */,
@@ -1132,7 +1136,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = Chatty.Chatty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1170,7 +1174,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = Chatty.Chatty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

@@ -144,20 +144,20 @@ struct ProfileView: View {
                                         .opacity(blurViewOpacity())
 
                                     HStack{
-                                        Button(action:{
-                                            dismiss()
-                                        }){
-                                            Image(systemName: "arrow.left")
-                                                .font(.system(size:16, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .background(
-                                                    Circle()
-                                                        .fill(Color("Card Share Background"))
-                                                        .frame(width: 32, height: 32)
-                                                )
-                                        }
-                                        .padding(.leading, 25)
-                                        .padding(.bottom, 10)
+//                                        Button(action:{
+//                                            dismiss()
+//                                        }){
+//                                            Image(systemName: "arrow.left")
+//                                                .font(.system(size:16, weight: .bold))
+//                                                .foregroundColor(Color.white)
+//                                                .background(
+//                                                    Circle()
+//                                                        .fill(Color("Card Share Background"))
+//                                                        .frame(width: 32, height: 32)
+//                                                )
+//                                        }
+//                                        .padding(.leading, 25)
+//                                        .padding(.bottom, 10)
 
                                         Spacer()
                                         VStack(alignment: .center, spacing: 8){
@@ -171,22 +171,22 @@ struct ProfileView: View {
                                         }
                                         Spacer()
 
-                                        Button(action:{
-                                            isUserSheet = true
-                                        }){
-                                            Image(systemName: "ellipsis")
-                                                .font(.system(size:16, weight: .bold))
-                                                .foregroundColor(Color.white)
-                                                .rotationEffect(.degrees(-90))
-                                                .background(
-                                                    Circle()
-                                                        .fill(Color("Card Share Background"))
-                                                        .frame(width: 32, height: 32)
-                                                )
-                                        }
-                                        .padding(.trailing, 25)
-                                        .padding(.bottom, 10)
-                                        .opacity(profileVM.profileModel?.username == KeyChain.read(key: "username") ? 0 : 1)
+//                                        Button(action:{
+//                                            isUserSheet = true
+//                                        }){
+//                                            Image(systemName: "ellipsis")
+//                                                .font(.system(size:16, weight: .bold))
+//                                                .foregroundColor(Color.white)
+//                                                .rotationEffect(.degrees(-90))
+//                                                .background(
+//                                                    Circle()
+//                                                        .fill(Color("Card Share Background"))
+//                                                        .frame(width: 32, height: 32)
+//                                                )
+//                                        }
+//                                        .padding(.trailing, 25)
+//                                        .padding(.bottom, 10)
+//                                        .opacity(profileVM.profileModel?.username == KeyChain.read(key: "username") ? 0 : 1)
 
                                     }
                                     // to slide from bottom added extra 60..

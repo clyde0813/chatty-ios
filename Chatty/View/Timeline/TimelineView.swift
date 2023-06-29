@@ -268,7 +268,7 @@ extension TimelineView {
                     }
                     else{
                         LazyVStack(spacing: 16){
-                            ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id:\.offset){ index, questiondata in
+                            ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id:\.element.pk){ index, questiondata in
                                 ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
                                     .onAppear{
                                         callNextTimeline(questiondata: questiondata)
