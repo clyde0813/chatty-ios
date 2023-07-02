@@ -186,6 +186,18 @@ struct MyPageView: View {
                                         }
                                     }
                                     .frame(height: 48)
+                                    NavigationLink {
+                                        MyQuestionView()
+                                    } label: {
+                                        HStack{
+                                            Text("질문 모아보기")
+                                                .font(Font.system(size: 16, weight: .none))
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                                .font(Font.system(size: 16, weight: .none))
+                                        }
+                                    }
+                                    .frame(height: 48)
         //                            HStack{
         //                                Text("신고 기록 및 처리 상태 확인")
         //                                    .font(Font.system(size: 16, weight: .none))
@@ -235,6 +247,7 @@ struct MyPageView: View {
                                     }
                                 }
                                 .padding([.leading, .trailing], 20)
+                                
                                 Spacer()
                             }
                             .background(Color.clear)

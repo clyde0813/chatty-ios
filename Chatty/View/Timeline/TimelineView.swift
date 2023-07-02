@@ -29,30 +29,24 @@ struct TimelineView: View {
     @State var showOtherUserSheet = false
 
 //    @StateObject var nativeAds = NativeVM()
-
-    
-    @State var isTimelineEmpty = true
     
     @State var isProgress = true
     
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing){
+                //MARK: - 상단 navBar & Tabbar  -2023.06.03 신현호-
                 VStack{
-                    //MARK: - 상단 navBar & Tabbar  -2023.06.03 신현호-
-                    VStack{
-                        navBar
-                        tabChangeBar
-                            .background(Rectangle()
-                                .fill(Color.white)
-                                .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
-                            )
-                        timelineList
-                    }
-                    .blur(radius: isClickedQuestion ? 2 : 0)
-                    
+                    navBar
+                    tabChangeBar
+                        .background(Rectangle()
+                            .fill(Color.white)
+                            .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
+                        )
+                    timelineList
                 }
-                
+                .blur(radius: isClickedQuestion ? 2 : 0)
+    
                 if isClickedQuestion {
                     BlurView()
                         .ignoresSafeArea()
@@ -76,6 +70,7 @@ struct TimelineView: View {
 //                nativeAds.refreshAd()
                 self.initTimelineView()
             })
+            
         }
         .onReceive(profileVM.$profileModel) { userInfo in
             guard let user = userInfo else { return }
@@ -121,7 +116,7 @@ extension TimelineView {
         questionVM.questionModel = nil
         self.currentPage = 1
         profileVM.profileGet(username: KeyChain.read(key: "username")!)
-        questionVM.timelineGet(page: self.currentPage)
+        questionVM.GetTimeline(page: self.currentPage)
 
     }
     
@@ -130,7 +125,7 @@ extension TimelineView {
         if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
             print("callNextQuestion() - run")
             self.currentPage += 1
-            questionVM.timelineGet(page: self.currentPage)
+            questionVM.GetTimeline(page: self.currentPage)
             
 
         }
@@ -228,7 +223,7 @@ extension TimelineView {
     var timelineList : some View {
         GeometryReader{ proxy in
             ScrollView(showsIndicators: false){
-                if isProgress {
+                if questionVM.questionModel == nil {
                     VStack{
                         Spacer()
                         ProgressView()
@@ -237,10 +232,10 @@ extension TimelineView {
                     .frame(width: proxy.size.width)
                 }
                 else {
-                    if isTimelineEmpty {
+                    if questionVM.questionModel?.results.isEmpty == true {
                         VStack(alignment: .center){
                             VStack(spacing: 0){
-                                Text("팔로워가 아직 받은 질문이 없어요!")
+                                Text("더 많은 친구를 팔로우하여 소식을 받아보세요!")
                                     .font(.system(size: 16, weight: .none))
                                     .padding(.bottom, 13)
                                 Button(action:{
@@ -277,6 +272,9 @@ extension TimelineView {
                                     AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                 }
                             }
+                            if questionVM.isLoading {
+                                ProgressView()
+                            }
                         }
                         .padding(.top, 10)
                     }
@@ -303,19 +301,10 @@ extension TimelineView {
             // 2023.06.06 Clyde 높이 제한 추가
             .frame(height: proxy.size.height)
             .frame(maxHeight: .infinity)
-//            .allowsHitTesting(!questionVM.isLoading)
             .refreshable {
                 self.initTimelineView()
             }
              
-        }
-        .onReceive(questionVM.isSuccessGetQuestion){ result in
-            isProgress = false
-            if result {
-                isTimelineEmpty = true
-            }else {
-                isTimelineEmpty = false
-            }
         }
         
         

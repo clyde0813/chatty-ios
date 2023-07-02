@@ -3,27 +3,6 @@ import Alamofire
 import Combine
 import Foundation
 
-//class APIService {
-//    func timelineGet(page: Int) -> AnyPublisher<QuestionModel, Error> {
-//        let urlString = "https://chatty.kr/api/v1/chatty/timeline?page=\(page)"
-//        guard let url = URL(string: urlString) else {
-//            return Fail(error: NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
-//                .eraseToAnyPublisher()
-//        }
-//
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "GET"
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        request.addValue("Bearer " + KeyChain.read(key: "access_token")!, forHTTPHeaderField: "Authorization")
-//
-//        return URLSession.shared.dataTaskPublisher(for: request)
-//            .map { $0.data }
-//            .decode(type: QuestionModel.self, decoder: JSONDecoder())
-//            .eraseToAnyPublisher()
-//    }
-//}
-
 class QuestionVM : ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     //새로추가
@@ -41,88 +20,37 @@ class QuestionVM : ObservableObject {
     var refuseComplete = PassthroughSubject<(), Never>()
     //새로추가
     var answerComplete = PassthroughSubject<(), Never>()
-    //새로추가
-    var isSuccessGetQuestion = PassthroughSubject<Bool, Never>()
-
-//    private let apiService = APIService()
     
-    //MARK: - 카드뷰에서 쓰일 함수들
+    
+    //MARK: - Getinit()
     func questionGet(questionType: String, username: String, page: Int){
-        var urlPath : String = ""
-        var headers : HTTPHeaders = []
-        
-        if questionType == "responsed" {
-            urlPath = "user/\(username)"
-        }
-        else if questionType == "arrived" {
-            urlPath = "arrived"
-        }
-        else if questionType == "refused" {
-            urlPath = "refuse"
-        }
-        
-        let url = "https://chatty.kr/api/v1/chatty/" + urlPath
-        
-        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        let params: Parameters = [
-            "page": page
-        ]
-        
-        AF.request(url,
-                   method: .get,
-                   parameters: params,
-                   encoding: URLEncoding.default,
-                   headers: headers)
-        .responseDecodable(of: QuestionModel.self){ response in
-            switch response.result {
+        NetworkManager.shared.questionGet(questionType: questionType, username: username, page: page) { [weak self] result in
+            switch result {
             case .success(let data):
-                
-                guard let stateCode = response.response?.statusCode else { return }
-                
-                if stateCode == 200 {
-                    print("QuestionVM - questionGet() - 200")
-                    if self.questionModel == nil {
-                        self.questionModel = data
-                    }else{
-                        self.questionModel?.results += data.results
-                        self.questionModel?.next = data.next
-                        self.questionModel?.previous = data.previous
-                    }
-                }
-                else if stateCode == 400 {
-                    print("QuestionVM - questionGet() - 400")
-                }
-
-                if self.questionModel?.results.isEmpty == true{
-                    print("QuestionVM- guestionGet() : 질문 데이터가 비어있어")
-                    self.isSuccessGetQuestion.send(false)
-                }else{
-                    print("QuestionVM- guestionGet() : 데이터가 들어있어")
-                    print(self.questionModel?.results)
-                    self.isSuccessGetQuestion.send(true)
-                }
-                
-            case .failure(_):
-                print("실패! 원인은! \n\(response)")
-                if let data = response.data,
-                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
-                    if errorModel.status_code == 401 {
-                        self.token.refreshToken() { success in
-                            if success {
-                                self.questionGet(questionType: questionType, username: username, page: page)
-                            } else {
-                                print("Token Refresh Failed")
-                            }
-                        }
-                    }
-                }
+                print("MyQuestionVM - questionGet(): Success")
+                self?.handleQuestionResponse(data)
+            case .failure(let error):
+                print("MyQuestionVM - questionGet(): Fail")
+                self?.handleQuestionError(error)
             }
-            
         }
     }
     
-    //질문하기
+    func GetTimeline(page :Int){
+        NetworkManager.shared.timelineGet(page: page) { [weak self] result in
+            switch result {
+            case .success(let data) :
+                print("MyQuestionVM - fetchGetQuestion(): Success")
+                self?.handleQuestionResponse(data)
+            case .failure(let error):
+                print("MyQuestionVM - fetchGetQuestion(): Fail")
+                self?.handleQuestionError(error)
+            }
+        }
+    }
+    
+    
+    //MARK: - 질문, 답장, 삭제, 거절, 신고
     func questionPost(username: String, content: String, anonymous: Bool) {
         let url = "https://chatty.kr/api/v1/chatty"
         var headers : HTTPHeaders = []
@@ -143,7 +71,6 @@ class QuestionVM : ObservableObject {
         .responseString { (response) in
             switch response.result {
             case .success:
-                print("질문은 성공이 맞는데?")
                 self.questionPostSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
@@ -151,7 +78,6 @@ class QuestionVM : ObservableObject {
         }
     }
     
-    //질문신고
     func questionReport(question_id: Int) {
         let url = "https://chatty.kr/api/v1/chatty/report"
         var headers : HTTPHeaders = []
@@ -169,7 +95,6 @@ class QuestionVM : ObservableObject {
         .responseData { response in
             switch response.result {
             case .success:
-                print("Report 성공")
                 self.reportSuccess.send()
             case .failure(let error):
                 print("error : \(error.errorDescription!)")
@@ -177,7 +102,6 @@ class QuestionVM : ObservableObject {
         }
     }
     
-    //질문삭제
     func questionDelete(question_id: Int) {
         let url = "https://chatty.kr/api/v1/chatty"
         var headers : HTTPHeaders = []
@@ -207,7 +131,6 @@ class QuestionVM : ObservableObject {
         }
     }
     
-    //질문거절
     func questionRefuse(question_id: Int) {
         let url = "https://chatty.kr/api/v1/chatty/refuse"
         var headers : HTTPHeaders = []
@@ -278,101 +201,44 @@ class QuestionVM : ObservableObject {
             }
         }
     }
-        
-    func timelineGet(page: Int){
-        let url : String = "https://chatty.kr/api/v1/chatty/timeline"
-        
-        var headers : HTTPHeaders = []
-        
-        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        let params: Parameters = [
-            "page": page
-        ]
-        
-        AF.request(url,
-                   method: .get,
-                   parameters: params,
-                   encoding: URLEncoding.default,
-                   headers: headers
-        )
-        .responseDecodable(of: QuestionModel.self){ response in
-            switch response.result {
-            case .success(let data):
-                print("TimeLine get : Success")
-                print("타임라인의 데이터는! \(data)")
-                if self.questionModel == nil {
-                    self.questionModel = data
-                }else{
-                    self.questionModel?.results += data.results
-                    self.questionModel?.next = data.next
-                    self.questionModel?.previous = data.previous
-                }
-                
-                if data.results.isEmpty{
-                    print("timeline이  비어있어")
-                    self.isSuccessGetQuestion.send(true)
-                }else{
-                    print("timeline이 들어있어")
-                    self.isSuccessGetQuestion.send(false)
-                }
-                
-            case .failure(_):
-                print("Profile get : Failed")
-                if let data = response.data,
-                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
-                    if errorModel.status_code == 401 {
-                        self.token.refreshToken() { success in
-                            if success {
-                                self.timelineGet(page: page)
-                            } else {
-                                print("Token Refresh Failed")
-                            }
-                        }
-                    }
-                }
-            }
+}
+
+
+extension QuestionVM {
+    
+    func handleQuestionResponse(_ data: QuestionModel) {
+        if questionModel == nil {
+            questionModel = data
+        }else {
+            questionModel?.results += data.results
+            questionModel?.next = data.next
+            questionModel?.previous = data.previous
         }
     }
     
-//    func timelineGetFromGPT(page: Int) {
-//        isLoading = true
-//
-//            apiService.timelineGet(page: page)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//                    switch completion {
-//                    case .finished:
-//                        if self?.questionModel?.results.isEmpty == true {
-//                            print("Timeline is empty")
-//                            self?.isSuccessGetQuestion.send(true)
-//                        } else {
-//                            print("Timeline is not empty")
-//                            self?.isSuccessGetQuestion.send(false)
-//                        }
-//                        self?.isLoading = false
-//                    case .failure(let error):
-//                        print("Timeline get failed: \(error)")
-//                    }
-////                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-////                        self?.isLoading = false
-////                    }
-//                }, receiveValue: { [weak self] questionModel in
-//                    print("Timeline get success")
-//                    print(questionModel)
-//                    if self?.questionModel == nil {
-//                        self?.questionModel = questionModel
-//                    } else {
-//                        if let results = self?.questionModel?.results {
-//                            self?.questionModel?.results = results + questionModel.results
-//                        } else {
-//                            self?.questionModel?.results = questionModel.results
-//                        }
-//                        self?.questionModel?.next = questionModel.next
-//                        self?.questionModel?.previous = questionModel.previous
-//                    }
-//                })
-//                .store(in: &cancellables)
-//        }
-//
+    func handleQuestionError(_ error: Error) {
+        
+        if let afError = error as? AFError, let statusCode = afError.responseCode {
+            handleStatusCodeError(statusCode)
+        }else{
+            handleNetworkError()
+        }
+    }
+    
+    func handleStatusCodeError(_ statusCode : Int, retryAction: (() -> Void)? = nil){
+        switch statusCode {
+        case 400 :
+            print("400")
+        case 401 :
+            print("401")
+        case 500 :
+            print("500")
+        default:
+            print("!!")
+        }
+    }
+    
+    func handleNetworkError(){
+        print("네트워크에러!")
+    }
 }

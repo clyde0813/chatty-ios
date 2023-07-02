@@ -27,31 +27,25 @@ class ProfileVM : ObservableObject {
     //MARK: - 함수
     //Get profile
     func profileGet(username: String){
-        let url = "https://chatty.kr/api/v1/user/profile/\(username)"
-        
-        var headers : HTTPHeaders = []
-        
-        headers = ["Content-Type":"application/json", "Accept":"application/json",
-                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        AF.request(url,
-                   method: .get,
-                   encoding: JSONEncoding.default,
-                   headers: headers)
-        .responseDecodable(of: ProfileModel.self){ response in
-            switch response.response?.statusCode {
-            case 200 :
-                print("Profile get : Success")
-                self.profileModel = response.value
-            case 400:
-                print("Profile get : isBlocked User")
-                self.isBlocked.send()
-            default:
-                print("Profile get : Failed")
-                print(response)
-                if let data = response.data,
-                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
-                    print("Error Data : ", errorModel)
+        NetworkManager.shared.profileGet(username: username) { [weak self]result in
+            switch result {
+            case .success(let data):
+                self?.profileModel = data
+            case .failure(let error):
+                if let afError = error as? AFError, let statusCode = afError.responseCode{
+                    switch statusCode {
+                    case 400:
+                        print("Profile get : isBlocked User")
+                        self?.isBlocked.send()
+                    case 404:
+                        print("Profile get : notFoundPage")
+                    case 500:
+                        print("Profile get : serverError")
+                    default :
+                        print("?")
+                    }
+                }else{
+                    print("네트워크에러")
                 }
             }
         }
@@ -130,7 +124,7 @@ class ProfileVM : ObservableObject {
                    parameters: parameters,
                    encoding: JSONEncoding.default,
                    headers: headers)
-        .response{ response in
+        .responseData{ response in
             switch response.response?.statusCode {
             case 201 :
                 print("실패")

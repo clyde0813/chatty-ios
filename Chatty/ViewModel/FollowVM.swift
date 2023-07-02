@@ -6,9 +6,11 @@ class FollowVM : ObservableObject{
     @Published var followModel : FollowModel? = nil
     
     var isGetFollowSuccess = PassthroughSubject<(),Never>()
+    
     var DeleteFollowerSuccess = PassthroughSubject<(),Never>()
     
     var toggleToSearchView = PassthroughSubject<(),Never>()
+    
     
     func followGet(username: String, page : Int, tab:String){
         
@@ -31,7 +33,7 @@ class FollowVM : ObservableObject{
         .responseDecodable(of: FollowModel.self){ response in
             switch response.result {
             case .success(let data):
-                print("Follow get : Success")
+                print("FollowVM - FollowGet() : Success")
                 if self.followModel == nil {
                     self.followModel = data
                 }else{
@@ -42,8 +44,7 @@ class FollowVM : ObservableObject{
                 }
                 self.isGetFollowSuccess.send()
             case .failure(_):
-                print("Follow get : Failed")
-                print(response)
+                print("FollowVM - FollowGet() : Fail")
                 if let data = response.data,
                    let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
                     print("Error Data : ", errorModel)
@@ -72,6 +73,7 @@ class FollowVM : ObservableObject{
             case 201 :
                 print("FollowVM - followPost() 201")
             case 200:
+                print("FollowVM - FollowPost() : Success")
                 let index = self.followModel?.results.firstIndex(where: {
                     $0.username == username
                 })
@@ -101,8 +103,9 @@ class FollowVM : ObservableObject{
         .response{ response in
             switch response.response?.statusCode {
             case 201 :
-                print("FollowVM - followPost() 201")
+                print("FollowVM - DeleteFollower() : 201")
             case 200:
+                print("FollowVM - DeleteFollower() : Success")
                 self.followModel?.results.removeAll{ $0.username == username }
                 self.DeleteFollowerSuccess.send()
             default :

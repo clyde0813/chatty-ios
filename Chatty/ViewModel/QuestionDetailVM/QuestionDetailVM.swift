@@ -23,7 +23,7 @@ class QuestionDetailVM : ObservableObject {
         
         headers = ["Content-Type":"application/json", "Accept":"application/json",
                    "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        print(KeyChain.read(key: "access_token")!)
+        
         AF.request(url,
                    method: .get,
                    parameters: params,
@@ -43,7 +43,6 @@ class QuestionDetailVM : ObservableObject {
                 self.isGetSuccessFollowings.send()
             case .failure(_):
                 print("실패임?")
-                print(response)
                 if let data = response.data,
                    let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
                     print("Error Data : ", errorModel)
