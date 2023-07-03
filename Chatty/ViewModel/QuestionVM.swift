@@ -21,34 +21,137 @@ class QuestionVM : ObservableObject {
     //새로추가
     var answerComplete = PassthroughSubject<(), Never>()
     
+    var publisher = PassthroughSubject<String, Never>()
+    
     
     //MARK: - Getinit()
+//    func questionGet(questionType: String, username: String, page: Int){
+//        NetworkManager.shared.questionGet(questionType: questionType, username: username, page: page) { [weak self] result in
+//            switch result {
+//            case .success(let data):
+//                self?.handleQuestionResponse(data)
+//            case .failure(let error):
+//                print("MyQuestionVM - questionGet(): Fail")
+//                switch errorModel.status_code{
+//                case 400:
+//                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
+//                case 500:
+//                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
+//                case 401:
+//                    self?.token.refreshToken() { success in
+//                        if success {
+//                            self?.timelineGet(page: 1)
+//                        } else {
+//                            print("Token Refresh Fail!")
+//                        }
+//                    }
+//                default:
+//                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
+//                }
+////                self?.handleQuestionError(error)
+//            }
+//        }
+//    }
+    
+//    func GetTimeline(page :Int){
+//        NetworkManager.shared.timelineGet(page: page) { [weak self] result in
+//            switch result {
+//            case .success(let data) :
+//                print("MyQuestionVM - fetchGetQuestion(): Success")
+//                self?.handleQuestionResponse(data)
+//            case .failure(let error):
+//                print("MyQuestionVM - fetchGetQuestion(): Fail")
+//                self?.handleQuestionError(error)
+//            }
+//        }
+//    }
+    
+    func timelineGet(page: Int){
+        let url : String = "https://chatty.kr/api/v1/chatty/timeline"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let params: Parameters = [
+            "page": page
+        ]
+        
+        NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers, params: params,encoding: URLEncoding.default) { [weak self] result in
+            switch result{
+            case .success(let data):
+                print("MyQuestionVM - timelineGet() : Success")
+                self?.handleQuestionResponse(data)
+                
+            case .failure(let errorModel):
+                switch errorModel.status_code{
+                case 400:
+                    print("MyQuestionVM - timelineGet() : Fail \(errorModel)")
+                case 500:
+                    print("MyQuestionVM - timelineGet() : Fail \(errorModel)")
+                case 401:
+                    self?.token.refreshToken() { success in
+                        if success {
+                            self?.timelineGet(page: 1)
+                        } else {
+                            print("Token Refresh Fail!")
+                        }
+                    }
+                default:
+                    print("MyQuestionVM - timelineGet() : Fail \(errorModel)")
+                }
+            }
+        }
+    }
+    
     func questionGet(questionType: String, username: String, page: Int){
-        NetworkManager.shared.questionGet(questionType: questionType, username: username, page: page) { [weak self] result in
+        var urlPath : String = ""
+        
+        var headers : HTTPHeaders = []
+        
+        if questionType == "responsed" {
+            urlPath = "user/\(username)"
+        }
+        else if questionType == "arrived" {
+            urlPath = "arrived"
+        }
+        else if questionType == "refused" {
+            urlPath = "refuse"
+        }
+        
+        let url = "https://chatty.kr/api/v1/chatty/" + urlPath
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let params: Parameters = [
+            "page": page
+        ]
+        
+        NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers, params: params , encoding: URLEncoding.default) { [weak self] result in
             switch result {
             case .success(let data):
-                print("MyQuestionVM - questionGet(): Success")
+                print("MyQuestionVM - GetMyQuestion() : Success")
                 self?.handleQuestionResponse(data)
-            case .failure(let error):
-                print("MyQuestionVM - questionGet(): Fail")
-                self?.handleQuestionError(error)
+            case .failure(let errorModel):
+                switch errorModel.status_code{
+                case 400:
+                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
+                case 500:
+                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
+                case 401:
+                    self?.token.refreshToken() { success in
+                        if success {
+                            self?.questionGet(questionType: questionType, username: username, page: page)
+                        } else {
+                            print("Token Refresh Fail!")
+                        }
+                    }
+                default:
+                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
+                }
             }
         }
     }
-    
-    func GetTimeline(page :Int){
-        NetworkManager.shared.timelineGet(page: page) { [weak self] result in
-            switch result {
-            case .success(let data) :
-                print("MyQuestionVM - fetchGetQuestion(): Success")
-                self?.handleQuestionResponse(data)
-            case .failure(let error):
-                print("MyQuestionVM - fetchGetQuestion(): Fail")
-                self?.handleQuestionError(error)
-            }
-        }
-    }
-    
     
     //MARK: - 질문, 답장, 삭제, 거절, 신고
     func questionPost(username: String, content: String, anonymous: Bool) {
@@ -185,7 +288,6 @@ class QuestionVM : ObservableObject {
             case 401:
                 if let data = response.data,
                    let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
-                    print("Error : \(errorModel.status_code)")
                     if errorModel.status_code == 401 {
                         self.token.refreshToken() { success in
                             if success {
@@ -201,44 +303,48 @@ class QuestionVM : ObservableObject {
             }
         }
     }
+    
+//    func onClickLike(question_id : Int){
+//        let url = "https://chatty.kr/api/v1/chatty"
+//
+//        var headers : HTTPHeaders = []
+//
+//        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+//
+//        let params: Parameters = [
+//            "question_id" : question_id
+//        ]
+//
+//        NetworkManager.shared.RequestServer(url: url, method: .post, headers: headers, params: params,encoding: JSONEncoding.default) { [weak self] result in
+//            switch result{
+//            case .success(let data):
+//                guard let data = data else { return }
+//                guard let data = try? JSONDecoder().decode(QuestionModel.self, from: data) else { return }
+//                let index = self?.questionModel?.results.firstIndex(where: {
+//                    $0.pk == question_id
+//                })
+//                //                self?.questionModel?.results[index!].
+//            case .failure(let errorModel):
+//                print("!!")
+//            }
+//        }
+//    }
 }
 
 
 extension QuestionVM {
     
-    func handleQuestionResponse(_ data: QuestionModel) {
-        if questionModel == nil {
-            questionModel = data
-        }else {
-            questionModel?.results += data.results
-            questionModel?.next = data.next
-            questionModel?.previous = data.previous
-        }
-    }
-    
-    func handleQuestionError(_ error: Error) {
+    func handleQuestionResponse(_ data: Data?) {
+        guard let data = data ,let myData = try? JSONDecoder().decode(QuestionModel.self, from: data) else { return }
         
-        if let afError = error as? AFError, let statusCode = afError.responseCode {
-            handleStatusCodeError(statusCode)
-        }else{
-            handleNetworkError()
+        if questionModel == nil {
+            questionModel = myData
+        }else {
+            questionModel?.results += myData.results
+            questionModel?.next = myData.next
+            questionModel?.previous = myData.previous
         }
     }
-    
-    func handleStatusCodeError(_ statusCode : Int, retryAction: (() -> Void)? = nil){
-        switch statusCode {
-        case 400 :
-            print("400")
-        case 401 :
-            print("401")
-        case 500 :
-            print("500")
-        default:
-            print("!!")
-        }
-    }
-    
-    func handleNetworkError(){
-        print("네트워크에러!")
-    }
+
+
 }

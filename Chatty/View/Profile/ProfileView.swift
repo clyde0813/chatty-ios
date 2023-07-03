@@ -691,6 +691,9 @@ struct ProfileView: View {
             .onReceive(eventVM.otherUserSheetPublisher){
                 showOtherUserSheet.toggle()
             }
+            .onReceive(eventVM.likePublisher){
+                print("onClick like!")
+            }
             .onReceive(profileVM.userBlockSuccess){
                 self.userBlockSuccess = true
                 scheduleTimer(duration: 2){

@@ -116,7 +116,7 @@ extension TimelineView {
         questionVM.questionModel = nil
         self.currentPage = 1
         profileVM.profileGet(username: KeyChain.read(key: "username")!)
-        questionVM.GetTimeline(page: self.currentPage)
+        questionVM.timelineGet(page: self.currentPage)
 
     }
     
@@ -125,7 +125,7 @@ extension TimelineView {
         if questionVM.questionModel?.results.isEmpty == false && questionVM.questionModel?.next != nil && questiondata.pk == questionVM.questionModel?.results.last?.pk{
             print("callNextQuestion() - run")
             self.currentPage += 1
-            questionVM.GetTimeline(page: self.currentPage)
+            questionVM.timelineGet(page: self.currentPage)
             
 
         }

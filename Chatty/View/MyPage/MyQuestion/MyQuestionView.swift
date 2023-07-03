@@ -1,47 +1,57 @@
-//
-//  MyQuestionView.swift
-//  Chatty
-//
-//  Created by Hyeonho on 2023/06/30.
-//
-
 import SwiftUI
-
-enum QuestionTab : String{
-    case responsedTab = "responsed"
-    case arrivedTab = "arrived"
-    case refusedTab = "refused"
-}
 
 struct MyQuestionView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @State var currentTab : QuestionTab = .responsedTab
+    @StateObject var myQuestionVM = MyQuestionVM()
     
-    @State var myQuestionVM = MyQuestionVM()
+    @State var currentPage = 1
     
     var body: some View {
+        
         VStack{
             navView
                 .background(Rectangle()
                     .fill(Color.white)
                     .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
                 )
-            tabChangeBar
             
-            GeometryReader { proxy in
-                ScrollView{
-                    LazyVStack{
-                        
-                        if currentTab == .responsedTab {
-                            
+                ScrollView(showsIndicators: false){
+                    LazyVStack(spacing: 16){
+                        if myQuestionVM.myQuestionModel == nil {
+                            ProgressView()
+                        }
+                        else {
+                            if myQuestionVM.myQuestionModel?.results.isEmpty == true {
+                                Text("질문한거 없움!")
+                            }
+                            else {
+                                ForEach(myQuestionVM.myQuestionModel?.results ?? [], id: \.pk) { result in
+                                    QuestionCard(cardWidth: getWindowWidth() - 32 , questionModel: result)
+                                        .padding(.top,5)
+                                        .padding(.horizontal,20)
+                                        .onAppear{
+                                            callNextQuestion(questiondata: result)
+                                        }
+                                }
+                                
+                            }
                         }
                     }
                 }
-            }
+                .background(Color("Background inner"))
+                .refreshable {
+                    initMyQuestionView()
+                }
             
-            Spacer()
+
+        }
+        .onAppear{
+            initMyQuestionView()
+        }
+        .onDisappear{
+            myQuestionVM.myQuestionModel = nil
         }
         .toolbar(.hidden)
     }
@@ -59,107 +69,45 @@ extension MyQuestionView {
                     .fontWeight(.bold)
                     .foregroundColor(.black)
             }
-            Spacer()
-            Text("질문 모아보기")
+            Text("내가 한 질문")
                 .font(.system(size: 18))
                 .fontWeight(.medium)
                 .foregroundColor(.black)
             Spacer()
-            Button(action:{
-                dismiss()
-            }){
-                Image(systemName: "arrow.left")
-                    .font(.system(size: 18))
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
-            }
-            .opacity(0)
         }
         .padding(.horizontal,24)
         .padding(.vertical,14)
     }
     
-    var tabChangeBar : some View {
-        HStack(spacing: 20){
-            ZStack(alignment: .bottom){
-                Button(action: {
-                    currentTab = .responsedTab
-                }){
-                    if currentTab == .responsedTab {
-                        VStack(alignment: .center, spacing: 0){
-                            Text("보낸질문")
-                                .font(Font.system(size: 16, weight: .bold))
-                                .accentColor(.black)
-                                .padding(.bottom, 9)
-                            Rectangle()
-                                .fill(Color("Main Secondary"))
-                                .frame(width: 50, height: 3)
-                        }
-                    } else {
-                        Text("보낸질문")
-                            .font(Font.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 12)
-                    }
-                }
-                .accentColor(.black)
-            }
-            Spacer()
-            ZStack(alignment: .bottom){
-                Button(action: {
-                    currentTab = .arrivedTab
-                }){
-                    if currentTab == .arrivedTab {
-                        VStack(alignment: .center, spacing: 0){
-                            Text("삭제된 질문")
-                                .font(Font.system(size: 16, weight: .bold))
-                                .accentColor(.black)
-                                .padding(.bottom, 9)
-                            Rectangle()
-                                .fill(Color("Main Secondary"))
-                                .frame(width: 50, height: 3)
-                        }
-                    } else {
-                        Text("삭제된 질문")
-                            .font(Font.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 12)
-                    }
-                }
-                .accentColor(.black)
-            }
-            Spacer()
-            ZStack(alignment: .bottom){
-                Button(action: {
-                    currentTab = .refusedTab
-                }){
-                    if currentTab == .refusedTab {
-                        VStack(alignment: .center, spacing: 0){
-                            Text("거절된 질문")
-                                .font(Font.system(size: 16, weight: .bold))
-                                .accentColor(.black)
-                                .padding(.bottom, 9)
-                            Rectangle()
-                                .fill(Color("Main Secondary"))
-                                .frame(width: 50, height: 3)
-                        }
-                    } else {
-                        Text("거절된 질문")
-                            .font(Font.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color.gray)
-                            .padding(.bottom, 12)
-                    }
-                }
-                .accentColor(.black)
-            }
-        }
-        .padding(.top,10)
-        .padding(.horizontal, 20)
-    }
+    
 }
 
-struct MyQuestionView_Previews: PreviewProvider {
-    static var previews: some View {
-        MyQuestionView()
+extension MyQuestionView {
+    
+    private func callNextQuestion(questiondata: ResultDetail){
+        if myQuestionVM.myQuestionModel?.results.isEmpty == false && myQuestionVM.myQuestionModel?.next != nil && questiondata.pk == myQuestionVM.myQuestionModel?.results.last?.pk{
+            print("callNextQuestion() - run")
+            self.currentPage += 1
+            myQuestionVM.GetMyQuestion(page: currentPage)
+        }
+        
+        
+    }
+    
+    private func initMyQuestionView() {
+        print("run itit")
+        myQuestionVM.myQuestionModel = nil
+        self.currentPage = 1
+        myQuestionVM.GetMyQuestion(page: currentPage)
+    }
+    
+    func getWindowWidth() -> CGFloat {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let mainWindow = windowScene.windows.first else {
+                    return 0
+                }
+        
+        let windowWidth = mainWindow.frame.width
+        return windowWidth
     }
 }

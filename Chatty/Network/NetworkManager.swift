@@ -1,134 +1,62 @@
 import Foundation
 import Alamofire
 import Combine
-
+enum NetworkError: Error {
+    case clientError(statusCode: Int)
+    case serverError(statusCode: Int)
+    case unknownError
+}
 class NetworkManager {
     static let shared = NetworkManager()
-    
-    func fetchGetQuestion(completion: @escaping (Result<GenericListModel<ResultDetail>, Error>) -> Void){
-        let url : String = "가져올 url"
-        
-        var headers : HTTPHeaders = []
-        
-        headers = [
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": "Bearer " + KeyChain.read(key: "access_token")!
-        ]
-        
-        let params: Parameters = [
-            "page": 1
-        ]
-        
+
+    func RequestServer(url :String, method : HTTPMethod, headers : HTTPHeaders? = nil, params : Parameters? = nil, encoding: ParameterEncoding, completion: @escaping (Result<Data?, ErrorModel>) -> Void){
         AF.request(url,
-                   method: .get,
+                   method: method,
                    parameters: params,
-                   encoding: URLEncoding.default,
+                   encoding: encoding ,
                    headers: headers
         )
-        .validate()
-        .responseDecodable(of : GenericListModel<ResultDetail>.self) { response in
-            switch response.result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func timelineGet(page: Int, completion: @escaping (Result<QuestionModel, Error>) -> Void){
-        
-        let url : String = "https://chatty.kr/api/v1/chatty/timeline"
-        
-        var headers : HTTPHeaders = []
-        
-        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        let params: Parameters = [
-            "page": page
-        ]
-        
-        AF.request(url,
-                   method: .get,
-                   parameters: params,
-                   encoding: URLEncoding.default,
-                   headers: headers
-        )
-        .responseDecodable(of: QuestionModel.self){ response in
+        .response{  response in
             switch response.result {
             case .success(let data) :
-                completion(.success(data))
+                guard let statusCode = response.response?.statusCode else {
+                    completion(.failure(ErrorModel(error: "UnKnownError", status_code: nil)))
+                    return
+                }
+                switch statusCode{
+                case 200:
+                    completion(.success(data))
+                case 400,500:
+                    if let errorData = response.data, let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: errorData) {
+                        completion(.failure(errorModel))
+                    }
+                    else{
+                        completion(.failure(ErrorModel(error: "UnknownError", status_code: nil)))
+                    }
+                default:
+                    completion(.failure(ErrorModel(error: "UnknownError", status_code: nil)))
+                }
             case .failure(let error) :
-                completion(.failure(error))
+                completion(.failure(ErrorModel(error: error.localizedDescription, status_code: nil)))
             }
         }
     }
-    
-    func questionGet(questionType: String, username: String, page: Int, completion: @escaping(Result<QuestionModel,Error>) -> Void){
-        
-        var urlPath : String = ""
-        var headers : HTTPHeaders = []
-        
-        if questionType == "responsed" {
-            urlPath = "user/\(username)"
-        }
-        else if questionType == "arrived" {
-            urlPath = "arrived"
-        }
-        else if questionType == "refused" {
-            urlPath = "refuse"
-        }
-        
-        let url = "https://chatty.kr/api/v1/chatty/" + urlPath
-        
-        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        let params: Parameters = [
-            "page": page
-        ]
-        
-        AF.request(url,
-                   method: .get,
-                   parameters: params,
-                   encoding: URLEncoding.default,
-                   headers: headers)
-        .responseDecodable(of: QuestionModel.self){ response in
-            switch response.result {
-            case .success(let data):
-                print(data)
-                print(response.data)
-                completion(.success(data))
-            case .failure(let error):
-                print(error)
-                print(response.data)
-                completion(.failure(error))
-            }
-            
-        }
-    }
-    
-    func profileGet(username : String, completion: @escaping (Result<ProfileModel, Error>) -> Void){
-        let url = "https://chatty.kr/api/v1/user/profile/\(username)"
-        
-        var headers : HTTPHeaders = []
-        
-        headers = ["Content-Type":"application/json", "Accept":"application/json",
-                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        AF.request(url,
-                   method: .get,
-                   encoding: JSONEncoding.default,
-                   headers: headers)
-        .responseDecodable(of: ProfileModel.self){ response in
-            switch response.result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
 }
 
+
+
+extension NetworkManager{
+    func ErrorHandler(data: Data?){
+        guard let errorData = data else { return }
+        let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: errorData)
+        print("Error Data : ", errorModel as Any )
+        
+        switch errorModel?.status_code {
+        case 400:
+            print("400")
+        default:
+            print("unknown")
+        }
+        
+    }
+}

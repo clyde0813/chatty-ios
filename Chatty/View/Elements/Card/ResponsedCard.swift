@@ -174,21 +174,37 @@ struct ResponsedCard: View {
                     }
                 }
                 .padding(.top, questiondata.author == nil ? 0 : 21)
-//                .padding(.bottom, 16)
-//                HStack(spacing: 0){
-//                    Image(systemName: "heart")
-//                        .fontWeight(.semibold)
-//                        .font(Font.system(size: 16, weight: .bold))
-//                        .frame(width: (width-32) / 3)
-//                    Image(systemName: "bookmark")
-//                        .fontWeight(.semibold)
-//                        .font(Font.system(size: 16, weight: .bold))
-//                        .frame(width: (width-32) / 3)
-//                    Image(systemName: "square.and.arrow.up")
-//                        .fontWeight(.semibold)
-//                        .font(Font.system(size: 16, weight: .bold))
-//                        .frame(width: (width-32) / 3)
-//                }
+                .padding(.bottom, 16)
+                
+                //좋아요, 저장, 공유
+                HStack(spacing: 0){
+                    Button {
+                        eventVM.data = questiondata
+                        eventVM.onClickLike()
+                        print("heart!")
+                    } label: {
+                        Image(systemName: "heart")
+                            .fontWeight(.semibold)
+                            .font(Font.system(size: 16, weight: .bold))
+                            .frame(width: (width-32) / 3)
+                    }
+                    Button {
+                        print("bookMark!!")
+                    } label: {
+                        Image(systemName: "bookmark")
+                            .fontWeight(.semibold)
+                            .font(Font.system(size: 16, weight: .bold))
+                            .frame(width: (width-32) / 3)
+                    }
+                    Button {
+                        print("share!")
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .fontWeight(.semibold)
+                            .font(Font.system(size: 16, weight: .bold))
+                            .frame(width: (width-32) / 3)
+                    }
+                }
             }
             .padding([.leading, .trailing, .bottom], 16)
             .padding(.top, 12)
@@ -201,10 +217,10 @@ struct ResponsedCard: View {
         
     }
 }
-
-struct ResponsedCard_Previews: PreviewProvider {
-    static var previews: some View {
-        ResponsedCard(width : 100.0, questiondata: ResultDetail(pk: 1, createdDate: "11", answeredDate: "1111", profile: Profile(username: "11", profileName: "11", profileImage: "11", backgroundImage: "11"), author: nil, content: "11"), eventVM: ChattyEventVM())
-    }
-}
+//
+//struct ResponsedCard_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResponsedCard(width : 100.0, questiondata: ResultDetail(pk: 1, createdDate: "11", answeredDate: "1111", profile: Profile(username: "11", profileName: "11", profileImage: "11", backgroundImage: "11"), author: nil, content: "11"), eventVM: ChattyEventVM())
+//    }
+//}
 
