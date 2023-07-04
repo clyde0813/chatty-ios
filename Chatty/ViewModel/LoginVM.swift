@@ -19,43 +19,38 @@ class LoginVM : ObservableObject {
     @Published var password : String = ""
     
     func login(){
-        print("login() - called")
+        
         let url = "https://chatty.kr/api/v1/user/login"
         
         let params: [String: Any] = [
             "username" : username,
             "password": password
         ]
-        AF.request(url,
-                   method: .post,
-                   parameters: params,
-                   encoding: JSONEncoding(options: []),
-                   headers: ["Content-Type":"application/json", "Accept":"application/json"])
-        .responseDecodable(of: UserData.self){ response in
-            switch response.result {
-            case .success(let data) :
-                print(data.username, " - ", data.access_token, " - ", data.refresh_token, " - ", KeyChain.read(key: "fcm_token") ?? "")
+        
+        var header : HTTPHeaders
+        header = ["Content-Type":"application/json", "Accept":"application/json"]
+        NetworkManager.shared.RequestServer(url: url, method: .post, headers: header,params: params, encoding: JSONEncoding(options: [])) { [weak self] result in
+            switch result {
+            case .success(let data):
+                guard let data = data, let data = try? JSONDecoder().decode(UserData.self, from: data) else { return }
                 KeyChain.create(key: "access_token", value: data.access_token)
                 KeyChain.create(key: "refresh_token", value: data.refresh_token)
                 KeyChain.create(key: "username", value: data.username)
                 UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                self.apnsTokenRegister()
-                self.isLoginSuccess.send(true)
-            case .failure(_) :
-                if let data = response.data,
-                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
-                    print("LoginVM - login() Error : \(errorModel)")
-                    if errorModel.status_code == 401 {
-                        self.isLoginSuccess.send(false)
-                        print("LoginVM - login() ErrorCode 401")
-                    } else {
-                        self.isLoginSuccess.send(false)
-                        print("LoginVM - login() Error No model")
-                        
-                    }
+                self?.apnsTokenRegister()
+                self?.isLoginSuccess.send(true)
+            case .failure(let errorModel):
+                print("LoginVM - login() : Fail \(errorModel)")
+                switch errorModel.status_code{
+                case 401:
+                    self?.isLoginSuccess.send(false)
+                default:
+                    print("LoginVM - login() : Fail \(errorModel)")
                 }
             }
         }
+       
+        
     }
     
     func apnsTokenRegister() {

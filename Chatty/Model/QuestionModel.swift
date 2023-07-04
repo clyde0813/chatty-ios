@@ -31,7 +31,9 @@ struct ResultDetail: Codable {
     let content: String
     var answerContent: String?
     var refusalStatus : Bool
-
+    var like: Int
+    var likeStatus : Bool
+    
     enum CodingKeys: String, CodingKey {
         case pk
         case createdDate = "created_date"
@@ -39,6 +41,8 @@ struct ResultDetail: Codable {
         case profile, author, content
         case answerContent = "answer_content"
         case refusalStatus = "refusal_status"
+        case like = "like"
+        case likeStatus = "like_status"
     }
     
 }
