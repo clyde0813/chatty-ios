@@ -191,6 +191,8 @@ extension FollowView {
                                                         Text(follower.profile_name)
                                                             .font(Font.system(size: 14, weight: .semibold))
                                                             .foregroundColor(Color.black)
+                                                            .lineLimit(1)
+                                                            .truncationMode(.tail)
                                                         
                                                         //맞팔로우한 사람일때
                                                         if follower.followState {
@@ -330,9 +332,10 @@ extension FollowView {
                                                         Text(follower.profile_name)
                                                             .font(Font.system(size: 14, weight: .semibold))
                                                             .foregroundColor(Color.black)
-                                                        
+                                                            .lineLimit(1)
+                                                            .truncationMode(.tail)
                                                         //맞팔로우한 사람일때
-                                                        if follower.followState {
+                                                        if follower.followState && follower.username != KeyChain.read(key: "username") {
                                                             Text("•")
                                                                 .font(Font.system(size: 14, weight: .bold))
                                                             Text("맞팔로워")
@@ -409,6 +412,8 @@ extension FollowView {
                                                         Text(following.profile_name)
                                                             .font(Font.system(size: 14, weight: .semibold))
                                                             .foregroundColor(Color.black)
+                                                            .lineLimit(1)
+                                                            .truncationMode(.tail)
                                                     }
                                                 }
                                             }
