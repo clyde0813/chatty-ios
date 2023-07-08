@@ -15,7 +15,7 @@ class QuestionVM : ObservableObject {
     //새로추가
     var reportSuccess = PassthroughSubject<(), Never>()
     //새로추가
-    var deleteSuccess = PassthroughSubject<(), Never>()
+    var deleteSuccess = PassthroughSubject<Bool, Never>()
     //새로추가
     var refuseComplete = PassthroughSubject<(), Never>()
     //새로추가
@@ -213,25 +213,52 @@ class QuestionVM : ObservableObject {
         let params: Parameters = [
             "question_id" : question_id
         ]
-        
-        AF.request(url,
-                   method: .delete,
-                   parameters: params,
-                   encoding: JSONEncoding(options: []),
-                   headers: headers)
-        .responseData { response in
-            switch response.result {
-            case .success:
-                print("DELETE 성공")
-                print("question_id는 \(question_id)")
-                
-                self.questionModel?.results.removeAll(where: { $0.pk == question_id })
-                
-                self.deleteSuccess.send()
-            case .failure(let error):
-                print("error : \(error.errorDescription!)")
+        NetworkManager.shared.RequestServer(url: url, method: .delete, headers: headers,params: params,encoding: JSONEncoding(options: [])){ [weak self] result in
+            switch result{
+            case .success(_):
+                self?.questionModel?.results.removeAll(where: { $0.pk == question_id })
+                self?.deleteSuccess.send(true)
+            case .failure(let errorModel):
+                print("MyQuestionVM - timelineGet() : Fail \(errorModel)")
+                switch errorModel.status_code{
+                case 400:
+                    self?.deleteSuccess.send(false)
+                case 500:
+                    self?.deleteSuccess.send(false)
+                case 401:
+                    self?.token.refreshToken() { success in
+                        if success {
+                            self?.timelineGet(page: 1)
+                        } else {
+                            print("Token Refresh Fail!")
+                        }
+                    }
+                default:
+                    print("MyQuestionVM - timelineGet() : Fail \(errorModel)")
+                }
+
             }
         }
+        
+        
+//        AF.request(url,
+//                   method: .delete,
+//                   parameters: params,
+//                   encoding: JSONEncoding(options: []),
+//                   headers: headers)
+//        .responseData { response in
+//            switch response.result {
+//            case .success:
+//                print("DELETE 성공")
+//                print("question_id는 \(question_id)")
+//
+//                self.questionModel?.results.removeAll(where: { $0.pk == question_id })
+//
+//                self.deleteSuccess.send()
+//            case .failure(let error):
+//                print("error : \(error.errorDescription!)")
+//            }
+//        }
     }
     
     func questionRefuse(question_id: Int) {
@@ -304,7 +331,7 @@ class QuestionVM : ObservableObject {
         }
     }
     
-    func onClickLike(question_id : Int){
+    func onClickLike(question_id : Int) {
 
         let url = "https://chatty.kr/api/v1/chatty/like"
 
@@ -324,6 +351,7 @@ class QuestionVM : ObservableObject {
                 })
                 self?.questionModel?.results[index!].likeStatus.toggle()
                 print("togleAction Success")
+                
             case .failure(let errorModel):
                 switch errorModel.status_code{
                 case 400:

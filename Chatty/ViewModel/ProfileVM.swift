@@ -32,7 +32,7 @@ class ProfileVM : ObservableObject {
         var headers : HTTPHeaders = []
         
         headers = ["Content-Type":"application/json", "Accept":"application/json",
-                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+                   "Authorization": "Bearer " + (KeyChain.read(key: "access_token") ?? "")  ]
         
         NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers, encoding: URLEncoding.default){ [weak self] result in
 

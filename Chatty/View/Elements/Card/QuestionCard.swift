@@ -16,8 +16,9 @@ struct QuestionCard: View {
         } label: {
             ZStack{
                 Color.white
-                VStack(alignment: .leading,spacing: 3){
+                VStack(alignment: .leading,spacing: 5){
                     responseState
+                        .padding(.bottom,2)
                     
                     if questionModel.author == nil{
                         NilQuestion
@@ -88,6 +89,7 @@ extension QuestionCard {
             HStack{
                 Text("To ")
                     .foregroundColor(Color("Main Primary"))
+                    .font(.system(size: 14))
                 Text("@\(questionModel.profile.username)")
                     .foregroundColor(Color("Main Primary"))
                     .font(Font.system(size: 15, weight: .bold))
@@ -115,9 +117,13 @@ extension QuestionCard {
                 HStack(spacing: 4){
                     Text(questionModel.author?.profileName ?? "")
                         .font(Font.system(size: 16, weight: .bold))
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                     Text("@\(questionModel.author?.username ?? "")")
                         .font(Font.system(size: 12, weight: .semibold))
                         .foregroundColor(Color.gray)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                     Text("\(elapsedtime(time: questionModel.createdDate))")
                         .font(Font.system(size: 12, weight: .semibold))
                         .foregroundColor(Color.gray)
@@ -155,9 +161,13 @@ extension QuestionCard {
                     HStack(spacing: 4){
                         Text(questionModel.profile.profileName)
                             .font(Font.system(size: 16, weight: .bold))
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                         Text("@\(questionModel.profile.username)")
                             .font(Font.system(size: 12, weight: .semibold))
                             .foregroundColor(Color.gray)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                         Text("\(elapsedtime(time: questionModel.answeredDate ?? ""))")
                             .font(Font.system(size: 12, weight: .semibold))
                             .foregroundColor(Color.gray)

@@ -1,22 +1,13 @@
-//
-//  CardView.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2023/02/25.
-//
 
 import SwiftUI
 import Kingfisher
-import Combine
-struct ResponsedCard: View {
-    
+
+struct TimelineCard: View {
     @State var width : CGFloat = 0.0
     
     @State var questiondata : ResultDetail
     
     @ObservedObject var eventVM : ChattyEventVM
-    
-
     var body: some View {
         ZStack{
             Color.white
@@ -43,7 +34,7 @@ struct ResponsedCard: View {
     }
 }
 
-extension ResponsedCard {
+extension TimelineCard {
     //익명일떄 질문양식
     var NilQuestion : some View {
         VStack(alignment: .leading, spacing: 5){
@@ -66,8 +57,7 @@ extension ResponsedCard {
                 Button(action : {
                     eventVM.data = questiondata
                     
-                    if questiondata.profile.username == KeyChain.read(key: "username")!  {
-                        print("showMySheet!!")
+                    if questiondata.author?.username == KeyChain.read(key: "username")! {
                         eventVM.ShowSheet()
                     }else {
                         print("showOtherUserSheet!!")
@@ -124,7 +114,7 @@ extension ResponsedCard {
                     Spacer()
                     Button(action : {
                         eventVM.data = questiondata
-                        if questiondata.profile.username == KeyChain.read(key: "username")! || questiondata.author?.username == KeyChain.read(key: "username")!{
+                        if questiondata.author?.username == KeyChain.read(key: "username")! {
                             print("showMySheet!!")
                             eventVM.ShowSheet()
                         }else {
@@ -187,6 +177,8 @@ extension ResponsedCard {
                         Text("\(elapsedtime(time: questiondata.answeredDate ?? ""))")
                             .font(Font.system(size: 12, weight: .semibold))
                             .foregroundColor(Color.gray)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                         Spacer()
                     }
                     Text(questiondata.answerContent ?? "")

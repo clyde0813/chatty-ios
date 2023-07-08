@@ -201,6 +201,8 @@ extension FollowView {
                                                             Text("맞팔로워")
                                                                 .font(Font.system(size: 14, weight: .bold))
                                                                 .foregroundColor(Color("Main Secondary"))
+                                                                .lineLimit(1)
+                                                                .truncationMode(.tail)
                                                         }
                                                     }
                                                 }
@@ -341,6 +343,8 @@ extension FollowView {
                                                             Text("맞팔로워")
                                                                 .font(Font.system(size: 14, weight: .bold))
                                                                 .foregroundColor(Color("Main Secondary"))
+                                                                .lineLimit(1)
+                                                                .truncationMode(.tail)
                                                         }
                                                     }
                                                 }

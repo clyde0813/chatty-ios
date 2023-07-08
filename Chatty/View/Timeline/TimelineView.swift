@@ -30,6 +30,9 @@ struct TimelineView: View {
     
     @State var showOtherUserSheet = false
 
+    @State var deleteSuccess = false
+    
+    @State var deleteFailure = false
     
     var body: some View {
         NavigationView {
@@ -64,6 +67,12 @@ struct TimelineView: View {
                 if shareSuccess {
                     ProfileErrorView(msg: "복사 완료!")
                 }
+                if deleteSuccess {
+                    ProfileErrorView(msg: "삭제가 완료되었습니다")
+                }
+                if deleteFailure {
+                    ProfileErrorView(msg: "질문등록 48시간 이후로 삭제가능합니다")
+                }
                 
             }
             .navigationBarHidden(true)
@@ -85,21 +94,38 @@ struct TimelineView: View {
             showOtherUserSheet = true
         }
         .sheet(isPresented: $showMySheet, onDismiss: {showMySheet = false}) {
-            QuestionOption(eventVM: eventVM)
+            TimelineOption(eventVM: eventVM)
                 .presentationDetents([.fraction(0.4)])
         }
         .sheet(isPresented: $showOtherUserSheet, onDismiss: {showOtherUserSheet = false}) {
-            QuestionOption(eventVM: eventVM)
+            TimelineOption(eventVM: eventVM)
                 .presentationDetents([.fraction(0.2)])
         }
         .onReceive(eventVM.reportPublisher){
             questionVM.questionReport(question_id: eventVM.data?.pk ?? 0)
+        }
+        .onReceive(eventVM.deletePublisher){
+            questionVM.questionDelete(question_id: eventVM.data?.pk ?? 0)
         }
         .onReceive(questionVM.reportSuccess){
             self.reportSuccess = true
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
                 self.reportSuccess = false
             }
+        }
+        .onReceive(questionVM.deleteSuccess) { result in
+            if result {
+                self.deleteSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.deleteSuccess = false
+                }
+            }else {
+                self.deleteFailure = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.deleteFailure = false
+                }
+            }
+            
         }
         .onReceive(eventVM.likePublisher) {
             questionVM.onClickLike(question_id: eventVM.data?.pk ?? 0)
@@ -127,7 +153,7 @@ extension TimelineView {
         print("init")
         questionVM.questionModel = nil
         self.currentPage = 1
-        profileVM.profileGet(username: KeyChain.read(key: "username")!)
+        profileVM.profileGet(username: KeyChain.read(key: "username") ?? "")
         questionVM.timelineGet(page: self.currentPage)
 
     }
@@ -276,7 +302,7 @@ extension TimelineView {
                     else{
                         LazyVStack(spacing: 16){
                             ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id:\.element.pk){ index, questiondata in
-                                ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
+                                TimelineCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
                                     .onAppear{
                                         callNextTimeline(questiondata: questiondata)
                                     }
