@@ -1,9 +1,3 @@
-//
-//  TimeExtension.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2023/03/26.
-//
 
 import Foundation
 
@@ -20,22 +14,3 @@ func elapsedtime(time: String) -> String{
     
     return relativeDate
 }
-
-
-
-//func checkTimeElapsed(from serverTime: Date)  {
-//    let currentTime = Date()
-//
-//    
-//    let timeDifference = serverTime.timeIntervalSince(currentTime)
-//    
-//    print(timeDifference)
-//    
-//    let hours = Int(timeDifference) / 3600
-//    let minutes = (Int(timeDifference) % 3600) / 60
-//    let seconds = (Int(timeDifference) % 3600) % 60
-//    
-//    let date =  String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-//    
-//    print(date)
-//}

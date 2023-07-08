@@ -1,10 +1,3 @@
-//
-//  HomeView.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2023/02/23.
-//
-
 import SwiftUI
 import Kingfisher
 
@@ -39,8 +32,6 @@ struct ProfileView: View {
     
     @State var questionEditorStatus : Bool = false
     
-    @State var questionEmpty : Bool = false
-    
     @State var questionPostSuccess : Bool = false
     
     @State var copyButtonPressed : Bool = false
@@ -50,6 +41,8 @@ struct ProfileView: View {
     @State var refuseSuccess : Bool = false
     
     @State var deleteSuccess : Bool = false
+    
+    @State var deleteFailure : Bool = false
     
     @State var answerSuccess : Bool = false
     
@@ -64,6 +57,8 @@ struct ProfileView: View {
     @State var isUserSheet : Bool = false
     
     @State var isMeBlocked : Bool = false
+    
+    @State var shareQuestionSuccess : Bool = false
     
     //MARK: - 광고를 위한 VM
 //    @StateObject var googleAdsVM = NativeViewModel()
@@ -628,6 +623,9 @@ struct ProfileView: View {
                 if answerSuccess {
                     ProfileErrorView(msg: "답변을 완료했습니다!")
                 }
+                if deleteFailure {
+                    ProfileErrorView(msg: "질문등록 48시간 이후로 삭제가능합니다")
+                }
                 
             }
             .ignoresSafeArea(.all, edges: .top)
@@ -649,11 +647,19 @@ struct ProfileView: View {
                     self.reportSuccess = false
                 }
             }
-            .onReceive(questionVM.deleteSuccess) {
-                self.deleteSuccess = true
-                scheduleTimer(duration: 2){
-                    self.deleteSuccess = false
+            .onReceive(questionVM.deleteSuccess) { result in
+                if result {
+                    self.deleteSuccess = true
+                    scheduleTimer(duration: 2){
+                        self.deleteSuccess = false
+                    }
+                }else {
+                    self.deleteFailure = true
+                    scheduleTimer(duration: 2){
+                        self.deleteFailure = false
+                    }
                 }
+                
             }
             .onReceive(questionVM.questionPostSuccess){
                 self.questionPostSuccess = true
@@ -685,14 +691,20 @@ struct ProfileView: View {
             .onReceive(eventVM.userBlockPublisher){
                 profileVM.userBlock(username: profileVM.profileModel?.username ?? "" )
             }
+            .onReceive(eventVM.likePublisher){
+                questionVM.onClickLike(question_id: eventVM.data?.pk ?? 0)
+            }
             .onReceive(eventVM.mySheetPublisher){
                 showMySheet.toggle()
             }
             .onReceive(eventVM.otherUserSheetPublisher){
                 showOtherUserSheet.toggle()
             }
-            .onReceive(eventVM.likePublisher){
-                print("onClick like!")
+            .onReceive(eventVM.sharePublisher){
+                self.shareQuestionSuccess = true
+                scheduleTimer(duration: 2){
+                    self.shareQuestionSuccess = false
+                }
             }
             .onReceive(profileVM.userBlockSuccess){
                 self.userBlockSuccess = true
@@ -724,13 +736,6 @@ struct ProfileView: View {
                         questionEditorStatus = false
                     }
             }
-            .sheet(isPresented: $questionEditorStatus){
-                QuestionEditor(username: $username, questionVM: questionVM)
-                    .presentationDetents([.fraction(0.45)])
-                    .onDisappear{
-                        questionEditorStatus = false
-                    }
-            }
             .sheet(isPresented: $isAnswerSheet) {
                 AnswerEditor(eventVM: eventVM)
                     .presentationDetents([.fraction(0.45)])
@@ -745,7 +750,6 @@ struct ProfileView: View {
                         isUserSheet = false
                     }
             }
-            
             .alert(isPresented: $isMeBlocked){
                 Alert(
                     title: Text("Error"),
@@ -759,14 +763,9 @@ struct ProfileView: View {
             .refreshable {
                 self.initProfileView()
             }
-            .onChange(of: self.offset) {_ in
-                print(self.offset)
-            }
-            
         }
         .onDisappear{
             questionVM.questionModel = nil
-            profileVM.profileModel = nil
         }
         .navigationBarHidden(true)
         .onTapGesture {
@@ -816,7 +815,6 @@ extension ProfileView{
     
     private func initProfileView() {
         print("run itit")
-        self.questionEmpty = false
         questionVM.questionModel = nil
         self.currentQuestionPage = 1
         profileVM.profileGet(username: username)

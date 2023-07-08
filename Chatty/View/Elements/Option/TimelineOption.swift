@@ -1,24 +1,18 @@
 //
-//  QuestionOption.swift
-//  Chatty_Swift
+//  TimelineOption.swift
+//  Chatty
 //
-//  Created by Clyde on 2023/04/18.
+//  Created by Hyeonho on 2023/07/07.
 //
 
 import SwiftUI
 
-struct QuestionOption: View {
+struct TimelineOption: View {
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var eventVM : ChattyEventVM
     
     @State var isSaveImage = false
-    
-//    @State private var countdownText = ""
-//    @State private var remainingTime: TimeInterval = 0
-//    private let countdownDuration: TimeInterval = 48 * 60 * 60 // 48시간을 초로 변환
-    
-    @State private var timer: Timer? = nil
     
     var body: some View {
         ZStack{
@@ -39,7 +33,7 @@ struct QuestionOption: View {
                 }
                 
                 
-                if eventVM.data?.profile.username == KeyChain.read(key: "username") || eventVM.data?.author?.username == KeyChain.read(key: "username"){
+                if eventVM.data?.author?.username == KeyChain.read(key: "username") {
                     Button(action: {
                         isSaveImage = true
                     }){
@@ -136,36 +130,11 @@ struct QuestionOption: View {
             .clipped()
             .padding(20)
         }
-        .onAppear{
-//            startCountdown(from: eventVM.data?.createdDate ?? "")
-        }
     }
-//    func startCountdown(from time: String) {
-//            let dateFormatter = DateFormatter()
-//            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
-//            guard let convertDate = dateFormatter.date(from: time) else { return }
-//
-//            remainingTime = countdownDuration - Date().timeIntervalSince(convertDate)
-//
-//            if remainingTime <= 0 {
-//                countdownText = "삭제하기"
-//            } else {
-//                let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-//                    self.remainingTime -= 1
-//
-//                    if self.remainingTime <= 0 {
-//                        timer.invalidate()
-//                        self.countdownText = "삭제하기"
-//                    } else {
-//                        let formatter = DateComponentsFormatter()
-//                        formatter.unitsStyle = .full
-//                        self.countdownText = formatter.string(from: self.remainingTime) ?? ""
-//                    }
-//                }
-//
-//                // 타이머를 현재 실행 루프에 추가합니다.
-//                RunLoop.current.add(timer, forMode: .common)
-//            }
-//        }
 }
 
+//struct TimelineOption_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TimelineOption()
+//    }
+//}

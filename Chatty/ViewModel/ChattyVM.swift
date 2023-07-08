@@ -101,7 +101,7 @@ class ChattyVM: ObservableObject {
         .response{ response in
             switch response.result {
             case .success(_) :
-                print("FCM 토큰 초기화 완료")
+                completion(true)
             case .failure(let error) :
                 print(error)
             }
@@ -322,9 +322,12 @@ class ChattyVM: ObservableObject {
         self.logoutSuccess.send()
         UserDefaults.standard.setValue(false, forKey: "isLoggedIn")
         self.apnsTokenInitialize() { success in
-            KeyChain.delete(key: "username")
-            KeyChain.delete(key: "access_token")
-            KeyChain.delete(key: "refresh_token")
+            if success {
+                KeyChain.delete(key: "username")
+                KeyChain.delete(key: "access_token")
+                KeyChain.delete(key: "refresh_token")
+                print("deleteToken!Success")
+            }
         }
     }
     

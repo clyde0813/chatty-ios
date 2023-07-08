@@ -117,13 +117,13 @@ struct CommunityView: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
-        .onReceive(chattyVM.$currentUserModel){ data in
-            self.currentUser = data?.info ?? 0
-            self.percent = Double(self.currentUser) / 10000
-            if self.percent < 0.15 {
-                self.percent = 0.15
-            }
-        }
+//        .onReceive(chattyVM.$currentUserModel){ data in
+//            self.currentUser = data?.info ?? 0
+//            self.percent = Double(self.currentUser) / 10000
+//            if self.percent < 0.15 {
+//                self.percent = 0.15
+//            }
+//        }
     }
 }
 
