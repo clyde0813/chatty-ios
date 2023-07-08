@@ -35,7 +35,8 @@ class ChattyEventVM : ObservableObject {
     //좋아요
     var likePublisher = PassthroughSubject<(),Never>()
     
-    
+    //카드뷰에서 공유하기 눌렀을때 profileView로 이벤트 전달
+    var sharePublisher = PassthroughSubject<(),Never>()
     
     //MARK: - Follower / Followings Event
     

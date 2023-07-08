@@ -304,31 +304,46 @@ class QuestionVM : ObservableObject {
         }
     }
     
-//    func onClickLike(question_id : Int){
-//        let url = "https://chatty.kr/api/v1/chatty"
-//
-//        var headers : HTTPHeaders = []
-//
-//        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-//
-//        let params: Parameters = [
-//            "question_id" : question_id
-//        ]
-//
-//        NetworkManager.shared.RequestServer(url: url, method: .post, headers: headers, params: params,encoding: JSONEncoding.default) { [weak self] result in
-//            switch result{
-//            case .success(let data):
-//                guard let data = data else { return }
-//                guard let data = try? JSONDecoder().decode(QuestionModel.self, from: data) else { return }
-//                let index = self?.questionModel?.results.firstIndex(where: {
-//                    $0.pk == question_id
-//                })
-//                //                self?.questionModel?.results[index!].
-//            case .failure(let errorModel):
-//                print("!!")
-//            }
-//        }
-//    }
+    func onClickLike(question_id : Int){
+
+        let url = "https://chatty.kr/api/v1/chatty/like"
+
+        var headers : HTTPHeaders = []
+
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+
+        let params: Parameters = [
+            "question_id" : question_id
+        ]
+
+        NetworkManager.shared.RequestServer(url: url, method: .post, headers: headers, params: params,encoding: JSONEncoding.default) { [weak self] result in
+            switch result{
+            case .success(_):
+                let index = self?.questionModel?.results.firstIndex(where: {
+                    $0.pk == question_id
+                })
+                self?.questionModel?.results[index!].likeStatus.toggle()
+                print("togleAction Success")
+            case .failure(let errorModel):
+                switch errorModel.status_code{
+                case 400:
+                    print("MyQuestionVM - onClickLike() : Fail \(errorModel)")
+                case 500:
+                    print("MyQuestionVM - onClickLike() : Fail \(errorModel)")
+                case 401:
+                    self?.token.refreshToken() { success in
+                        if success {
+                            self?.onClickLike(question_id: question_id)
+                        } else {
+                            print("Token Refresh Fail!")
+                        }
+                    }
+                default:
+                    print("MyQuestionVM - onClickLike() : Fail \(errorModel)")
+                }
+            }
+        }
+    }
 }
 
 

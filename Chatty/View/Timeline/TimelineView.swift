@@ -24,13 +24,12 @@ struct TimelineView: View {
     
     @State var reportSuccess = false
     
+    @State var shareSuccess = false
+    
     @State var showMySheet = false
     
     @State var showOtherUserSheet = false
 
-//    @StateObject var nativeAds = NativeVM()
-    
-    @State var isProgress = true
     
     var body: some View {
         NavigationView {
@@ -61,6 +60,9 @@ struct TimelineView: View {
                 
                 if reportSuccess {
                     ProfileErrorView(msg: "신고 접수가 완료되었습니다!")
+                }
+                if shareSuccess {
+                    ProfileErrorView(msg: "복사 완료!")
                 }
                 
             }
@@ -99,6 +101,16 @@ struct TimelineView: View {
                 self.reportSuccess = false
             }
         }
+        .onReceive(eventVM.likePublisher) {
+            questionVM.onClickLike(question_id: eventVM.data?.pk ?? 0)
+        }
+        .onReceive(eventVM.sharePublisher) {
+            self.shareSuccess = true
+            Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                self.shareSuccess = false
+            }
+        }
+        
         
     }
     
@@ -268,6 +280,7 @@ extension TimelineView {
                                     .onAppear{
                                         callNextTimeline(questiondata: questiondata)
                                     }
+                                    
                                 if index % 4 == 0 && index != 0 {
                                     AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                 }
