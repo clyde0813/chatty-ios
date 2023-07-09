@@ -78,6 +78,8 @@ struct IndexView: View {
                 chattyVM.apnsTokenInitialize(){success in
                     
                 }
+                
+                
             }
         }
     }

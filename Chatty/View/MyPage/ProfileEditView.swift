@@ -312,6 +312,7 @@ struct ProfileEditView: View {
                 self.profileEditSuccess = false
             }
         }
+        
     }
 }
 

@@ -1,10 +1,3 @@
-//
-//  HomeView.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2023/02/23.
-//
-
 import SwiftUI
 import Kingfisher
 
@@ -37,11 +30,7 @@ struct ProfileView: View {
     
     @State var currentQuestionPage : Int = 1
     
-    @State var isQuestionEmpty = false
-    
     @State var questionEditorStatus : Bool = false
-    
-    @State var questionEmpty : Bool = false
     
     @State var questionPostSuccess : Bool = false
     
@@ -52,6 +41,8 @@ struct ProfileView: View {
     @State var refuseSuccess : Bool = false
     
     @State var deleteSuccess : Bool = false
+    
+    @State var deleteFailure : Bool = false
     
     @State var answerSuccess : Bool = false
     
@@ -66,6 +57,8 @@ struct ProfileView: View {
     @State var isUserSheet : Bool = false
     
     @State var isMeBlocked : Bool = false
+    
+    @State var shareQuestionSuccess : Bool = false
     
     //MARK: - 광고를 위한 VM
 //    @StateObject var googleAdsVM = NativeViewModel()
@@ -521,7 +514,45 @@ struct ProfileView: View {
                                     )
                                 //MARK: - 질문 lazyVstack
                                 LazyVStack(spacing: 16){
-                                    if isQuestionEmpty == false{
+                                    if questionVM.questionModel == nil {
+                                        VStack(alignment: .center){
+                                            Spacer()
+                                            ProgressView()
+                                            Spacer()
+                                        }
+                                        .frame(width: proxy.size.width, height: 300)
+                                    }
+                                    else{
+                                        if questionVM.questionModel?.results.isEmpty == true{
+                                            VStack(alignment: .center){
+                                                VStack(spacing: 0){
+                                                    Text("아직 받은 질문이 없어요!")
+                                                        .font(.system(size: 16, weight: .none))
+                                                        .padding(.bottom, 13)
+                                                    Button(action:{
+                                                        UIPasteboard.general.string = "chatty.kr/\(profileVM.profileModel?.username ?? "")"
+                                                        self.copyButtonPressed = true
+                                                        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                                                            self.copyButtonPressed = false
+                                                        }
+                                                    }){
+                                                        Text("프로필 링크 복사하기")
+                                                            .font(.system(size:16, weight: .bold))
+                                                            .frame(height: 40)
+                                                            .frame(width: 194)
+                                                            .foregroundColor(Color.white)
+                                                            .background(
+                                                                Capsule()
+                                                                    .fill( LinearGradient(gradient: Gradient(colors: [Color("MainGradient1"), Color("MainGradient2"),Color("MainGradient3")]), startPoint: .trailing, endPoint: .leading))
+                                                            )
+                                                    }
+                                                }
+                                                .padding(.top, 80)
+                                            }
+                                            .frame(width: proxy.size.width)
+                                            .frame(maxHeight: .infinity)
+                                        }
+                                        else {
                                             ForEach(Array((questionVM.questionModel?.results ?? [] ).enumerated()), id:\.element.pk){ index, questiondata in
                                                 if self.currentPostTab == .responsedTab {
                                                     ResponsedCard(width: proxy.size.width - 32, questiondata: questiondata, eventVM : eventVM)
@@ -545,48 +576,10 @@ struct ProfileView: View {
                                                     AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                                 }
                                             }
-                                    }
-                                    else if isQuestionEmpty == true {
-                                        VStack(alignment: .center){
-                                            VStack(spacing: 0){
-                                                Text("아직 받은 질문이 없어요!")
-                                                    .font(.system(size: 16, weight: .none))
-                                                    .padding(.bottom, 13)
-                                                Button(action:{
-                                                    UIPasteboard.general.string = "chatty.kr/\(profileVM.profileModel?.username ?? "")"
-                                                    self.copyButtonPressed = true
-                                                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
-                                                        self.copyButtonPressed = false
-                                                    }
-                                                }){
-                                                    Text("프로필 링크 복사하기")
-                                                        .font(.system(size:16, weight: .bold))
-                                                        .frame(height: 40)
-                                                        .frame(width: 194)
-                                                        .foregroundColor(Color.white)
-                                                        .background(
-                                                            Capsule()
-                                                                .fill( LinearGradient(gradient: Gradient(colors: [Color("MainGradient1"), Color("MainGradient2"),Color("MainGradient3")]), startPoint: .trailing, endPoint: .leading))
-                                                        )
-                                                }
-                                            }
-                                            .padding(.top, 80)
                                         }
-                                        .frame(width: proxy.size.width)
-                                        .frame(maxHeight: .infinity)
-                                    }
-                                    else {
-                                        VStack(alignment: .center){
-                                            Spacer()
-                                            ProgressView()
-                                            Spacer()
-                                        }
-                                        .frame(width: proxy.size.width, height: 300)
                                     }
                                 }
                                 .padding([.top, .bottom])
-                                
-                                
                             }
                             .zIndex(0)
                         }
@@ -630,6 +623,9 @@ struct ProfileView: View {
                 if answerSuccess {
                     ProfileErrorView(msg: "답변을 완료했습니다!")
                 }
+                if deleteFailure {
+                    ProfileErrorView(msg: "질문등록 48시간 이후로 삭제가능합니다")
+                }
                 
             }
             .ignoresSafeArea(.all, edges: .top)
@@ -638,13 +634,6 @@ struct ProfileView: View {
 //                googleAdsVM.refreshAd()
                 nativeAds.refreshAd()
                 self.initProfileView()
-            }
-            .onReceive(questionVM.isSuccessGetQuestion){ result in
-                if result {
-                    self.isQuestionEmpty = false
-                } else {
-                    self.isQuestionEmpty = true
-                }
             }
             .onReceive(questionVM.refuseComplete) {
                 self.refuseSuccess = true
@@ -658,11 +647,19 @@ struct ProfileView: View {
                     self.reportSuccess = false
                 }
             }
-            .onReceive(questionVM.deleteSuccess) {
-                self.deleteSuccess = true
-                scheduleTimer(duration: 2){
-                    self.deleteSuccess = false
+            .onReceive(questionVM.deleteSuccess) { result in
+                if result {
+                    self.deleteSuccess = true
+                    scheduleTimer(duration: 2){
+                        self.deleteSuccess = false
+                    }
+                }else {
+                    self.deleteFailure = true
+                    scheduleTimer(duration: 2){
+                        self.deleteFailure = false
+                    }
                 }
+                
             }
             .onReceive(questionVM.questionPostSuccess){
                 self.questionPostSuccess = true
@@ -694,11 +691,20 @@ struct ProfileView: View {
             .onReceive(eventVM.userBlockPublisher){
                 profileVM.userBlock(username: profileVM.profileModel?.username ?? "" )
             }
+            .onReceive(eventVM.likePublisher){
+                questionVM.onClickLike(question_id: eventVM.data?.pk ?? 0)
+            }
             .onReceive(eventVM.mySheetPublisher){
                 showMySheet.toggle()
             }
             .onReceive(eventVM.otherUserSheetPublisher){
                 showOtherUserSheet.toggle()
+            }
+            .onReceive(eventVM.sharePublisher){
+                self.shareQuestionSuccess = true
+                scheduleTimer(duration: 2){
+                    self.shareQuestionSuccess = false
+                }
             }
             .onReceive(profileVM.userBlockSuccess){
                 self.userBlockSuccess = true
@@ -730,13 +736,6 @@ struct ProfileView: View {
                         questionEditorStatus = false
                     }
             }
-            .sheet(isPresented: $questionEditorStatus){
-                QuestionEditor(username: $username, questionVM: questionVM)
-                    .presentationDetents([.fraction(0.45)])
-                    .onDisappear{
-                        questionEditorStatus = false
-                    }
-            }
             .sheet(isPresented: $isAnswerSheet) {
                 AnswerEditor(eventVM: eventVM)
                     .presentationDetents([.fraction(0.45)])
@@ -751,7 +750,6 @@ struct ProfileView: View {
                         isUserSheet = false
                     }
             }
-            
             .alert(isPresented: $isMeBlocked){
                 Alert(
                     title: Text("Error"),
@@ -765,10 +763,9 @@ struct ProfileView: View {
             .refreshable {
                 self.initProfileView()
             }
-            .onChange(of: self.offset) {_ in
-                print(self.offset)
-            }
-            
+        }
+        .onDisappear{
+            questionVM.questionModel = nil
         }
         .navigationBarHidden(true)
         .onTapGesture {
@@ -818,7 +815,6 @@ extension ProfileView{
     
     private func initProfileView() {
         print("run itit")
-        self.questionEmpty = false
         questionVM.questionModel = nil
         self.currentQuestionPage = 1
         profileVM.profileGet(username: username)

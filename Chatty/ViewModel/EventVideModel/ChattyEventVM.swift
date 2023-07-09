@@ -5,23 +5,38 @@ class ChattyEventVM : ObservableObject {
     
     var data : ResultDetail? = nil
     
+    //본인프로필sheet
     var mySheetPublisher = PassthroughSubject<(),Never>()
     
+    //다른사람 프로필 sheet
     var otherUserSheetPublisher = PassthroughSubject<(),Never>()
     
+    //답변sheet
     var answerSheetPublisher = PassthroughSubject<(),Never>()
-
+    
+    //사진으로 저장하기 sheet => full
     var ImageSavePublisher = PassthroughSubject<(),Never>()
     
+    //삭제하기
     var deletePublisher = PassthroughSubject<(),Never>()
     
+    //신고하기
     var reportPublisher = PassthroughSubject<(),Never>()
     
+    //거절하기
     var refusePublisher = PassthroughSubject<(),Never>()
     
+    //답변하기
     var answerPublisher = PassthroughSubject<(),Never>()
     
+    //차단하기
     var userBlockPublisher = PassthroughSubject<(),Never>()
+    
+    //좋아요
+    var likePublisher = PassthroughSubject<(),Never>()
+    
+    //카드뷰에서 공유하기 눌렀을때 profileView로 이벤트 전달
+    var sharePublisher = PassthroughSubject<(),Never>()
     
     //MARK: - Follower / Followings Event
     
@@ -58,6 +73,9 @@ class ChattyEventVM : ObservableObject {
     }
     func userBlock(){
         userBlockPublisher.send()
+    }
+    func onClickLike(){
+        likePublisher.send()
     }
     
     

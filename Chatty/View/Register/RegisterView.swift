@@ -245,7 +245,7 @@ struct RegisterView: View {
             }
             
             if let error = registerVM.errorModel {
-                ErrorView(message: (error.error))
+                ErrorView(message: (error.error ?? ""))
             }
             
         }

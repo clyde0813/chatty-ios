@@ -11,17 +11,9 @@ struct ChattyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
-//            TestView()
             IndexView().environmentObject(ChattyVM())
         }
     }
-//    init(){
-//        
-//        //ios 15이상부턴 버그떄문에 이걸추가해서 1초 딜레이를 주라고함..
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//              ATTrackingManager.requestTrackingAuthorization(completionHandler: { _ in })
-//            }
-//    }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {

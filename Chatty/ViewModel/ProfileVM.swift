@@ -32,30 +32,66 @@ class ProfileVM : ObservableObject {
         var headers : HTTPHeaders = []
         
         headers = ["Content-Type":"application/json", "Accept":"application/json",
-                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+                   "Authorization": "Bearer " + (KeyChain.read(key: "access_token") ?? "")  ]
         
-        AF.request(url,
-                   method: .get,
-                   encoding: JSONEncoding.default,
-                   headers: headers)
-        .responseDecodable(of: ProfileModel.self){ response in
-            switch response.response?.statusCode {
-            case 200 :
-                print("Profile get : Success")
-                self.profileModel = response.value
-            case 400:
-                print("Profile get : isBlocked User")
-                self.isBlocked.send()
-            default:
-                print("Profile get : Failed")
-                print(response)
-                if let data = response.data,
-                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
-                    print("Error Data : ", errorModel)
+        NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers, encoding: URLEncoding.default){ [weak self] result in
+
+            switch result {
+                
+            case .success(let data):
+                
+                guard let data = data else {return}
+                guard let data = try? JSONDecoder().decode(ProfileModel.self, from: data) else { return }
+                
+                print("ProfileVM - profileGet() : Success ")
+                
+                self?.profileModel = data
+                
+            case .failure(let errorModel):
+                switch errorModel.status_code{
+                case 400:
+                    print("ProfileVM - profileGet() : Fail \(errorModel)")
+                case 500:
+                    print("ProfileVM - profileGet() : Fail \(errorModel)")
+                case 401:
+                    self?.token.refreshToken() { success in
+                        if success {
+                            self?.profileGet(username: username)
+                        } else {
+                            print("Token Refresh Fail!")
+                        }
+                    }
+                default:
+                    print("ProfileVM - profileGet() : Fail \(errorModel)")
                 }
+                
             }
         }
+//        NetworkManager.shared.profileGet(username: username) { [weak self]result in
+//            switch result {
+//            case .success(let data):
+//                self?.profileModel = data
+//            case .failure(let error):
+//                if let afError = error as? AFError, let statusCode = afError.responseCode{
+//                    switch statusCode {
+//                    case 400:
+//                        print("Profile get : isBlocked User")
+//                        self?.isBlocked.send()
+//                    case 404:
+//                        print("Profile get : notFoundPage")
+//                    case 500:
+//                        print("Profile get : serverError")
+//                    default :
+//                        print("?")
+//                    }
+//                }else{
+//                    print("네트워크에러")
+//                }
+//            }
+//        }
     }
+    
+    
     
     //update profile
     func profileEdit(username: String, profile_name: String, profile_message: String, profile_image: UIImage?, background_image: UIImage?){
@@ -130,7 +166,7 @@ class ProfileVM : ObservableObject {
                    parameters: parameters,
                    encoding: JSONEncoding.default,
                    headers: headers)
-        .response{ response in
+        .responseData{ response in
             switch response.response?.statusCode {
             case 201 :
                 print("실패")
@@ -254,5 +290,27 @@ class ProfileVM : ObservableObject {
         }
         
     }
+    
+    
+    //MARK: -  신현호의 네트워크분리 테스트코드
+//    func profileGet2(username: String){
+//        let url = "https://chatty.kr/api/v1/user/profile/\(username)"
+//
+//        var headers : HTTPHeaders = []
+//
+//        headers = ["Content-Type":"application/json", "Accept":"application/json",
+//                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+//        
+//        NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers,encoding: URLEncoding.default) { result in
+//            switch result{
+//            case .success(let data):
+//                if let data = data {
+//                    let profileData = try? JSONDecoder().decode(ProfileModel.self, from: data)
+//                }
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+//    }
     
 }

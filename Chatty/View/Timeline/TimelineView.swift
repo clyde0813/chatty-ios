@@ -24,35 +24,31 @@ struct TimelineView: View {
     
     @State var reportSuccess = false
     
+    @State var shareSuccess = false
+    
     @State var showMySheet = false
     
     @State var showOtherUserSheet = false
 
-//    @StateObject var nativeAds = NativeVM()
-
+    @State var deleteSuccess = false
     
-    @State var isTimelineEmpty = true
-    
-    @State var isProgress = true
+    @State var deleteFailure = false
     
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing){
+                //MARK: - 상단 navBar & Tabbar  -2023.06.03 신현호-
                 VStack{
-                    //MARK: - 상단 navBar & Tabbar  -2023.06.03 신현호-
-                    VStack{
-                        navBar
-                        tabChangeBar
-                            .background(Rectangle()
-                                .fill(Color.white)
-                                .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
-                            )
-                        timelineList
-                    }
-                    .blur(radius: isClickedQuestion ? 2 : 0)
-                    
+                    navBar
+                    tabChangeBar
+                        .background(Rectangle()
+                            .fill(Color.white)
+                            .shadow(color: Color("Shadow Button"), radius: 3, x: 0, y: 6)
+                        )
+                    timelineList
                 }
-                
+                .blur(radius: isClickedQuestion ? 2 : 0)
+    
                 if isClickedQuestion {
                     BlurView()
                         .ignoresSafeArea()
@@ -68,6 +64,15 @@ struct TimelineView: View {
                 if reportSuccess {
                     ProfileErrorView(msg: "신고 접수가 완료되었습니다!")
                 }
+                if shareSuccess {
+                    ProfileErrorView(msg: "복사 완료!")
+                }
+                if deleteSuccess {
+                    ProfileErrorView(msg: "삭제가 완료되었습니다")
+                }
+                if deleteFailure {
+                    ProfileErrorView(msg: "질문등록 48시간 이후로 삭제가능합니다")
+                }
                 
             }
             .navigationBarHidden(true)
@@ -76,6 +81,7 @@ struct TimelineView: View {
 //                nativeAds.refreshAd()
                 self.initTimelineView()
             })
+            
         }
         .onReceive(profileVM.$profileModel) { userInfo in
             guard let user = userInfo else { return }
@@ -88,15 +94,18 @@ struct TimelineView: View {
             showOtherUserSheet = true
         }
         .sheet(isPresented: $showMySheet, onDismiss: {showMySheet = false}) {
-            QuestionOption(eventVM: eventVM)
+            TimelineOption(eventVM: eventVM)
                 .presentationDetents([.fraction(0.4)])
         }
         .sheet(isPresented: $showOtherUserSheet, onDismiss: {showOtherUserSheet = false}) {
-            QuestionOption(eventVM: eventVM)
+            TimelineOption(eventVM: eventVM)
                 .presentationDetents([.fraction(0.2)])
         }
         .onReceive(eventVM.reportPublisher){
             questionVM.questionReport(question_id: eventVM.data?.pk ?? 0)
+        }
+        .onReceive(eventVM.deletePublisher){
+            questionVM.questionDelete(question_id: eventVM.data?.pk ?? 0)
         }
         .onReceive(questionVM.reportSuccess){
             self.reportSuccess = true
@@ -104,6 +113,30 @@ struct TimelineView: View {
                 self.reportSuccess = false
             }
         }
+        .onReceive(questionVM.deleteSuccess) { result in
+            if result {
+                self.deleteSuccess = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.deleteSuccess = false
+                }
+            }else {
+                self.deleteFailure = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.deleteFailure = false
+                }
+            }
+            
+        }
+        .onReceive(eventVM.likePublisher) {
+            questionVM.onClickLike(question_id: eventVM.data?.pk ?? 0)
+        }
+        .onReceive(eventVM.sharePublisher) {
+            self.shareSuccess = true
+            Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                self.shareSuccess = false
+            }
+        }
+        
         
     }
     
@@ -120,7 +153,7 @@ extension TimelineView {
         print("init")
         questionVM.questionModel = nil
         self.currentPage = 1
-        profileVM.profileGet(username: KeyChain.read(key: "username")!)
+        profileVM.profileGet(username: KeyChain.read(key: "username") ?? "")
         questionVM.timelineGet(page: self.currentPage)
 
     }
@@ -228,7 +261,7 @@ extension TimelineView {
     var timelineList : some View {
         GeometryReader{ proxy in
             ScrollView(showsIndicators: false){
-                if isProgress {
+                if questionVM.questionModel == nil {
                     VStack{
                         Spacer()
                         ProgressView()
@@ -237,10 +270,10 @@ extension TimelineView {
                     .frame(width: proxy.size.width)
                 }
                 else {
-                    if isTimelineEmpty {
+                    if questionVM.questionModel?.results.isEmpty == true {
                         VStack(alignment: .center){
                             VStack(spacing: 0){
-                                Text("팔로워가 아직 받은 질문이 없어요!")
+                                Text("더 많은 친구를 팔로우하여 소식을 받아보세요!")
                                     .font(.system(size: 16, weight: .none))
                                     .padding(.bottom, 13)
                                 Button(action:{
@@ -269,13 +302,17 @@ extension TimelineView {
                     else{
                         LazyVStack(spacing: 16){
                             ForEach(Array((questionVM.questionModel?.results ?? []).enumerated()), id:\.element.pk){ index, questiondata in
-                                ResponsedCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
+                                TimelineCard(width:proxy.size.width-32, questiondata: questiondata, eventVM : eventVM)
                                     .onAppear{
                                         callNextTimeline(questiondata: questiondata)
                                     }
+                                    
                                 if index % 4 == 0 && index != 0 {
                                     AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                 }
+                            }
+                            if questionVM.isLoading {
+                                ProgressView()
                             }
                         }
                         .padding(.top, 10)
@@ -303,19 +340,10 @@ extension TimelineView {
             // 2023.06.06 Clyde 높이 제한 추가
             .frame(height: proxy.size.height)
             .frame(maxHeight: .infinity)
-//            .allowsHitTesting(!questionVM.isLoading)
             .refreshable {
                 self.initTimelineView()
             }
              
-        }
-        .onReceive(questionVM.isSuccessGetQuestion){ result in
-            isProgress = false
-            if result {
-                isTimelineEmpty = true
-            }else {
-                isTimelineEmpty = false
-            }
         }
         
         
