@@ -13,7 +13,7 @@ struct QuestionEditor: View {
     
     @State private var content: String = ""
     @Binding var username: String
-    @State var anonymous: Bool = false
+    @State var anonymous: Bool = true
     
     @ObservedObject var questionVM : QuestionVM
     

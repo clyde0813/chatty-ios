@@ -23,49 +23,6 @@ class QuestionVM : ObservableObject {
     
     var publisher = PassthroughSubject<String, Never>()
     
-    
-    //MARK: - Getinit()
-//    func questionGet(questionType: String, username: String, page: Int){
-//        NetworkManager.shared.questionGet(questionType: questionType, username: username, page: page) { [weak self] result in
-//            switch result {
-//            case .success(let data):
-//                self?.handleQuestionResponse(data)
-//            case .failure(let error):
-//                print("MyQuestionVM - questionGet(): Fail")
-//                switch errorModel.status_code{
-//                case 400:
-//                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
-//                case 500:
-//                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
-//                case 401:
-//                    self?.token.refreshToken() { success in
-//                        if success {
-//                            self?.timelineGet(page: 1)
-//                        } else {
-//                            print("Token Refresh Fail!")
-//                        }
-//                    }
-//                default:
-//                    print("MyQuestionVM - GetMyQuestion() : Fail \(errorModel)")
-//                }
-////                self?.handleQuestionError(error)
-//            }
-//        }
-//    }
-    
-//    func GetTimeline(page :Int){
-//        NetworkManager.shared.timelineGet(page: page) { [weak self] result in
-//            switch result {
-//            case .success(let data) :
-//                print("MyQuestionVM - fetchGetQuestion(): Success")
-//                self?.handleQuestionResponse(data)
-//            case .failure(let error):
-//                print("MyQuestionVM - fetchGetQuestion(): Fail")
-//                self?.handleQuestionError(error)
-//            }
-//        }
-//    }
-    
     func timelineGet(page: Int){
         let url : String = "https://chatty.kr/api/v1/chatty/timeline"
         

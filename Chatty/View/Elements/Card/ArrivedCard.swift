@@ -39,19 +39,20 @@ struct ArrivedCard: View {
                         }
                         else {
                             HStack(alignment: .top,spacing: 0){
-                                NavigationLink {
-                                    ProfileView(username: .constant(questiondata.author?.username ?? ""), isOwner: false)
-                                } label: {
-                                    KFImage(URL(string:"\(questiondata.author?.profileImage ?? "" )"))
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 45, height: 45)
-                                        .clipShape(Circle())
-                                        .overlay(Circle()
-                                            .stroke(Color.white, lineWidth: 3))
-                                        .clipped()
-                                        .padding(.trailing, 8)
-                                }
+//                                NavigationLink {
+//                                    ProfileView(username: .constant(questiondata.author?.username ?? ""))
+//                                } label: {
+//                                    KFImage(URL(string:"\(questiondata.author?.profileImage ?? "" )"))
+//                                        .resizable()
+//                                        .scaledToFill()
+//                                        .frame(width: 45, height: 45)
+//                                        .clipShape(Circle())
+//                                        .overlay(Circle()
+//                                            .stroke(Color.white, lineWidth: 3))
+//                                        .clipped()
+//                                        .padding(.trailing, 8)
+//                                }
+                                
                                 VStack(alignment: .leading, spacing: 0){
                                     HStack(spacing: 4){
                                         Text(questiondata.author?.profileName ?? "")

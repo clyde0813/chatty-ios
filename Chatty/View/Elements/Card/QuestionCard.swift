@@ -11,36 +11,37 @@ struct QuestionCard: View {
     }
     
     var body: some View {
-        NavigationLink {
-            ProfileView(username: .constant(questionModel.profile.username), isOwner: false)
-        } label: {
-            ZStack{
-                Color.white
-                VStack(alignment: .leading,spacing: 5){
-                    responseState
-                        .padding(.bottom,2)
-                    
-                    if questionModel.author == nil{
-                        NilQuestion
-                    }
-                    else{
-                        NotNilQuestion
-                    }
-                    
-                    // 완료된 답변일시,
-                    if questionModel.answerContent != nil {
-                        answered
-                    }
-                }
-                .padding([.leading, .trailing, .bottom], 16)
-                .padding(.top, 12)
-            }
-            .frame(width: cardWidth)
-            .frame(minHeight: 0)
-            .fixedSize(horizontal: false, vertical: true)
-            .mask(RoundedRectangle(cornerRadius: 20))
-            .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
-        }
+        Text("!")
+//        NavigationLink {
+//            ProfileView(username: .constant(questionModel.profile.username))
+//        } label: {
+//            ZStack{
+//                Color.white
+//                VStack(alignment: .leading,spacing: 5){
+//                    responseState
+//                        .padding(.bottom,2)
+//
+//                    if questionModel.author == nil{
+//                        NilQuestion
+//                    }
+//                    else{
+//                        NotNilQuestion
+//                    }
+//
+//                    // 완료된 답변일시,
+//                    if questionModel.answerContent != nil {
+//                        answered
+//                    }
+//                }
+//                .padding([.leading, .trailing, .bottom], 16)
+//                .padding(.top, 12)
+//            }
+//            .frame(width: cardWidth)
+//            .frame(minHeight: 0)
+//            .fixedSize(horizontal: false, vertical: true)
+//            .mask(RoundedRectangle(cornerRadius: 20))
+//            .shadow(color: Color("Shadow Card"), radius: 3, x: 0, y: 7)
+//        }
 
         
         

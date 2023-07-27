@@ -9,15 +9,14 @@ import SwiftUI
 import Kingfisher
 
 struct RankingView: View {
-    @EnvironmentObject var chattyVM: ChattyVM
     
     @State var offset: CGFloat = 0
     
-    @State var rankingList = [Ranking]()
+    @StateObject var rankingVM = RankingVM()
         
     var body: some View {
         GeometryReader{ proxy in
-            if self.rankingList.isEmpty || self.rankingList.count < 3{
+            if rankingVM.rankingModel == nil{
                 ZStack{
                     Color.white
                     ProgressView("불러오는중...")
@@ -32,7 +31,6 @@ struct RankingView: View {
                             // Sticky Header...
                             let minY = proxy.frame(in: .global).minY
                             DispatchQueue.main.async {
-
                                 self.offset = minY
                             }
 
@@ -59,8 +57,8 @@ struct RankingView: View {
                                             .padding(.bottom, -45)
                                         HStack(spacing: 0){
                                             VStack{
-                                                ZStack(){
-                                                    KFImage(URL(string: "\(rankingList[1].profileImage)"))
+                                                ZStack{
+                                                    KFImage(URL(string: rankingVM.rankingModel?.ranking[1].profileImage ?? ""))
                                                         .resizable()
                                                         .clipShape(Circle())
                                                         .scaledToFill()
@@ -77,11 +75,11 @@ struct RankingView: View {
                                                         .clipped()
                                                         .offset(x: 25, y: -27)
                                                 }
-                                                Text("\(rankingList[1].profileName)")
+                                                Text(rankingVM.rankingModel?.ranking[1].profileName ?? "")
                                                     .font(.system(size: 16))
                                                     .fontWeight(.bold)
                                                     .foregroundColor(Color(.white))
-                                                Text("\(rankingList[1].questionCount)개")
+                                                Text("\(rankingVM.rankingModel?.ranking[1].questionCount ?? 0)개")
                                                     .font(.system(size: 12))
                                                     .fontWeight(.bold)
                                                     .frame(width: 80, height: 28)
@@ -94,7 +92,7 @@ struct RankingView: View {
                                             .frame(width:proxy.size.width*0.3, height: 200)
                                             VStack{
                                                 ZStack{
-                                                    KFImage(URL(string: "\(rankingList[0].profileImage)"))
+                                                    KFImage(URL(string: rankingVM.rankingModel?.ranking[0].profileImage ?? ""))
                                                         .resizable()
                                                         .clipShape(Circle())
                                                         .scaledToFill()
@@ -107,11 +105,11 @@ struct RankingView: View {
                                                         .clipped()
                                                         .offset(x: 35, y: -37)
                                                 }
-                                                Text("\(rankingList[0].profileName)")
+                                                Text(rankingVM.rankingModel?.ranking[0].profileName ?? "")
                                                     .font(.system(size: 16))
                                                     .fontWeight(.bold)
                                                     .foregroundColor(Color(.white))
-                                                Text("\(rankingList[0].questionCount)개")
+                                                Text("\(rankingVM.rankingModel?.ranking[0].questionCount ?? 0)개")
                                                     .font(.system(size: 12))
                                                     .fontWeight(.bold)
                                                     .frame(width: 80, height: 28)
@@ -120,9 +118,10 @@ struct RankingView: View {
                                                     .cornerRadius(16)
                                             }
                                             .frame(width:proxy.size.width*0.4, height: 270)
+
                                             VStack{
                                                 ZStack{
-                                                    KFImage(URL(string: "\(rankingList[2].profileImage)"))
+                                                    KFImage(URL(string: rankingVM.rankingModel?.ranking[2].profileImage ?? ""))
                                                         .resizable()
                                                         .clipShape(Circle())
                                                         .scaledToFill()
@@ -135,11 +134,11 @@ struct RankingView: View {
                                                         .clipped()
                                                         .offset(x: 25, y: -27)
                                                 }
-                                                Text("\(rankingList[2].profileName)")
+                                                Text(rankingVM.rankingModel?.ranking[2].profileName ?? "")
                                                     .font(.system(size: 16))
                                                     .fontWeight(.bold)
                                                     .foregroundColor(Color(.white))
-                                                Text("\(rankingList[2].questionCount)개")
+                                                Text("\(rankingVM.rankingModel?.ranking[2].questionCount ?? 0)개")
                                                     .font(.system(size: 12))
                                                     .fontWeight(.bold)
                                                     .frame(width: 80, height: 28)
@@ -161,12 +160,13 @@ struct RankingView: View {
                             )}
                         .frame(height: 380)
                         .zIndex(0)
+                        
                         ZStack(alignment: .top){
                             Color.white
                                 .mask(RoundedCornersShape(corners: [.topLeft, .topRight], radius: 20))
                             VStack(spacing: 0){
-                                ForEach(0..<self.rankingList.count - 3, id: \.self) {
-                                    RankingCell(ranking: self.rankingList[$0+3], rank: $0+4)
+                                ForEach(0 ..< (rankingVM.rankingModel?.ranking.count ?? 0) - 3 ) { result in
+                                    RankingCell(ranking: rankingVM.rankingModel?.ranking[result+3] ?? Ranking(username: "1", profileName: "1", profileImage: "12", questionCount: 3), rank: result+4)
                                 }
                             }
                             .padding([.top, .bottom], 24)
@@ -182,12 +182,10 @@ struct RankingView: View {
             }
         }
         .onAppear{
-            self.rankingList.removeAll()
-            chattyVM.rankingGet()
+            rankingVM.rankingGet()
         }
-        .onReceive(chattyVM.$rankingModel){ data in
-            self.rankingList += data?.ranking ?? []
-            print(self.rankingList.count)
+        .onDisappear{
+            rankingVM.rankingModel = nil
         }
     }
 }

@@ -47,7 +47,7 @@ struct ResultDetail: Codable {
     
 }
 
-struct Profile: Codable {
+struct Profile: Codable ,Hashable{
     let username, profileName: String
     let profileImage, backgroundImage: String
 

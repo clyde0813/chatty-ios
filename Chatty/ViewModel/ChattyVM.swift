@@ -88,7 +88,7 @@ class ChattyVM: ObservableObject {
         let url = "https://chatty.kr/api/v1/user/FCM/ios"
         var headers : HTTPHeaders = []
         
-        headers = ["Content-Type":"application/json", "Accept":"application/json"]
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")! ]
         let params: [String: Any] = [
             "token" : KeyChain.read(key: "fcm_token") ?? ""
         ]
