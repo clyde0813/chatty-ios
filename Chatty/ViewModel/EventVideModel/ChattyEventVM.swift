@@ -1,8 +1,17 @@
 import Foundation
 import Combine
 
-class ChattyEventVM : ObservableObject {
-    
+class ChattyEventVM : ObservableObject ,Equatable,Hashable {
+    static func == (lhs: ChattyEventVM, rhs: ChattyEventVM) -> Bool {
+            // EventViewModel의 동등성 비교 로직 구현
+            // 예시로 간단히 object identifier를 비교
+            return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        }
+    func hash(into hasher: inout Hasher) {
+          // EventViewModel의 해시 값 생성
+          // 예시로 간단히 object identifier를 사용
+          hasher.combine(ObjectIdentifier(self))
+      }
     var data : ResultDetail? = nil
     
     //본인프로필sheet

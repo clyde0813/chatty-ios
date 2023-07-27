@@ -18,6 +18,8 @@ struct PrivacyEditView: View {
     @State var unregisterError : Bool = false
     @State var EULAShow : Bool = false
     
+    
+    
     var body: some View {
         GeometryReader{ proxy in
             ZStack{

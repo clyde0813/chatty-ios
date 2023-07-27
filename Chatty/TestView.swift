@@ -9,21 +9,16 @@ import SwiftUI
 import Kingfisher
 
 struct TestView: View {
-    @StateObject private var nativeViewModel = NativeViewModel()
+//    @StateObject private var nativeViewModel = UnifiedNativeAdVM()
     var body: some View {
         VStack{
-            AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: UIScreen.main.bounds.width)
+            Text("!")
+//            UnifiedNativeAdView(nativeAdViewModel: nativeViewModel)
+//                .frame(width: 300,height: 100)
         }
-        
-        //        .onAppear {
-        //              refreshAd()
-        //            }
-        //
-        //    }
-        //
-        //    private func refreshAd() {
-        //        nativeViewModel.refreshAd()
-        //      }
+        .onAppear{
+//            nativeViewModel.refreshAd()
+        }
     }
 }
 

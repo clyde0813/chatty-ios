@@ -40,7 +40,6 @@ struct LoginView: View {
                         HStack{
                             Button(action:{
                                 presentationMode.wrappedValue.dismiss()
-                                
                             }) {
                                 Image(systemName: "chevron.backward")
                                     .font(Font.system(size: 20, weight: .bold))
@@ -107,7 +106,7 @@ struct LoginView: View {
                         Button(action: {
                             endEditing()
                             self.loginPressed = true
-                            loginVM.login()
+                            loginVM.Login()
                         }){
                             Text("로그인")
                                 .fontWeight(.bold)
@@ -136,14 +135,14 @@ struct LoginView: View {
             .onReceive(loginVM.isLoginSuccess, perform: { result in
                 if result {
                     loginSuccess = true
-                    let window = UIApplication
-                        .shared
-                        .connectedScenes
-                        .flatMap { ($0 as? UIWindowScene)?.windows ?? []
-                        }
-                        .first{ $0.isKeyWindow}
-                    window?.rootViewController = UIHostingController(rootView: MainView().environmentObject(ChattyVM()))
-                    window?.makeKeyAndVisible()
+//                    let window = UIApplication
+//                        .shared
+//                        .connectedScenes
+//                        .flatMap { ($0 as? UIWindowScene)?.windows ?? []
+//                        }
+//                        .first{ $0.isKeyWindow}
+//                    window?.rootViewController = UIHostingController(rootView: MainView().environmentObject(ChattyVM()))
+//                    window?.makeKeyAndVisible()
                 }else{
                     loginPressed = false
                     ErrorShow = true

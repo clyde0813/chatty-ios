@@ -13,6 +13,7 @@ import Foundation
 class TokenVM : ObservableObject {
     @Published var tokenModel : TokenModel? = nil
 
+    static let share = TokenVM()
     func apnsTokenInitialize(completion: @escaping (Bool) -> Void) {
         let url = "https://chatty.kr/api/v1/user/FCM/ios"
         var headers : HTTPHeaders = []
@@ -31,8 +32,10 @@ class TokenVM : ObservableObject {
             switch response.result {
             case .success(_) :
                 print("FCM 토큰 초기화 완료")
+                completion(true)
             case .failure(let error) :
                 print(error)
+                completion(false)
             }
         }
     }

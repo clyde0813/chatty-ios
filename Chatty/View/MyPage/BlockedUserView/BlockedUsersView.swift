@@ -23,27 +23,27 @@ struct BlockedUsersView: View {
                             ZStack{
                                 Color.white
                                 HStack{
-                                    NavigationLink {
-                                        ProfileView(username: .constant(data.username) , isOwner: false)
-                                    } label: {
-                                        HStack(spacing: 12){
-                                            KFImage(URL(string:data.profileImage))
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 48, height: 48)
-                                                .clipShape(Circle())
-                                                .clipped()
-                                                .padding(.trailing, 8)
-                                            VStack(alignment: .leading, spacing: 4){
-                                                Text(data.profile_name)
-                                                    .font(Font.system(size: 14, weight: .semibold))
-                                                    .foregroundColor(Color.black)
-                                                Text("@\(data.username)")
-                                                    .font(Font.system(size: 11, weight: .light))
-                                                    .foregroundColor(Color("Text Light Secondary"))
-                                            }
-                                        }
-                                    }
+//                                    NavigationLink {
+//                                        ProfileView(username: .constant(data.username) )
+//                                    } label: {
+//                                        HStack(spacing: 12){
+//                                            KFImage(URL(string:data.profileImage))
+//                                                .resizable()
+//                                                .scaledToFill()
+//                                                .frame(width: 48, height: 48)
+//                                                .clipShape(Circle())
+//                                                .clipped()
+//                                                .padding(.trailing, 8)
+//                                            VStack(alignment: .leading, spacing: 4){
+//                                                Text(data.profile_name)
+//                                                    .font(Font.system(size: 14, weight: .semibold))
+//                                                    .foregroundColor(Color.black)
+//                                                Text("@\(data.username)")
+//                                                    .font(Font.system(size: 11, weight: .light))
+//                                                    .foregroundColor(Color("Text Light Secondary"))
+//                                            }
+//                                        }
+//                                    }
                                     Spacer()
                                     Button(action: {
                                         profileVM.DeleteUserBlock(username: data.username)
