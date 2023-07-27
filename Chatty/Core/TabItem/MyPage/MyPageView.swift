@@ -78,8 +78,8 @@ struct MyPageView: View {
                                                 .font(Font.system(size: 12, weight: .none))
                                         }
                                         .padding(.bottom, 16)
-                                        
-                                        NavigationLink(value: myPageStack.editProfileView) {
+
+                                        NavigationLink(value: myPageStack.editProfileView(myPageVM.currentUser!)) {
                                             Text("프로필 수정")
                                                 .font(.system(size:14, weight: .bold))
                                                 .frame(height: 40)
@@ -92,8 +92,6 @@ struct MyPageView: View {
                                                         .strokeBorder(Color("Pink Main"), lineWidth: 1)
                                                 )
                                         }
-
-
                                     }
                                     .padding(16)
                                 }

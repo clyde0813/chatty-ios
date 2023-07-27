@@ -111,7 +111,7 @@ class ProfileEditVM : ObservableObject {
         if username.isEmpty { return true}
         if username.count < 4 { return true }
         if username.count > 15 { return true }
-        if !usernameVerify { return true }
+        if !usernameVerify { return true }        
 
         return false
     }
