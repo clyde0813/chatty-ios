@@ -3,8 +3,7 @@ import PhotosUI
 import Kingfisher
 
 struct ProfileEditView: View {
-    @EnvironmentObject var chattyVM: ChattyVM
-    
+
     @Environment(\.presentationMode) var presentationMode
     
     @ObservedObject var viewmodel : ProfileEditVM

@@ -76,34 +76,21 @@ struct MyPageView: View {
                                         .padding(.bottom, 16)
                                         
 
-                                        NavigationLink(value: myPageStack.editProfileView(myPageVM.currentUser!)) {
-                                            Text("프로필 수정")
-                                                .font(.system(size:14, weight: .bold))
-                                                .frame(height: 40)
-                                                .frame(minWidth: 0,
-                                                       maxWidth: .infinity
-                                                )
-                                                .foregroundColor(Color("Pink Main"))
-                                                .background(
-                                                    Capsule()
-                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
-                                                )
+                                        if let currentUser = myPageVM.currentUser {
+                                            NavigationLink(value: myPageStack.editProfileView(currentUser)) {
+                                                Text("프로필 수정")
+                                                    .font(.system(size:14, weight: .bold))
+                                                    .frame(height: 40)
+                                                    .frame(minWidth: 0,
+                                                           maxWidth: .infinity
+                                                    )
+                                                    .foregroundColor(Color("Pink Main"))
+                                                    .background(
+                                                        Capsule()
+                                                            .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                    )
+                                            }
                                         }
-//                                        NavigationLink {
-//                                            ProfileEditView(profileVM: myPageVM)
-//                                        } label: {
-//                                            Text("프로필 수정")
-//                                                .font(.system(size:14, weight: .bold))
-//                                                .frame(height: 40)
-//                                                .frame(minWidth: 0,
-//                                                       maxWidth: .infinity
-//                                                )
-//                                                .foregroundColor(Color("Pink Main"))
-//                                                .background(
-//                                                    Capsule()
-//                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
-//                                                )
-//                                        }
                                     }
                                     .padding(16)
                                 }
