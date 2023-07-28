@@ -75,6 +75,7 @@ struct MyPageView: View {
                                         }
                                         .padding(.bottom, 16)
                                         
+
                                         if let currentUser = myPageVM.currentUser {
                                             NavigationLink(value: myPageStack.editProfileView(currentUser)) {
                                                 Text("프로필 수정")
@@ -90,7 +91,6 @@ struct MyPageView: View {
                                                     )
                                             }
                                         }
-                                        
                                     }
                                     .padding(16)
                                 }
