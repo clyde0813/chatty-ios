@@ -112,8 +112,7 @@ class ProfileEditVM : ObservableObject {
         if username.count < 4 { return true }
         if username.count > 15 { return true }
         if !usernameVerify { return true }
-        
-        //false일시 중복확인요청 가능
+
         return false
     }
     
