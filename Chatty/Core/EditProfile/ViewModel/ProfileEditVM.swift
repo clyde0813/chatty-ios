@@ -98,9 +98,10 @@ class ProfileEditVM : ObservableObject {
     func verifyUsername() {
         AuthorizationService.share.verifyUsername(username: username) { result in
             if result {
-                self.currentUser?.username = self.username
                 self.usernameVerify = true
+                self.currentUser?.username = self.username
             }else{
+                self.usernameVerify = false
                 ChattyEventManager.share.showAlter.send("사용 불가능한 아이디입니다.")
             }
         }
@@ -115,7 +116,7 @@ class ProfileEditVM : ObservableObject {
         if username.count > 15 { return true }
         
         //중복확인이완료된경우 더이상클릭못함.
-        if !usernameVerify { return true }
+//        if !usernameVerify { return true }
         
         
         //false일시 중복확인요청 가능
