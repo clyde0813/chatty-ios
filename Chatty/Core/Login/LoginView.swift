@@ -31,7 +31,7 @@ struct LoginView: View {
         GeometryReader{proxy in
             ZStack(alignment: .center) {
                 Color.white
-                if self.loginPressed {
+                if loginVM.loginning {
                     ProgressView("로그인 중...")
                 }
                 
@@ -132,26 +132,7 @@ struct LoginView: View {
                 }
                 
             }
-            .onReceive(loginVM.isLoginSuccess, perform: { result in
-                if result {
-                    loginSuccess = true
-//                    let window = UIApplication
-//                        .shared
-//                        .connectedScenes
-//                        .flatMap { ($0 as? UIWindowScene)?.windows ?? []
-//                        }
-//                        .first{ $0.isKeyWindow}
-//                    window?.rootViewController = UIHostingController(rootView: MainView().environmentObject(ChattyVM()))
-//                    window?.makeKeyAndVisible()
-                }else{
-                    loginPressed = false
-                    ErrorShow = true
-                    Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
-                        ErrorShow = false
-                    }
-                }
-                
-            })
+            
             
             .onTapGesture {
                 endEditing()

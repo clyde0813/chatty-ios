@@ -117,9 +117,9 @@ class AuthorizationService {
     }
     
     func fetchUserProfile(){
-        print("AuthorizationService - fetchUserProfile run!!!")
+        guard let usernmae = KeyChain.read(key: "username") else { return }
         
-        let url = "https://chatty.kr/api/v1/user/profile/\(KeyChain.read(key: "username")!)"
+        let url = "https://chatty.kr/api/v1/user/profile/\(usernmae)"
         
         var headers : HTTPHeaders = []
         
