@@ -58,6 +58,7 @@ struct MyPageView: View {
                                             Spacer()
                                         }
                                         .padding(.bottom, 10)
+                                        
                                         Text(myPageVM.currentUser?.profile_name ?? "" )
                                             .font(Font.system(size: 18, weight: .semibold))
                                             .padding(.bottom, 5)
@@ -78,9 +79,7 @@ struct MyPageView: View {
                                         }
                                         .padding(.bottom, 16)
                                         
-//
-                                        
-                                        NavigationLink(value: myPageStack.editProfileView) {
+                                        NavigationLink(value: myPageStack.editProfileView(myPageVM.currentUser!)) {
                                             Text("프로필 수정")
                                                 .font(.system(size:14, weight: .bold))
                                                 .frame(height: 40)
