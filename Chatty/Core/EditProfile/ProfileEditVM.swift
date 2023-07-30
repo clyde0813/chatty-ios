@@ -96,6 +96,7 @@ class ProfileEditVM : ObservableObject {
         AuthorizationService.share.verifyUsername(username: username) { result in
             if result {
                 self.usernameVerify = true
+//                self.currentUser?.username = self.username
             }else{
                 self.usernameVerify = false
                 ChattyEventManager.share.showAlter.send("사용 불가능한 아이디입니다.")
@@ -110,8 +111,8 @@ class ProfileEditVM : ObservableObject {
         if username.isEmpty { return true}
         if username.count < 4 { return true }
         if username.count > 15 { return true }
-
         if !usernameVerify { return true }   
+
         return false
     }
     
