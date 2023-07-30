@@ -23,6 +23,6 @@ class ChattyAppVM : ObservableObject {
         
         //등록된 username이 있으면 username의 정모를 불러옴
         // 불로온 데이터는 여기에있는 currentUser가 구독하고있기때문에, 성공적으로 받아오면 nil이 아니게됌
-        AuthorizationService.share.loadUserProfile()
+        AuthorizationService.share.fetchUserProfile()
     }
 }

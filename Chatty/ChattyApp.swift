@@ -19,14 +19,14 @@ struct ChattyApp: App {
                 //chattyAppVM.currentUser != nil &&
                 MainView()
             }else {
-                IndexView().environmentObject(ChattyVM())
+                IndexView()
             }
         }
     }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    @EnvironmentObject var chattyVM: ChattyVM
+//    @EnvironmentObject var chattyVM: ChattyVM
     
     // 앱이 켜졌을때
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {

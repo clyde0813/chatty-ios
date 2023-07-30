@@ -140,23 +140,7 @@ extension UserSearchView {
                             HStack{
                                 //profile image & ID + Profile Name Area
                                 NavigationLink(value: StackPath.profileView(user.username)) {
-                                    HStack(spacing: 12){
-                                        KFImage(URL(string:user.profileImage))
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 48, height: 48)
-                                            .clipShape(Circle())
-                                            .clipped()
-                                            .padding(.trailing, 8)
-                                        VStack(alignment: .leading, spacing: 4){
-                                            Text(user.profile_name)
-                                                .font(Font.system(size: 14, weight: .semibold))
-                                                .foregroundColor(Color.black)
-                                            Text("@\(user.username)")
-                                                .font(Font.system(size: 11, weight: .light))
-                                                .foregroundColor(Color("Text Light Secondary"))
-                                        }
-                                    }
+                                    UserCell(profileImage: user.profileImage, profileName: user.profile_name, username: user.username)
                                 }
                                 .simultaneousGesture(TapGesture().onEnded{
                                     userSearchHistoryVM.addSearch(keyword: userSearchVM.resultKeyword)

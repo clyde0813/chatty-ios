@@ -17,15 +17,16 @@ class UserService {
         var headers : HTTPHeaders = []
         
         headers = ["Content-Type":"application/json", "Accept":"application/json",
-                   "Authorization": "Bearer " + (KeyChain.read(key: "access_token") ?? "")  ]
+                   "Authorization": "Bearer " + (KeyChain.read(key: "access_token") ?? "")]
         
-        NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers, encoding: URLEncoding.default){ [weak self] result in
+        NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers, encoding: URLEncoding.default){ result in
             switch result {
             case .success(let data):
                 guard let data = data else {return}
+                
                 guard let data = try? JSONDecoder().decode(ProfileModel.self, from: data) else { return }
-                print("ProfileVM - profileGet() : Success ")
-                self?.user = data
+                
+                self.user = data
                 
             case .failure(let errorModel):
                 switch errorModel.status_code{
@@ -204,6 +205,43 @@ class UserService {
                     print("Error Data : ", errorModel)
                 }
                 completion(true)
+            }
+        }
+    }
+    
+    func DeleteUserBlock(username : String, completion: @escaping (Bool)-> ()) {
+        let url = "https://chatty.kr/api/v1/user/block"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json",
+                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let parameters: [String: String] = [
+            "username" : username
+        ]
+        
+        AF.request(url,
+                   method: .delete,
+                   parameters: parameters,
+                   encoding: JSONEncoding.default,
+                   headers: headers)
+        .responseData { response in
+            switch response.result {
+            case .success(_):
+                
+                //프로필을 들어가서 해제했을경우를 대비해서
+                self.user?.blockState.toggle()
+                completion(true)
+                
+            case .failure(_):
+                print("ProfileVM - DeleteUserBlock() : Failed")
+                print(response)
+                if let data = response.data,
+                   let errorModel = try? JSONDecoder().decode(ErrorModel.self, from: data) {
+                    print("Error Data : ", errorModel)
+                }
+                completion(false)
             }
         }
     }

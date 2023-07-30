@@ -6,9 +6,6 @@ enum PostTab : String {
     case arrivedTab = "arrived"
     case refusedTab = "refused"
 }
-enum ProfileNavStackView {
-    case Follow, Following
-}
 
 struct ProfileView: View {
     
@@ -19,13 +16,9 @@ struct ProfileView: View {
     init(username: String, clickTab : Binding<Bool>){
         self.username = username
         self._clickTab = clickTab
-        print(self.username)
-        print(self.clickTab)
     }
     
     @StateObject var profileVM = ProfileVM()
-    
-    @StateObject var eventVM = ChattyEventVM()
     
     @Environment(\.dismiss) private var dismiss
     
@@ -48,6 +41,7 @@ struct ProfileView: View {
     @State var isUserSheet : Bool = false
     
     @State var isMeBlocked : Bool = false
+    
     @Namespace var topID
     
     //MARK: - 광고를 위한 VM
@@ -64,14 +58,14 @@ struct ProfileView: View {
             let widthFix = (proxy.size.width - 40) / 3
             ZStack(alignment: .bottomTrailing){
                 ScrollViewReader { scrollProxy in
-                    ScrollView(.vertical, showsIndicators: false, content: {
+                    ScrollView(.vertical, showsIndicators: false) {
                         // ScrollView content VStack
-                        
+                        Text("")
+                            .frame(width: 0,height: 0)
+                            .opacity(0)
+                            .id(topID)
                         VStack(spacing: 0){
-                            Text("")
-                                .frame(width: 0,height: 0)
-                                .opacity(0)
-                                .id(topID)
+                            
                             GeometryReader { proxy -> AnyView in
 
                                 // Sticky Header...
@@ -217,7 +211,7 @@ struct ProfileView: View {
                                                     
                                                     if profileVM.profileModel?.blockState == true{
                                                         Button {
-                                                            profileVM.DeleteUserBlock(username: profileVM.profileModel?.username ?? "")
+                                                            profileVM.deleteUserBlock(username: profileVM.profileModel?.username ?? "")
                                                         } label: {
                                                             Text("차단해제")
                                                                 .font(.system(size:14, weight: .bold))
@@ -268,22 +262,17 @@ struct ProfileView: View {
                                                 }
                                                 //본인의 프로필일경우
                                                 else {
-                                                    if let profileModel = profileVM.profileModel {
-                                                        NavigationLink {
-                                                            ProfileEditView(userProfile: profileModel)
-                                                        } label: {
-                                                            Text("프로필 수정")
-                                                                .font(.system(size:14, weight: .bold))
-                                                                .frame(height: 40)
-                                                                .frame(width: 90)
-                                                                .foregroundColor(Color("Pink Main"))
-                                                                .background(
-                                                                    Capsule()
-                                                                        .strokeBorder(Color("Pink Main"), lineWidth: 1)
-                                                                )
-                                                        }
+                                                    NavigationLink(value: StackPath.profileEditView) {
+                                                        Text("프로필 수정")
+                                                            .font(.system(size:14, weight: .bold))
+                                                            .frame(height: 40)
+                                                            .frame(width: 90)
+                                                            .foregroundColor(Color("Pink Main"))
+                                                            .background(
+                                                                Capsule()
+                                                                    .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                            )
                                                     }
-                                                    
                                                 }
                                             }
                                         }
@@ -530,37 +519,17 @@ struct ProfileView: View {
                                             }
                                             else {
                                                 ForEach(Array((profileVM.questionModel?.results ?? [] ).enumerated()), id:\.element.pk){ index, questiondata in
-                                                    
                                                     ResponsedCard(width: proxy.size.width - 32, chatty: questiondata,currentTab : profileVM.postTab)
                                                         .onAppear{
                                                             profileVM.checkNextCard(questiondata: questiondata)
                                                             
                                                         }
-    //                                                if profileVM.postTab == .responsedTab {
-    //                                                    ResponsedCard(width: proxy.size.width - 32, chatty: questiondata,currentTab : profileVM.postTab)
-    //                                                        .onAppear{
-    //                                                            profileVM.checkNextCard(questiondata: questiondata)
-    //
-    //                                                        }
-    //                                                }
-    //                                                else if profileVM.postTab == .arrivedTab {
-    //                                                    ResponsedCard(width: proxy.size.width - 32, chatty: questiondata,currentTab : profileVM.postTab)
-    //                                                        .onAppear{
-    //                                                            profileVM.checkNextCard(questiondata: questiondata)
-    //
-    //                                                        }
-    //                                                }
-    //                                                else if profileVM.postTab == .refusedTab {
-    //                                                    ResponsedCard(width: proxy.size.width - 32, chatty: questiondata,currentTab : profileVM.postTab)
-    //                                                        .onAppear{
-    //                                                            profileVM.checkNextCard(questiondata: questiondata)
-    //
-    //                                                        }
-    //                                                }
+                                                        
                                                     if index % 4 == 0 && index != 0{
                                                         AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                                     }
                                                 }
+                                                
                                             }
                                         }
                                     }
@@ -570,10 +539,11 @@ struct ProfileView: View {
                             }
                             .zIndex(-offset > 80 ? 0 : 1)
                         }
-                    })
+                    }
                     .onChange(of: clickTab) { tap in
+                        print("onChange clickTab")
                         if tap {
-                            print("ProfileView onClick Tab!")
+                            print(tap)
                             withAnimation {
                                 scrollProxy.scrollTo(topID)
                                 clickTab = false
@@ -581,33 +551,30 @@ struct ProfileView: View {
                             }
                         }
                     }
-                    if !(profileVM.profileModel?.username == KeyChain.read(key: "username")) && profileVM.profileModel?.blockState == false {
-                        Button(action: {
-                            self.questionEditorStatus = true
-                        }
-                        ){
-                            NewQuestionButton()
-                                .padding([.bottom, .trailing], 16)
-                        }
-                    }
-                    
-                    if showMsg {
-                        ProfileErrorView(msg: msg)
-                    }
                 }
                 
+                if !(profileVM.profileModel?.username == KeyChain.read(key: "username")) && profileVM.profileModel?.blockState == false {
+                    Button(action: {
+                        self.questionEditorStatus = true
+                    }
+                    ){
+                        NewQuestionButton()
+                            .padding([.bottom, .trailing], 16)
+                    }
+                }
+                if showMsg {
+                    ProfileErrorView(msg: msg)
+                }
                 
             }
             .ignoresSafeArea(.all, edges: .top)
             .onAppear{
-                //MARK: - 광고넣넣기전 초기화
+                profileVM.subscribe()
                 profileVM.reset()
                 profileVM.getProfile(username: username)
                 profileVM.getQuestion(username: username)
-                print("appear!")
             }
             .onDisappear{
-                print("did disappear!")
                 profileVM.cancel()
             }
             .onChange(of: profileVM.postTab) { newValue in
@@ -624,6 +591,10 @@ struct ProfileView: View {
             .sheet(isPresented: $userOptionShow, onDismiss: { userOptionShow = false }){
                 UserOption(user: profileVM.profileModel!)
                     .presentationDetents([.fraction(0.2)])
+            }
+            .sheet(isPresented: $questionEditorStatus, onDismiss: { questionEditorStatus = false }){
+                QuestionEditor(username: username)
+                    .presentationDetents([.fraction(0.4)])
             }
 //            .alert(isPresented: $isMeBlocked){
 //                Alert(

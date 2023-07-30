@@ -70,5 +70,8 @@ struct FollowOption: View {
             .padding(.top,20)
             .padding(.horizontal, 20)
         }
+        .onDisappear{
+//            followOptionVM.profileModel
+        }
     }
 }
