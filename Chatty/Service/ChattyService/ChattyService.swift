@@ -50,6 +50,36 @@ class ChattyService {
         }
     }
     
+    //질문하기
+    func questionPost(username: String, content: String, anonymous: Bool, completion: @escaping(Bool)->()) {
+        let url = "https://chatty.kr/api/v1/chatty"
+        
+        var headers : HTTPHeaders = []
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        let params: Parameters = [
+            "username" : username,
+            "content" : content,
+            "anonymous_status" : anonymous
+        ]
+        
+        AF.request(url,
+                   method: .post,
+                   parameters: params,
+                   encoding: JSONEncoding(options: []),
+                   headers: headers)
+        .responseString { (response) in
+            switch response.result {
+            case .success:
+                completion(true)
+            case .failure(let error):
+                completion(false)
+                print("error : \(error.errorDescription!)")
+            }
+        }
+    }
+    
     //질문삭제
     func questionDelete(question_id: Int, completion: @escaping (Bool)->() ) {
         let url = "https://chatty.kr/api/v1/chatty"
@@ -187,8 +217,10 @@ class ChattyService {
         let url : String = "https://chatty.kr/api/v1/chatty/timeline"
 
         var headers : HTTPHeaders = []
-
-        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        
+        guard let accessToken = KeyChain.read(key: "access_token") else { return }
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + accessToken]
 
         let params: Parameters = [
             "page": page as Any
@@ -245,7 +277,7 @@ class ChattyService {
         let params: Parameters = [
             "page": page
         ]
-        print("ChattyService : run getQuestion!!")
+        
         NetworkManager.shared.RequestServer(url: url, method: .get, headers: headers, params: params , encoding: URLEncoding.default) { [weak self] result in
             switch result {
             case .success(let data):

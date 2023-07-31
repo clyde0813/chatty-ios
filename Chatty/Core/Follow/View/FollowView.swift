@@ -9,25 +9,23 @@ enum followTab :String {
 struct FollowView: View {
     @Environment(\.dismiss) var dismiss
     
-    //누구의 팔로우,팔로잉 뷰인지 식벽하는 username
+    @StateObject var followVM = FollowVM()
+    
     let username : String
     
     @State var currentTab : followTab
     
     @State var currentPage = 1
+
+    @State var isProgressBar = true
+    
+    @State var optionShow = false
     
     init(username : String, followTab : followTab){
         self.username = username
         self._currentTab = State(wrappedValue: followTab)
     }
-    
-     
-    
-    @StateObject var followVM = FollowVM()
-    
-    @State var isProgressBar = true
-    
-    @State var optionShow = false
+
     
     
     var body: some View {

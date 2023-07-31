@@ -1,18 +1,9 @@
-//
-//  IndexView.swift
-//  Chatty_Swift
-//
-//  Created by Clyde on 2022/12/21.
-//
-
 import SwiftUI
 
 struct IndexView: View {
-    @EnvironmentObject var chattyVM: ChattyVM
 
-    
     var body: some View {
-        NavigationStack {
+        NavigationView {
             GeometryReader{ proxy in
                 ZStack{
                     Color.white
@@ -38,7 +29,9 @@ struct IndexView: View {
                         .padding(.leading, 30)
                         Spacer()
                         VStack(spacing: 0){
-                            NavigationLink(destination: LoginView()){
+                            NavigationLink {
+                                LoginView()
+                            } label: {
                                 HStack(spacing: 0){
                                     Text("Chatty ")
                                         .font(.custom("SUIT-Heavy", size: 16))
@@ -55,10 +48,14 @@ struct IndexView: View {
                                 .cornerRadius(6)
                             }
                             .padding(.bottom, 16)
+                            
                             Text("앗, 회원이 아니라면?")
                                 .font(.system(size: 16, weight: .none))
                                 .padding(.bottom, 8)
-                            NavigationLink(destination: RegisterView()){
+                            
+                            NavigationLink {
+                                RegisterView()
+                            } label: {
                                 Text("박박 빠르게 회원가입하기 →")
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundColor(Color("Main Primary"))
@@ -70,13 +67,14 @@ struct IndexView: View {
                 }
                 .ignoresSafeArea(.all)
             }
+            .toolbar(.hidden)
         }
-        .navigationBarHidden(true)
+        
     }
 }
 
 struct IndexView_Previews: PreviewProvider {
     static var previews: some View {
-        IndexView().environmentObject(ChattyVM())
+        IndexView()
     }
 }

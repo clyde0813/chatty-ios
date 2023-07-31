@@ -18,6 +18,7 @@ struct ProfileModel: Codable,Hashable {
     let views: Int
     var followState : Bool
     var blockState : Bool
+    var rankState : Bool
 
     enum CodingKeys: String, CodingKey {
         case username = "username"
@@ -32,6 +33,7 @@ struct ProfileModel: Codable,Hashable {
         case views
         case followState = "follow_status"
         case blockState = "block_state"
+        case rankState = "ranking_status"
     }
 }
 
