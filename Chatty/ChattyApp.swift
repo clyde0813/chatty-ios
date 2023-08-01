@@ -9,15 +9,26 @@ import AppTrackingTransparency
 @main
 struct ChattyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+    @StateObject var chattyAppVM = ChattyAppVM()
+    
     var body: some Scene {
         WindowGroup {
-            IndexView().environmentObject(ChattyVM())
+
+            if UserDefaults.standard.bool(forKey: "isLoggedIn") {
+                //MARK: -조건에 아래코드도 넣고싶지만, 데이터를불러오는과정에서 깜빡이는것때문에 일단은 뺴두었음
+                //chattyAppVM.currentUser != nil &&
+                MainView()
+            }else {
+                IndexView()
+            }
+
         }
     }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    @EnvironmentObject var chattyVM: ChattyVM
+//    @EnvironmentObject var chattyVM: ChattyVM
     
     // 앱이 켜졌을때
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {

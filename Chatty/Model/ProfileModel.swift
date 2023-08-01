@@ -7,17 +7,18 @@
 
 import Foundation
 
-struct ProfileModel: Codable {
-    let username, profile_name: String
+struct ProfileModel: Codable,Hashable {
+    var username, profile_name: String
     let userID, responseRate: Int
     let questionCount: QuestionCount
-    let profileImage: String
-    let backgroundImage: String
-    let profileMessage: String?
+    var profileImage: String
+    var backgroundImage: String
+    var profileMessage: String?
     var follower, following: Int
     let views: Int
     var followState : Bool
     var blockState : Bool
+    var rankState : Bool
 
     enum CodingKeys: String, CodingKey {
         case username = "username"
@@ -32,9 +33,10 @@ struct ProfileModel: Codable {
         case views
         case followState = "follow_status"
         case blockState = "block_state"
+        case rankState = "ranking_status"
     }
 }
 
-struct QuestionCount: Codable {
+struct QuestionCount: Codable ,Hashable{
     let answered, unanswered, rejected: Int
 }
