@@ -95,11 +95,19 @@ class ProfileEditVM : ObservableObject {
     func verifyUsername() {
         AuthorizationService.share.verifyUsername(username: username) { result in
             if result {
+<<<<<<< HEAD:Chatty/Core/EditProfile/ViewModel/ProfileEditVM.swift
 
                 self.usernameVerify = true
+                self.currentUser?.username = self.username
             }else{
                 self.usernameVerify = false
 
+=======
+                self.usernameVerify = true
+//                self.currentUser?.username = self.username
+            }else{
+                self.usernameVerify = false
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd:Chatty/Core/EditProfile/ProfileEditVM.swift
                 ChattyEventManager.share.showAlter.send("사용 불가능한 아이디입니다.")
             }
         }
@@ -112,18 +120,22 @@ class ProfileEditVM : ObservableObject {
         if username.isEmpty { return true}
         if username.count < 4 { return true }
         if username.count > 15 { return true }
-        if !usernameVerify { return true }
+        if !usernameVerify { return true }   
 
-        
-        
-        //false일시 중복확인요청 가능
         return false
     }
     
     func rankingToggle(){
         let url = "https://chatty.kr/api/v1/user/ranking/toggle"
         
+<<<<<<< HEAD:Chatty/Core/EditProfile/ViewModel/ProfileEditVM.swift
+        //중복확인이완료된경우 더이상클릭못함.
+
+//        if !usernameVerify { return true }
+
+=======
         var headers : HTTPHeaders = []
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd:Chatty/Core/EditProfile/ProfileEditVM.swift
         
         headers = ["Content-Type":"application/json", "Accept":"application/json",
                    "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]

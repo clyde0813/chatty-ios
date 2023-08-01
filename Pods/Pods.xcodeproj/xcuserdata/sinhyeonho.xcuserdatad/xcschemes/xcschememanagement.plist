@@ -7,87 +7,143 @@
 		<key>Alamofire.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>14</integer>
+<<<<<<< HEAD
+			<integer>7</integer>
+=======
+			<integer>1</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>FirebaseAnalytics.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
+<<<<<<< HEAD
 			<integer>12</integer>
+=======
+			<integer>17</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>FirebaseCore.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>3</integer>
 		</dict>
 		<key>FirebaseCoreInternal.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+<<<<<<< HEAD
+			<integer>13</integer>
+=======
+			<integer>8</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>FirebaseInstallations.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>9</integer>
+<<<<<<< HEAD
+			<integer>1</integer>
+=======
+			<integer>13</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>FirebaseMessaging.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>15</integer>
+			<integer>5</integer>
 		</dict>
 		<key>Google-Mobile-Ads-SDK.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>10</integer>
+<<<<<<< HEAD
+			<integer>9</integer>
+=======
+			<integer>11</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>GoogleAppMeasurement.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>8</integer>
+<<<<<<< HEAD
+			<integer>15</integer>
+=======
+			<integer>2</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>GoogleDataTransport.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>7</integer>
+<<<<<<< HEAD
+			<integer>8</integer>
+=======
+			<integer>14</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>GoogleUserMessagingPlatform.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>10</integer>
 		</dict>
 		<key>GoogleUtilities.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+<<<<<<< HEAD
+			<integer>2</integer>
+=======
+			<integer>6</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>Kingfisher.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+<<<<<<< HEAD
+			<integer>17</integer>
+=======
+			<integer>12</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>Pods-Chatty-ChattyUITests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+<<<<<<< HEAD
+			<integer>11</integer>
+=======
+			<integer>7</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>Pods-Chatty.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>13</integer>
+<<<<<<< HEAD
+			<integer>4</integer>
+=======
+			<integer>15</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>Pods-ChattyTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
+<<<<<<< HEAD
+			<integer>16</integer>
+=======
+			<integer>4</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>PromisesObjC.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+<<<<<<< HEAD
+			<integer>14</integer>
+=======
+			<integer>16</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 		<key>nanopb.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>17</integer>
+<<<<<<< HEAD
+			<integer>6</integer>
+=======
+			<integer>9</integer>
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd
 		</dict>
 	</dict>
 </dict>

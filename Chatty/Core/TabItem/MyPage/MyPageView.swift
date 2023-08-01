@@ -58,6 +58,7 @@ struct MyPageView: View {
                                             Spacer()
                                         }
                                         .padding(.bottom, 10)
+                                        
                                         Text(myPageVM.currentUser?.profile_name ?? "" )
                                             .font(Font.system(size: 18, weight: .semibold))
                                             .padding(.bottom, 5)
@@ -78,8 +79,23 @@ struct MyPageView: View {
                                         }
                                         .padding(.bottom, 16)
                                         
-//
-                                        
+<<<<<<< HEAD:Chatty/Core/MyPage/View/MyPageView.swift
+
+                                        if let currentUser = myPageVM.currentUser {
+                                            NavigationLink(value: myPageStack.editProfileView(currentUser)) {
+                                                Text("프로필 수정")
+                                                    .font(.system(size:14, weight: .bold))
+                                                    .frame(height: 40)
+                                                    .frame(minWidth: 0,
+                                                           maxWidth: .infinity
+                                                    )
+                                                    .foregroundColor(Color("Pink Main"))
+                                                    .background(
+                                                        Capsule()
+                                                            .strokeBorder(Color("Pink Main"), lineWidth: 1)
+                                                    )
+                                            }
+=======
                                         NavigationLink(value: myPageStack.editProfileView) {
                                             Text("프로필 수정")
                                                 .font(.system(size:14, weight: .bold))
@@ -92,8 +108,8 @@ struct MyPageView: View {
                                                     Capsule()
                                                         .strokeBorder(Color("Pink Main"), lineWidth: 1)
                                                 )
+>>>>>>> a316a4c0d4d7fe02d31ed1a0fcaa781a5bac7edd:Chatty/Core/TabItem/MyPage/MyPageView.swift
                                         }
-
                                     }
                                     .padding(16)
                                 }
