@@ -8,6 +8,7 @@ enum myPageStack : Hashable{
     case EULAView
     case privacyEditView
     case blockListView
+    case settingView
 }
 
 struct MyPageView: View {
@@ -180,7 +181,7 @@ struct MyPageView: View {
                                     
                                     NavigationLink(value: myPageStack.allofQuestionView) {
                                         HStack{
-                                            Text("질문 모아보기")
+                                            Text("내가 한 질문 모아보기")
                                                 .font(Font.system(size: 16, weight: .none))
                                             Spacer()
                                             Image(systemName: "chevron.right")
@@ -188,14 +189,18 @@ struct MyPageView: View {
                                         }
                                     }
                                     .frame(height: 48)
-                                    //                            HStack{
-                                    //                                Text("신고 기록 및 처리 상태 확인")
-                                    //                                    .font(Font.system(size: 16, weight: .none))
-                                    //                                Spacer()
-                                    //                                Image(systemName: "chevron.right")
-                                    //                                    .font(Font.system(size: 16, weight: .none))
-                                    //                            }
-                                    //                            .frame(height: 48)
+                                    
+                                    NavigationLink(value: myPageStack.settingView) {
+                                        HStack{
+                                            Text("환경설정")
+                                                .font(Font.system(size: 16, weight: .none))
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                                .font(Font.system(size: 16, weight: .none))
+                                        }
+                                    }
+                                    .frame(height: 48)
+                                    
                                 }
                                 .padding(.top, 40)
                                 .padding([.leading, .trailing], 20)
@@ -266,6 +271,8 @@ struct MyPageView: View {
                     EULAView()
                 case .blockListView:
                     BlockedUsersView()
+                case .settingView:
+                    SettingView(toggleState: AuthorizationService.share.currentUser?.rankState ?? false)
                 }
             }
             .onAppear{

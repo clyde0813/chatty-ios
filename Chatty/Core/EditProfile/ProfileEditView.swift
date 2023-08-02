@@ -246,24 +246,6 @@ struct ProfileEditView: View {
                             .padding(.top, 32)
                             .padding([.leading, .trailing], 16)
                             .frame(height: 250)
-                            
-                            HStack{
-                                Button {
-                                    viewmodel.rankingToggle()
-                                } label: {
-                                    if viewmodel.currentUser?.rankState == false {
-                                        Text("랭킹보이게하기")
-                                            .foregroundColor(.blue)
-                                    }
-                                    else{
-                                        Text("랭킹안보이게하기")
-                                            .foregroundColor(.red)
-                                    }
-                                    
-                                }
-
-                            }
-                            
 
                         }
                     }
