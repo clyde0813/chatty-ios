@@ -17,14 +17,21 @@ enum StackPath : Hashable{
 
 struct TimelineView: View {
     @StateObject var timelineVM = TimeLineVM()
+    
     @State var showMsg = false
+    
     @State var msg = ""
+    
     @State var isClickedQuestion = false
+    
     @State var currentTab : Timeline_Hot_Tab =  .timeline
+    
     @State var path = NavigationPath()
+    
     var currentUser : ProfileModel
     
     @Binding var clickTab: Bool
+    
     @Binding var doubleClickTab : Bool
     
     @Namespace var topID
@@ -222,18 +229,15 @@ extension TimelineView {
                         if timelineVM.timelineData?.results.isEmpty == true {
                             VStack(alignment: .center){
                                 VStack(spacing: 0){
-                                    Text("더 많은 친구를 팔로우하여 소식을 받아보세요!")
+                                    Text("아직 친구가 없어요!")
                                         .font(.system(size: 16, weight: .none))
                                         .padding(.bottom, 13)
-                                    Button(action:{
-                                        UIPasteboard.general.string = "chatty.kr/\(currentUser.username)"
-                                        ChattyEventManager.share.showAlter.send("복사 완료!")
-                                    }){
-                                        Text("내 프로필 링크 복사하기")
+                                    NavigationLink(value: StackPath.searchView) {
+                                        Text("친구 검색하기")
                                             .font(.system(size:16, weight: .bold))
-                                            .frame(height: 40)
-                                            .frame(width: 194)
                                             .foregroundColor(Color.white)
+                                            .padding(.horizontal,10)
+                                            .padding(.vertical,15)
                                             .background(
                                                 Capsule()
                                                     .fill( LinearGradient(gradient: Gradient(colors: [Color("MainGradient1"), Color("MainGradient2"),Color("MainGradient3")]), startPoint: .trailing, endPoint: .leading))

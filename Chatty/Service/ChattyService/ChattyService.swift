@@ -272,7 +272,9 @@ class ChattyService {
         
         let url = "https://chatty.kr/api/v1/chatty/" + urlPath
         
-        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
+        guard let accessToken = KeyChain.read(key: "access_token") else { return }
+        
+        headers = ["Content-Type":"application/json", "Accept":"application/json","Authorization": "Bearer \(accessToken)"]
         
         let params: Parameters = [
             "page": page
