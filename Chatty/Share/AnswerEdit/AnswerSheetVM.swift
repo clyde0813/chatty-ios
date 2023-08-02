@@ -4,16 +4,12 @@ class AnserSheetVM : ObservableObject {
     
     let chatty : ResultDetail
     
-    @Published var content = ""
-    
-//    @Published var anonymous = false
-    
     init(chatty: ResultDetail){
         self.chatty = chatty
     }
     
     
-    func answerQuestion(){
+    func answerQuestion(content:String){
         ChattyService.share.answerPost(question_id: chatty.pk, content: content) { result in
             if result{
                 ChattyEventManager.share.showAlter.send("답변 완료!")
