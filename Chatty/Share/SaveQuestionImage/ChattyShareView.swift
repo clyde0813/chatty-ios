@@ -74,8 +74,6 @@ struct ChattyShareView: View {
                                     .padding(.bottom,8)
                                 }
                                 
-                                
-                                
                                 HStack(alignment: .top, spacing: 0){
                                     //답변 표현 화살표
                                     Image(systemName: "arrow.turn.down.right")

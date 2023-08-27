@@ -6,6 +6,11 @@ enum BottomTab  {
     case home, community, ranking, mypage
 }
 
+enum ShareLink : Hashable {
+    case profileView(String)
+    case editProfileView
+}
+
 
 struct MainView: View {
     
@@ -51,7 +56,7 @@ struct MainView: View {
                     .tag(BottomTab.home)
             }
             
-            RankingView()
+            RankingView(clickTab: $clickTab,doubleClickTab : $doubleClickTab)
                 .tabItem{
                     Image(systemName: "trophy.fill")
                     Text("랭킹")
@@ -74,9 +79,6 @@ struct MainView: View {
         }
         .onTapGesture(count: 2) {
             doubleClickTab.toggle()
-        }
-        .onTapGesture(count: 1) {
-            clickTab = true
         }
         .navigationBarHidden(true)
         .accentColor(Color.black)

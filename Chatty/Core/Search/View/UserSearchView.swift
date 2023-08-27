@@ -139,7 +139,7 @@ extension UserSearchView {
                             Color.white
                             HStack{
                                 //profile image & ID + Profile Name Area
-                                NavigationLink(value: StackPath.profileView(user.username)) {
+                                NavigationLink(value: ShareLink.profileView(user.username)) {
                                     UserCell(profileImage: user.profileImage, profileName: user.profile_name, username: user.username)
                                 }
                                 .simultaneousGesture(TapGesture().onEnded{

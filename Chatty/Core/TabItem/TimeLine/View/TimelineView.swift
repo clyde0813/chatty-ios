@@ -8,11 +8,9 @@ enum Timeline_Hot_Tab {
 }
 
 enum StackPath : Hashable{
-    case profileView(String)
     case searchView
     case DetailView
     case FollowView(String,followTab)
-    case profileEditView
 }
 
 struct TimelineView: View {
@@ -96,18 +94,22 @@ struct TimelineView: View {
                 }
             }
             .toolbar(.hidden)
-            .navigationDestination(for: StackPath.self){ result in
+            .navigationDestination(for: ShareLink.self) { result in
                 switch result {
                 case .profileView(let username):
                     ProfileView(username: username, clickTab: $clickTab)
+                case .editProfileView:
+                    ProfileEditView()
+                }
+            }
+            .navigationDestination(for: StackPath.self){ result in
+                switch result {
                 case .searchView:
                     UserSearchView()
                 case .DetailView:
                     QuestionDetailView()
                 case .FollowView(let username, let followTab):
                     FollowView(username: username, followTab: followTab)
-                case .profileEditView:
-                    ProfileEditView()
                 }
             }
             .onChange(of: doubleClickTab) { newValue in
@@ -124,7 +126,7 @@ struct TimelineView: View {
 extension TimelineView {
     var navBar : some View {
         HStack{
-            NavigationLink(value: StackPath.profileView(currentUser.username)) {
+            NavigationLink(value: ShareLink.profileView(currentUser.username)) {
                 KFImage(URL(string: currentUser.profileImage))
                     .resizable()
                     .scaledToFill()

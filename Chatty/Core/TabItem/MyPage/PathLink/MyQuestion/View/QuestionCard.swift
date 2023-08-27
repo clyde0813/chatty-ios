@@ -12,7 +12,7 @@ struct QuestionCard: View {
     
     var body: some View {
         
-        NavigationLink(value: myPageStack.profileView(questionModel.profile.username)) {
+        NavigationLink(value: ShareLink.profileView(questionModel.profile.username)) {
             ZStack{
                 Color.white
                 VStack(alignment: .leading,spacing: 5){
