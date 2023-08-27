@@ -10,7 +10,6 @@ class UserService {
     
     @Published var userList : GenericListModel<ProfileModel>? = nil
     
-    
     func profileGet(username: String){
         let url = "https://chatty.kr/api/v1/user/profile/\(username)"
         

@@ -5,6 +5,9 @@ class RankingVM : ObservableObject {
     
     @Published var rankingModel : RankingModel? = nil
     
+    init(){
+        rankingGet()
+    }
     
     func rankingGet() {
         

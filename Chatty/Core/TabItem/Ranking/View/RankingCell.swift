@@ -5,11 +5,11 @@ import Kingfisher
 struct RankingCell: View {
     
     
-    let ranking : Ranking?
+    let ranking : Ranking
     
     let rank : Int
     
-    init(ranking: Ranking?, rank: Int){
+    init(ranking: Ranking, rank: Int){
         self.ranking = ranking
         self.rank = rank
     }
@@ -21,16 +21,16 @@ struct RankingCell: View {
                 Text("\(rank)")
                     .font(Font.system(size: 14, weight: .semibold))
                     .foregroundColor(Color("Pink Main"))
-                KFImage(URL(string: "\(ranking?.profileImage ?? "")"))
+                KFImage(URL(string: "\(ranking.profileImage)"))
                     .resizable()
                     .clipShape(Circle())
                     .scaledToFill()
                     .frame(width: 48, height: 48)
                     .clipped()
-                Text("\(ranking?.profileName ?? "" )")
+                Text("\(ranking.profileName)")
                     .font(Font.system(size: 14, weight: .bold))
                 Spacer()
-                Text("\(ranking?.questionCount.abbreviateNumber() ?? "1" )개")
+                Text("\(ranking.questionCount.abbreviateNumber() )개")
                     .font(Font.system(size: 14, weight: .bold))
                     .foregroundColor(Color.white)
                     .frame(width:50, height: 28)
@@ -41,6 +41,7 @@ struct RankingCell: View {
             .padding([.leading, .trailing], 28)
         }
         .frame(height: 70)
+
     }
 }
 

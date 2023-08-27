@@ -111,7 +111,7 @@ extension ResponsedCard {
     //익명이 아닐때 질문양식
     var NotNilQuestion : some View {
         HStack{
-            NavigationLink(value: StackPath.profileView(cardVM.chatty.author?.username ?? "")) {
+            NavigationLink(value: ShareLink.profileView(cardVM.chatty.author?.username ?? "")) {
                 KFImage(URL(string:"\(cardVM.chatty.author?.profileImage ?? "")"))
                     .resizable()
                     .scaledToFill()
@@ -200,7 +200,7 @@ extension ResponsedCard {
             //Profile 사진
             HStack(alignment: .top){
                 //MARK: - 수정해야함
-                NavigationLink(value: StackPath.profileView(cardVM.chatty.profile.username)) {
+                NavigationLink(value: ShareLink.profileView(cardVM.chatty.profile.username)) {
                     KFImage(URL(string:"\(cardVM.chatty.profile.profileImage)"))
                         .resizable()
                         .scaledToFill()

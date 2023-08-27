@@ -23,7 +23,7 @@ struct BlockedUsersView: View {
                         ZStack{
                             Color.white
                             HStack{
-                                NavigationLink(value: myPageStack.profileView(user.username)) {
+                                NavigationLink(value: ShareLink.profileView(user.username)) {
                                     UserCell(profileImage: user.profileImage, profileName: user.profile_name, username: user.username)
                                 }
                                 Spacer()

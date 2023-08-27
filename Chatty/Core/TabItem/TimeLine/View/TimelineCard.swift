@@ -85,7 +85,7 @@ extension TimelineCard {
     //익명이 아닐때 질문양식
     var NotNilQuestion : some View {
         HStack{
-            NavigationLink(value: StackPath.profileView(timelineCardVM.chatty.author?.username ?? "")) {
+            NavigationLink(value: ShareLink.profileView(timelineCardVM.chatty.author?.username ?? "")) {
                 KFImage(URL(string:"\(timelineCardVM.chatty.author?.profileImage ?? "")"))
                     .resizable()
                     .scaledToFill()
@@ -144,7 +144,7 @@ extension TimelineCard {
             //Profile 사진
             HStack(alignment: .top){
                 
-                NavigationLink(value: StackPath.profileView(timelineCardVM.chatty.profile.username)) {
+                NavigationLink(value: ShareLink.profileView(timelineCardVM.chatty.profile.username)) {
                     KFImage(URL(string:"\(timelineCardVM.chatty.profile.profileImage)"))
                         .resizable()
                         .scaledToFill()

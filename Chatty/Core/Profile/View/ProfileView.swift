@@ -35,10 +35,6 @@ struct ProfileView: View {
     @State var titleOffset: CGFloat = 0
   
     @State var questionEditorStatus : Bool = false
-
-    @State var copyButtonPressed : Bool = false
-    
-    @State var isUserSheet : Bool = false
     
     @State var isMeBlocked : Bool = false
     
@@ -125,20 +121,20 @@ struct ProfileView: View {
                                             .opacity(blurViewOpacity())
 
                                         HStack{
-                                            Button(action:{
-                                                dismiss()
-                                            }){
-                                                Image(systemName: "arrow.left")
-                                                    .font(.system(size:16, weight: .bold))
-                                                    .foregroundColor(Color.white)
-                                                    .background(
-                                                        Circle()
-                                                            .fill(Color("Card Share Background"))
-                                                            .frame(width: 32, height: 32)
-                                                    )
-                                            }
-                                            .padding(.leading, 25)
-                                            .padding(.bottom, 10)
+//                                            Button(action:{
+//                                                dismiss()
+//                                            }){
+//                                                Image(systemName: "arrow.left")
+//                                                    .font(.system(size:16, weight: .bold))
+//                                                    .foregroundColor(Color.white)
+//                                                    .background(
+//                                                        Circle()
+//                                                            .fill(Color("Card Share Background"))
+//                                                            .frame(width: 32, height: 32)
+//                                                    )
+//                                            }
+//                                            .padding(.leading, 25)
+//                                            .padding(.bottom, 10)
 
                                             Spacer()
                                             VStack(alignment: .center, spacing: 8){
@@ -262,7 +258,7 @@ struct ProfileView: View {
                                                 }
                                                 //본인의 프로필일경우
                                                 else {
-                                                    NavigationLink(value: StackPath.profileEditView) {
+                                                    NavigationLink(value: ShareLink.editProfileView) {
                                                         Text("프로필 수정")
                                                             .font(.system(size:14, weight: .bold))
                                                             .frame(height: 40)
@@ -286,6 +282,18 @@ struct ProfileView: View {
                                                 .font(Font.system(size: 16, weight: .light))
                                             //2022.06.13 -신현호
                                                 .lineLimit(3)
+                                        }
+                                        
+                                        if let url = profileVM.profileModel?.urlLink {
+                                            Link(destination: URL(string: url)!) {
+                                                        HStack(spacing: 2){
+                                                            Image(systemName: "link")
+                                                            Text(url)
+                                                        }
+                                                        .font(Font.system(size: 15,weight: .semibold))
+                                                        .foregroundColor(.gray)
+                                                        .lineLimit(1)
+                                                    }
                                         }
                                         
                                         //MARK: - follow/following
@@ -547,7 +555,6 @@ struct ProfileView: View {
                             withAnimation {
                                 scrollProxy.scrollTo(topID)
                                 clickTab = false
-                                print("ProfileView onClick Tab! -> false")
                             }
                         }
                     }
@@ -576,6 +583,7 @@ struct ProfileView: View {
             }
             .onDisappear{
                 profileVM.cancel()
+                profileVM.reset()
             }
             .onChange(of: profileVM.postTab) { newValue in
                 profileVM.currentPage = 1
@@ -594,7 +602,7 @@ struct ProfileView: View {
             }
             .sheet(isPresented: $questionEditorStatus, onDismiss: { questionEditorStatus = false }){
                 QuestionEditor(username: username)
-                    .presentationDetents([.fraction(0.4)])
+                    .presentationDetents([.fraction(0.45)])
             }
 //            .alert(isPresented: $isMeBlocked){
 //                Alert(
@@ -638,7 +646,7 @@ struct ProfileErrorView : View {
                     .frame(width: 310, height: 40)
                     .foregroundColor(Color.white)
                     .background(Color("Error Background"))
-                    .cornerRadius(16)
+                    .cornerRadius(8)
                     .padding(.bottom, 50)
                 Spacer()
             }

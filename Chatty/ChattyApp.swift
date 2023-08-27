@@ -85,6 +85,7 @@ extension AppDelegate : MessagingDelegate {
     }
 }
 
+
 extension AppDelegate : UNUserNotificationCenterDelegate {
     
     // 푸시메세지가 앱이 켜져 있을때 나올때

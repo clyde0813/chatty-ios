@@ -13,8 +13,15 @@ struct QuestionEditor: View {
     
     @ObservedObject var questionEditorVM : QuestionEditorVM
     
+    @State var content = ""
+    
+    @State var anonymous = true
+    
+    let username : String
+    
     init(username:String) {
-        self.questionEditorVM = QuestionEditorVM(username: username)
+        self.username = username
+        self.questionEditorVM = QuestionEditorVM()
     }
     
     var body: some View {
@@ -38,16 +45,18 @@ struct QuestionEditor: View {
                     }
                 }
                 .padding(.bottom, 16)
+                
                 HStack(spacing: 0){
                     Text("To @")
                         .font(.system(size:12))
-                    Text("\(questionEditorVM.username)")
+                    Text(username)
                         .font(.system(size:12, weight: .bold))
                 }
                 .foregroundColor(Color("Main Primary"))
                 .padding(.bottom, 16)
+                
                 HStack(spacing: 0){
-                    Toggle(isOn: $questionEditorVM.anonymous){
+                    Toggle(isOn: $anonymous){
                         Text("익명으로 쓰기")
                             .font(.system(size:14, weight: .none))
                     }
@@ -55,17 +64,19 @@ struct QuestionEditor: View {
                 .padding(.bottom, 16)
                 //질문 입력창
                 ZStack(alignment: .topLeading){
-                    Text("@\(questionEditorVM.username)에게 질문하기")
+                    Text("@\(username)에게 질문하기")
                         .foregroundColor(Color.gray)
                         .font(.system(size:16, weight: .bold))
-                    TextEditor(text: $questionEditorVM.content)
+
+                    TextEditor(text: $content)
+                        .foregroundColor(.black)
                         .frame(height: 120)
                         .font(.system(size:16, weight: .none))
-                        .opacity(questionEditorVM.content.isEmpty ? 0.1 : 1)
+                        .opacity(content.isEmpty ? 0.1 : 1)
                 }
                 //완료 버튼
                 Button(action:{
-                    questionEditorVM.questionPost()
+                    questionEditorVM.questionPost(username: username, content: content, anonymous: anonymous)
                     dismiss()
                 }){
                     Text("완료")

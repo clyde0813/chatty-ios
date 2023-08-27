@@ -183,7 +183,7 @@ extension FollowView {
                                         HStack(spacing: 24){
                                             HStack{
                                                 //profile image & ID + Profile Name Area
-                                                NavigationLink(value: StackPath.profileView(follower.username)) {
+                                                NavigationLink(value: ShareLink.profileView(follower.username)) {
                                                     HStack(spacing: 6){
                                                         KFImage(URL(string:follower.profileImage))
                                                             .resizable()
@@ -251,7 +251,7 @@ extension FollowView {
                                         HStack(spacing: 24){
                                             HStack{
                                                 //profile image & ID + Profile Name Area
-                                                NavigationLink(value: StackPath.profileView(following.username)) {
+                                                NavigationLink(value: ShareLink.profileView(following.username)) {
                                                     HStack(spacing: 6){
                                                         KFImage(URL(string:following.profileImage))
                                                             .resizable()
@@ -318,7 +318,7 @@ extension FollowView {
                                         HStack(spacing: 24){
                                             HStack{
                                                 //profile image & ID + Profile Name Area
-                                                NavigationLink(value: StackPath.profileView(follower.username)) {
+                                                NavigationLink(value: ShareLink.profileView(follower.username)) {
                                                     HStack(spacing: 6){
                                                         KFImage(URL(string:follower.profileImage))
                                                             .resizable()
@@ -395,7 +395,7 @@ extension FollowView {
                                         HStack(spacing: 24){
                                             HStack{
                                                 //profile image & ID + Profile Name Area
-                                                NavigationLink(value: StackPath.profileView(following.username)) {
+                                                NavigationLink(value: ShareLink.profileView(following.username)) {
                                                     HStack(spacing: 6){
                                                         KFImage(URL(string:following.profileImage))
                                                             .resizable()

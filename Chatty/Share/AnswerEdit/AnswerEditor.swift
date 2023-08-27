@@ -7,7 +7,9 @@ struct AnswerEditor: View {
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var answerSheetVM : AnserSheetVM
-    
+
+    @State var content = ""
+
     init(chatty:ResultDetail){
         self.answerSheetVM = AnserSheetVM(chatty: chatty)
     }
@@ -88,20 +90,20 @@ struct AnswerEditor: View {
                         .padding(.bottom, 12)
                 }
                 
-                //질문 입력창
+                //답변입력창
                 ZStack(alignment: .topLeading){
                     Text(answerSheetVM.chatty.author == nil ? "@익명에게 답변 쓰기" : "@\(answerSheetVM.chatty.author?.username ?? "")에게 답변 쓰기")
                         .foregroundColor(Color.gray)
                         .font(.system(size:16, weight: .bold))
-                    TextEditor(text: $answerSheetVM.content)
+                    TextEditor(text: $content)
                         .frame(minHeight: 120)
                         .font(.system(size:16, weight: .none))
-                        .opacity(answerSheetVM.content.isEmpty ? 0.1 : 1)
+                        .opacity(content.isEmpty ? 0.1 : 1)
                 }
                 //완료 버튼
                 Button(action:{
                     dismiss()
-                    answerSheetVM.answerQuestion()
+                    answerSheetVM.answerQuestion(content: content)
                 }){
                     Text("완료")
                         .font(.system(size: 16, weight: .bold))

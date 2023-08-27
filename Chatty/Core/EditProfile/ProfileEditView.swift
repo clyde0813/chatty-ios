@@ -19,7 +19,7 @@ struct ProfileEditView: View {
     @State private var selectedProfileUIImage : UIImage?
     @State private var selectedProfileImage: Image?
     
-    @State var testTogle = false
+    
     
     
     var body: some View {
@@ -169,7 +169,8 @@ struct ProfileEditView: View {
                                 .padding(.leading, 5)
                                 ZStack(alignment: .trailing){
                                     
-                                    TextField("\(viewmodel.currentUser?.username ?? "")", text: $viewmodel.username)
+                                    
+                                    TextField("", text: $viewmodel.username.toUnwrapped(defaultValue: ""))
                                         .padding()
                                         .background(Color(uiColor: .secondarySystemBackground))
                                         .mask(RoundedRectangle(cornerRadius: 16))
@@ -217,7 +218,25 @@ struct ProfileEditView: View {
                                     Spacer()
                                 }
                                 .padding(.leading, 5)
-                                TextField("\(viewmodel.currentUser?.profile_name ?? "")", text: $viewmodel.profile_name)
+                                TextField("", text: $viewmodel.profile_name.toUnwrapped(defaultValue: ""))
+                                    .padding()
+                                    .background(Color(uiColor: .secondarySystemBackground))
+                                    .mask(RoundedRectangle(cornerRadius: 16))
+                            }
+                            .padding(.top, 32)
+                            .padding([.leading, .trailing], 16)
+                            
+                            
+                            VStack(spacing: 8){
+                                HStack{
+                                    Text("링크")
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .foregroundColor(Color("Grey700"))
+                                    Spacer()
+                                }
+                                .padding(.leading, 5)
+                                
+                                TextField("", text: $viewmodel.urlString.toUnwrapped(defaultValue: ""))
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
                                     .mask(RoundedRectangle(cornerRadius: 16))
@@ -231,13 +250,13 @@ struct ProfileEditView: View {
                                     Text("자기소개")
                                         .font(.system(size: 16, weight: .semibold))
                                         .foregroundColor(Color("Grey700"))
-                                    Text("\(viewmodel.profile_message.count)/50")
+                                    Text("\(viewmodel.profile_message?.count ?? 0)/50")
                                         .font(.caption)
-                                        .foregroundColor(viewmodel.profile_message.count <= 50 ? Color.black : Color.red)
+                                        .foregroundColor(viewmodel.profile_message?.count ?? 0 <= 50 ? Color.black : Color.red)
                                     Spacer()
                                 }
                                 .padding(.leading, 5)
-                                TextField("\(viewmodel.currentUser?.profileMessage ?? "")", text: $viewmodel.profile_message,axis: .vertical)
+                                TextField("\(viewmodel.currentUser?.profileMessage ?? "")", text: $viewmodel.profile_message.toUnwrapped(defaultValue: ""),axis: .vertical)
                                     .padding()
                                     .background(Color(uiColor: .secondarySystemBackground))
                                     .mask(RoundedRectangle(cornerRadius: 16))
@@ -247,22 +266,6 @@ struct ProfileEditView: View {
                             .padding([.leading, .trailing], 16)
                             .frame(height: 250)
                             
-                            HStack{
-                                Button {
-                                    viewmodel.rankingToggle()
-                                } label: {
-                                    if viewmodel.currentUser?.rankState == false {
-                                        Text("랭킹보이게하기")
-                                            .foregroundColor(.blue)
-                                    }
-                                    else{
-                                        Text("랭킹안보이게하기")
-                                            .foregroundColor(.red)
-                                    }
-                                    
-                                }
-
-                            }
                             
 
                         }

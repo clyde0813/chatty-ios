@@ -2,12 +2,11 @@ import SwiftUI
 import Kingfisher
 
 enum myPageStack : Hashable{
-    case profileView(String)
-    case editProfileView
     case allofQuestionView
     case EULAView
     case privacyEditView
     case blockListView
+    case settingView
 }
 
 struct MyPageView: View {
@@ -80,7 +79,7 @@ struct MyPageView: View {
                                         
 //
                                         
-                                        NavigationLink(value: myPageStack.editProfileView) {
+                                        NavigationLink(value: ShareLink.editProfileView) {
                                             Text("프로필 수정")
                                                 .font(.system(size:14, weight: .bold))
                                                 .frame(height: 40)
@@ -180,7 +179,7 @@ struct MyPageView: View {
                                     
                                     NavigationLink(value: myPageStack.allofQuestionView) {
                                         HStack{
-                                            Text("질문 모아보기")
+                                            Text("내가 한 질문 모아보기")
                                                 .font(Font.system(size: 16, weight: .none))
                                             Spacer()
                                             Image(systemName: "chevron.right")
@@ -188,14 +187,18 @@ struct MyPageView: View {
                                         }
                                     }
                                     .frame(height: 48)
-                                    //                            HStack{
-                                    //                                Text("신고 기록 및 처리 상태 확인")
-                                    //                                    .font(Font.system(size: 16, weight: .none))
-                                    //                                Spacer()
-                                    //                                Image(systemName: "chevron.right")
-                                    //                                    .font(Font.system(size: 16, weight: .none))
-                                    //                            }
-                                    //                            .frame(height: 48)
+                                    
+                                    NavigationLink(value: myPageStack.settingView) {
+                                        HStack{
+                                            Text("환경설정")
+                                                .font(Font.system(size: 16, weight: .none))
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                                .font(Font.system(size: 16, weight: .none))
+                                        }
+                                    }
+                                    .frame(height: 48)
+                                    
                                 }
                                 .padding(.top, 40)
                                 .padding([.leading, .trailing], 20)
@@ -254,10 +257,6 @@ struct MyPageView: View {
             .toolbar(.hidden)
             .navigationDestination(for: myPageStack.self) { result in
                 switch result {
-                case .editProfileView:
-                    ProfileEditView()
-                case .profileView(let username):
-                    ProfileView(username: username, clickTab: $clickTab)
                 case .allofQuestionView:
                     MyQuestionView()
                 case .privacyEditView:
@@ -266,6 +265,16 @@ struct MyPageView: View {
                     EULAView()
                 case .blockListView:
                     BlockedUsersView()
+                case .settingView:
+                    SettingView(toggleState: AuthorizationService.share.currentUser?.rankState ?? false)
+                }
+            }
+            .navigationDestination(for: ShareLink.self) { result in
+                switch result {
+                case .profileView(let username):
+                    ProfileView(username: username, clickTab: $clickTab)
+                case .editProfileView:
+                    ProfileEditView()
                 }
             }
             .onAppear{
@@ -317,7 +326,7 @@ struct MyPageErrorView : View {
                     .frame(width: 310, height: 40)
                     .foregroundColor(Color.white)
                     .background(Color("Error Background"))
-                    .cornerRadius(16)
+                    .cornerRadius(8)
                     .padding(.bottom, 50)
                 Spacer()
             }

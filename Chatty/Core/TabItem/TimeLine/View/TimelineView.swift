@@ -8,23 +8,28 @@ enum Timeline_Hot_Tab {
 }
 
 enum StackPath : Hashable{
-    case profileView(String)
     case searchView
     case DetailView
     case FollowView(String,followTab)
-    case profileEditView
 }
 
 struct TimelineView: View {
     @StateObject var timelineVM = TimeLineVM()
+    
     @State var showMsg = false
+    
     @State var msg = ""
+    
     @State var isClickedQuestion = false
+    
     @State var currentTab : Timeline_Hot_Tab =  .timeline
+    
     @State var path = NavigationPath()
+    
     var currentUser : ProfileModel
     
     @Binding var clickTab: Bool
+    
     @Binding var doubleClickTab : Bool
     
     @Namespace var topID
@@ -89,18 +94,22 @@ struct TimelineView: View {
                 }
             }
             .toolbar(.hidden)
-            .navigationDestination(for: StackPath.self){ result in
+            .navigationDestination(for: ShareLink.self) { result in
                 switch result {
                 case .profileView(let username):
                     ProfileView(username: username, clickTab: $clickTab)
+                case .editProfileView:
+                    ProfileEditView()
+                }
+            }
+            .navigationDestination(for: StackPath.self){ result in
+                switch result {
                 case .searchView:
                     UserSearchView()
                 case .DetailView:
                     QuestionDetailView()
                 case .FollowView(let username, let followTab):
                     FollowView(username: username, followTab: followTab)
-                case .profileEditView:
-                    ProfileEditView()
                 }
             }
             .onChange(of: doubleClickTab) { newValue in
@@ -117,7 +126,7 @@ struct TimelineView: View {
 extension TimelineView {
     var navBar : some View {
         HStack{
-            NavigationLink(value: StackPath.profileView(currentUser.username)) {
+            NavigationLink(value: ShareLink.profileView(currentUser.username)) {
                 KFImage(URL(string: currentUser.profileImage))
                     .resizable()
                     .scaledToFill()
@@ -222,18 +231,15 @@ extension TimelineView {
                         if timelineVM.timelineData?.results.isEmpty == true {
                             VStack(alignment: .center){
                                 VStack(spacing: 0){
-                                    Text("더 많은 친구를 팔로우하여 소식을 받아보세요!")
+                                    Text("아직 친구가 없어요!")
                                         .font(.system(size: 16, weight: .none))
                                         .padding(.bottom, 13)
-                                    Button(action:{
-                                        UIPasteboard.general.string = "chatty.kr/\(currentUser.username)"
-                                        ChattyEventManager.share.showAlter.send("복사 완료!")
-                                    }){
-                                        Text("내 프로필 링크 복사하기")
+                                    NavigationLink(value: StackPath.searchView) {
+                                        Text("친구 검색하기")
                                             .font(.system(size:16, weight: .bold))
-                                            .frame(height: 40)
-                                            .frame(width: 194)
                                             .foregroundColor(Color.white)
+                                            .padding(.horizontal,10)
+                                            .padding(.vertical,15)
                                             .background(
                                                 Capsule()
                                                     .fill( LinearGradient(gradient: Gradient(colors: [Color("MainGradient1"), Color("MainGradient2"),Color("MainGradient3")]), startPoint: .trailing, endPoint: .leading))

@@ -7,10 +7,11 @@ class ProfileEditVM : ObservableObject {
     
     @Published var currentUser : ProfileModel?
     
-    //변경된 아이디, 닉네임, 상태메시지
-    @Published var username : String = ""
-    @Published var profile_name : String = ""
-    @Published var profile_message : String = ""
+    //변경된 아이디, 닉네임, 상태메시지, Url
+    @Published var username : String? = ""
+    @Published var profile_name : String? = ""
+    @Published var profile_message : String? = ""
+    @Published var urlString : String? = ""
     
     //변경된 아이디가 가능한지의 여부
     @Published var usernameVerify = false
@@ -27,27 +28,45 @@ class ProfileEditVM : ObservableObject {
             }
             .store(in: &cancellable)
         
+        username = currentUser?.username ?? nil
+        profile_name = currentUser?.profile_name ?? nil
+        urlString = currentUser?.urlLink ?? nil
+        profile_message = currentUser?.profileMessage ?? nil
         
     }
     
     
     //update profile
+    //MARK: - 추가로 하이퍼링크 추가 해야함.
     func profileEdit(profile_image: UIImage?, background_image: UIImage?){
         
         isLoading = true
+        
+        var parameters: [String: Any] = [:]
+        
+        if username != currentUser?.username {
+            parameters["username"] = username!
+        }
+        
+        if profile_name != currentUser?.profile_name {
+            parameters["profile_name"] = profile_name!
+        }
+        
+        if profile_message != currentUser?.profileMessage {
+            parameters["profile_message"] = profile_message!
+             
+        }
+        
+        if urlString != currentUser?.urlLink {
+            parameters["link"] = urlString!
+        }
+
         
         let url = "https://chatty.kr/api/v1/user/profile"
         
         var headers : HTTPHeaders = []
         
         headers = ["Content-Type":"application/json", "Accept":"application/json", "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        //현재 모델값들 넣어줌 -> 변경사항을 파라미터로 보내줌
-        let parameters: [String: Any] = [
-            "username" : username,
-            "profile_name": profile_name,
-            "profile_message": profile_message
-        ]
         
         AF.upload(
             multipartFormData: { multipartFormData in
@@ -62,19 +81,18 @@ class ProfileEditVM : ObservableObject {
                 }
             },
             to: url,
-            method: .put,
+            method: .post,
             headers: headers
         )
         .response { response in
             self.isLoading = false
-            
+            print(response.response?.statusCode)
+            debugPrint(response)
             switch response.response?.statusCode {
             case 200:
-                if self.username != "" {
-                    KeyChain.delete(key: "username")
-                    KeyChain.create(key: "username", value: self.username)
-                }
-                
+                KeyChain.delete(key: "username")
+                KeyChain.create(key: "username", value: self.username ?? "")
+    
                 AuthorizationService.share.fetchUserProfile()
                 
                 ChattyEventManager.share.showAlter.send("수정이 완료되었습니다!")
@@ -93,7 +111,7 @@ class ProfileEditVM : ObservableObject {
     
     //아이디중복확인
     func verifyUsername() {
-        AuthorizationService.share.verifyUsername(username: username) { result in
+        AuthorizationService.share.verifyUsername(username: username ?? "") { result in
             if result {
 
                 self.usernameVerify = true
@@ -109,46 +127,36 @@ class ProfileEditVM : ObservableObject {
     //중복확인버튼 클릭가능 여부체크
     func checkAvailableUserNameButton() -> Bool {
         
-        if username.isEmpty { return true}
-        if username.count < 4 { return true }
-        if username.count > 15 { return true }
-        if !usernameVerify { return true }
+        if username?.isEmpty == true { return true}
+        if let nameCount = username?.count  {
+            if nameCount < 4 || nameCount > 15 {
+                return true
+            }
+        }
+//        if username?.count < 4 { return true }
+//        if username.count > 15 { return true }
 
-        
-        
         //false일시 중복확인요청 가능
         return false
     }
     
-    func rankingToggle(){
-        let url = "https://chatty.kr/api/v1/user/ranking/toggle"
-        
-        var headers : HTTPHeaders = []
-        
-        headers = ["Content-Type":"application/json", "Accept":"application/json",
-                   "Authorization": "Bearer " + KeyChain.read(key: "access_token")!]
-        
-        NetworkManager.shared.RequestServer(url: url, method: .post,headers: headers , encoding: JSONEncoding.default) { result in
-            switch result {
-            case .success(_):
-                AuthorizationService.share.currentUser?.rankState.toggle()
-            case .failure(let errorModel):
-                switch errorModel.status_code{
-                case 400:
-                    print("400 Error")
-                default :
-                    print("not Found Error")
-                }
-            }
-        }
-    }
-    
-    
     //수정하기 버튼 클릭가능여부
     func checkAailableEdit() -> Bool{
-        if (self.username.isEmpty || self.usernameVerify) && self.profile_name.count <= 20 && self.profile_message.count < 50 {
-            return true
+//        if username == currentUser?.username { usernameVerify = true }
+        if (urlString != currentUser?.urlLink) || (profile_name != currentUser?.profile_name) || (profile_message != currentUser?.profileMessage) || (usernameVerify) {
+            if let profileNameCount = profile_name?.count , let messageCount = profile_message?.count {
+                if profileNameCount <= 20 && messageCount < 50 {
+                    return true
+                }
+            }
+//            if profile_name.count <= 20 && profile_message.count < 50 {
+//                return true
+//            }
+            
         }
+//        if (self.username.isEmpty || self.usernameVerify) && self.profile_name.count <= 20 && self.profile_message.count < 50 {
+//            return true
+//        }
         return false
     }
 }
