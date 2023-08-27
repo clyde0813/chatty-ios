@@ -26,6 +26,9 @@
 		001CC21B2A723BF700383A3C /* ProfileEditVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001CC21A2A723BF700383A3C /* ProfileEditVM.swift */; };
 		0021051F2A6DB91300A80EEA /* TimeLineOpstionVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0021051E2A6DB91300A80EEA /* TimeLineOpstionVM.swift */; };
 		002105252A6DE80400A80EEA /* ChattyEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002105242A6DE80400A80EEA /* ChattyEventManager.swift */; };
+		006C64CB2A7A10C8002EBA8F /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006C64CA2A7A10C8002EBA8F /* SettingView.swift */; };
+		006C64CD2A7A1484002EBA8F /* SettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006C64CC2A7A1484002EBA8F /* SettingVM.swift */; };
+		00778D062A9A085D00AAB2C5 /* BindingExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00778D052A9A085D00AAB2C5 /* BindingExtention.swift */; };
 		0077E0FD2A441FBE00611776 /* Native.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0077E0F82A441FBE00611776 /* Native.swift */; };
 		0077E0FE2A441FBE00611776 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0077E0F92A441FBE00611776 /* AdBannerView.swift */; };
 		0077E0FF2A441FBE00611776 /* GADTSmallTemplateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0077E0FA2A441FBE00611776 /* GADTSmallTemplateView.xib */; };
@@ -144,6 +147,9 @@
 		001CC21A2A723BF700383A3C /* ProfileEditVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditVM.swift; sourceTree = "<group>"; };
 		0021051E2A6DB91300A80EEA /* TimeLineOpstionVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineOpstionVM.swift; sourceTree = "<group>"; };
 		002105242A6DE80400A80EEA /* ChattyEventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattyEventManager.swift; sourceTree = "<group>"; };
+		006C64CA2A7A10C8002EBA8F /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		006C64CC2A7A1484002EBA8F /* SettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVM.swift; sourceTree = "<group>"; };
+		00778D052A9A085D00AAB2C5 /* BindingExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtention.swift; sourceTree = "<group>"; };
 		0077E0F82A441FBE00611776 /* Native.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Native.swift; sourceTree = "<group>"; };
 		0077E0F92A441FBE00611776 /* AdBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		0077E0FA2A441FBE00611776 /* GADTSmallTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GADTSmallTemplateView.xib; sourceTree = "<group>"; };
@@ -291,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				2E3114D92A08A5870052B309 /* EULAView.swift */,
+				006C64C92A7A10B9002EBA8F /* Setting */,
 				001A6CBF2A750082000ADB2C /* BlockUserList */,
 				001A6CBA2A74F974000ADB2C /* PrivacyEdit */,
 				00C2E9502A4E7B2B0090E705 /* MyQuestion */,
@@ -516,6 +523,15 @@
 				2EDF750A29EE5947006D7257 /* ChattyShareView.swift */,
 			);
 			path = SaveQuestionImage;
+			sourceTree = "<group>";
+		};
+		006C64C92A7A10B9002EBA8F /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				006C64CA2A7A10C8002EBA8F /* SettingView.swift */,
+				006C64CC2A7A1484002EBA8F /* SettingVM.swift */,
+			);
+			path = Setting;
 			sourceTree = "<group>";
 		};
 		0077E0F72A441FBE00611776 /* Ads */ = {
@@ -888,6 +904,7 @@
 				2EA1C7B82A3C5DD800232CDB /* MessageBoxShape.swift */,
 				2EA1C7BB2A3C5DD800232CDB /* TextExtensions.swift */,
 				2EA1C7B52A3C5DD800232CDB /* TimeExtensions.swift */,
+				00778D052A9A085D00AAB2C5 /* BindingExtention.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1190,6 +1207,7 @@
 				0077E1002A441FBE00611776 /* AdsView.swift in Sources */,
 				2EA1C7D52A3CE88E00232CDB /* UserSearchHistoryVM.swift in Sources */,
 				00DF744D2A6C5106009C711B /* TimeLineVM.swift in Sources */,
+				006C64CB2A7A10C8002EBA8F /* SettingView.swift in Sources */,
 				2E3114DC2A08CB930052B309 /* PrivacyEditView.swift in Sources */,
 				2E5F21F429AD4D31003B2A14 /* TokenModel.swift in Sources */,
 				001A6CC12A7500F8000ADB2C /* BlcokUserVM.swift in Sources */,
@@ -1202,6 +1220,7 @@
 				2E23386A29EB50E500DF6E2F /* AnswerEditor.swift in Sources */,
 				2EA1C7C12A3C5DD800232CDB /* DragGestureExtention.swift in Sources */,
 				2E0B64952A36636100EE7F90 /* FollowVM.swift in Sources */,
+				006C64CD2A7A1484002EBA8F /* SettingVM.swift in Sources */,
 				2E0B64932A350D3000EE7F90 /* GenericListModel.swift in Sources */,
 				2EA1C7BF2A3C5DD800232CDB /* TimeExtensions.swift in Sources */,
 				2ED68B052952F79C007F5EA7 /* IndexView.swift in Sources */,
@@ -1210,6 +1229,7 @@
 				2E0B9958297F507000BDC534 /* UserData.swift in Sources */,
 				00DF74602A6C90E8009C711B /* TimeLineCardVM.swift in Sources */,
 				2E7E27602A2C6DC400651366 /* TokenVM.swift in Sources */,
+				00778D062A9A085D00AAB2C5 /* BindingExtention.swift in Sources */,
 				001CC2052A70399000383A3C /* AnswerSheetVM.swift in Sources */,
 				001A6CC42A750B03000ADB2C /* UserCell.swift in Sources */,
 				2EB0689E2A26280E002E9D7A /* ErrorView.swift in Sources */,
