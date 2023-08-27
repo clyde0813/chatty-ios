@@ -19,6 +19,7 @@ struct ProfileModel: Codable,Hashable {
     var followState : Bool
     var blockState : Bool
     var rankState : Bool
+    var urlLink : String?
 
     enum CodingKeys: String, CodingKey {
         case username = "username"
@@ -34,6 +35,7 @@ struct ProfileModel: Codable,Hashable {
         case followState = "follow_status"
         case blockState = "block_state"
         case rankState = "ranking_status"
+        case urlLink = "link"
     }
 }
 
