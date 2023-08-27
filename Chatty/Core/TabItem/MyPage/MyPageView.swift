@@ -2,8 +2,6 @@ import SwiftUI
 import Kingfisher
 
 enum myPageStack : Hashable{
-    case profileView(String)
-    case editProfileView
     case allofQuestionView
     case EULAView
     case privacyEditView
@@ -81,7 +79,7 @@ struct MyPageView: View {
                                         
 //
                                         
-                                        NavigationLink(value: myPageStack.editProfileView) {
+                                        NavigationLink(value: ShareLink.editProfileView) {
                                             Text("프로필 수정")
                                                 .font(.system(size:14, weight: .bold))
                                                 .frame(height: 40)
@@ -259,10 +257,6 @@ struct MyPageView: View {
             .toolbar(.hidden)
             .navigationDestination(for: myPageStack.self) { result in
                 switch result {
-                case .editProfileView:
-                    ProfileEditView()
-                case .profileView(let username):
-                    ProfileView(username: username, clickTab: $clickTab)
                 case .allofQuestionView:
                     MyQuestionView()
                 case .privacyEditView:
@@ -273,6 +267,14 @@ struct MyPageView: View {
                     BlockedUsersView()
                 case .settingView:
                     SettingView(toggleState: AuthorizationService.share.currentUser?.rankState ?? false)
+                }
+            }
+            .navigationDestination(for: ShareLink.self) { result in
+                switch result {
+                case .profileView(let username):
+                    ProfileView(username: username, clickTab: $clickTab)
+                case .editProfileView:
+                    ProfileEditView()
                 }
             }
             .onAppear{
@@ -324,7 +326,7 @@ struct MyPageErrorView : View {
                     .frame(width: 310, height: 40)
                     .foregroundColor(Color.white)
                     .background(Color("Error Background"))
-                    .cornerRadius(16)
+                    .cornerRadius(8)
                     .padding(.bottom, 50)
                 Spacer()
             }

@@ -29,7 +29,7 @@ struct SettingView: View {
             
             Toggle(isOn: $viewmodel.toggleState){
                 HStack{
-                    Text("랭킹 비활성화")
+                    Text("랭킹 활성화")
                     Image(systemName: "trophy")
                 }
             }
@@ -67,7 +67,7 @@ extension SettingView {
                     .fontWeight(.bold)
                     .foregroundColor(.black)
             }
-            Text("내가 한 질문")
+            Text("환경설정")
                 .font(.system(size: 18))
                 .fontWeight(.medium)
                 .foregroundColor(.black)

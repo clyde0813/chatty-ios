@@ -1,8 +1,9 @@
-//
-//  BindingExtention.swift
-//  Chatty
-//
-//  Created by Hyeonho on 2023/08/26.
-//
 
 import Foundation
+import SwiftUI
+
+extension Binding {
+     func toUnwrapped<T>(defaultValue: T) -> Binding<T> where Value == Optional<T>  {
+        Binding<T>(get: { self.wrappedValue ?? defaultValue }, set: { self.wrappedValue = $0 })
+    }
+}
