@@ -170,17 +170,30 @@ struct RankingView: View {
                                     .mask(RoundedCornersShape(corners: [.topLeft, .topRight], radius: 20))
                                 VStack(spacing: 0){
                                     
-                                    ForEach(Array((rankingVM.rankingModel?.ranking ?? [] ).enumerated()), id:\.element.username){ index, rank in
-                                        NavigationLink(value: ShareLink.profileView(rank.username)) {
-                                            RankingCell(ranking: rank , rank: index+4)
+//                                    ForEach(Array((rankingVM.rankingModel?.ranking ?? [] ).enumerated()), id:\.element.username){ index, rank in
+//                                        NavigationLink(value: ShareLink.profileView(rank.username)) {
+//                                            RankingCell(ranking: rank , rank: index+4)
+//                                        }
+////                                        if let ranking = rankingVM.rankingModel?.ranking[index+3] {
+////                                            NavigationLink(value: ShareLink.profileView(ranking.username)) {
+////                                                RankingCell(ranking: ranking , rank: index+4)
+////                                            }
+////                                        }
+//
+//                                    }
+                                    
+                                    ForEach(0 ..< (rankingVM.rankingModel?.ranking.count ?? 0) - 3 ){ result in
+                                        if let rank = rankingVM.rankingModel?.ranking[result+3] {
+                                            NavigationLink(value: ShareLink.profileView(rank.username)) {
+                                                RankingCell(ranking: rank , rank: result+4)
+                                            }
                                         }
                                     }
-                                    
                                     //                                    ForEach(0 ..< (rankingVM.rankingModel?.ranking.count ?? 0) - 3 ) { result in
                                     //                                        if let ranking  = rankingVM.rankingModel?.ranking[result+3]{
-                                    //                                            NavigationLink(value: ShareLink.profileView(ranking.username)) {
-                                    //                                                RankingCell(ranking: ranking , rank: result+4)
-                                    //                                            }
+//                                                                                NavigationLink(value: ShareLink.profileView(ranking.username)) {
+//                                                                                    RankingCell(ranking: ranking , rank: result+4)
+//                                                                                }
                                     //
                                     //                                        }
                                     //                                    }
@@ -200,9 +213,9 @@ struct RankingView: View {
             .onAppear{
                 rankingVM.rankingGet()
             }
-            //            .onDisappear{
-            //                rankingVM.rankingModel = nil
-            //            }
+            .onDisappear{
+                rankingVM.rankingModel = nil
+            }
             .navigationDestination(for: ShareLink.self) { result in
                 switch result {
                 case .profileView(let username):
