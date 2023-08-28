@@ -284,7 +284,8 @@ struct ProfileView: View {
                                                 .lineLimit(3)
                                         }
                                         
-                                        if let url = profileVM.profileModel?.urlLink {
+                                        
+                                        if let url = profileVM.profileModel?.urlLink, url.isEmpty != true {
                                             Link(destination: URL(string: url)!) {
                                                         HStack(spacing: 2){
                                                             Image(systemName: "link")
@@ -298,7 +299,6 @@ struct ProfileView: View {
                                         
                                         //MARK: - follow/following
                                         HStack{
-                                          
                                             NavigationLink(value: StackPath.FollowView(username, followTab.follower)) {
                                                 Text("\(profileVM.profileModel?.follower ?? 0)")
                                                     .font(Font.system(size: 18, weight: .bold))
