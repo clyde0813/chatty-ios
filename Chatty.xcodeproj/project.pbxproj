@@ -107,6 +107,7 @@
 		2EF5AC9629AF01DF0019A37D /* ChattyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF5AC9529AF01DF0019A37D /* ChattyTests.swift */; };
 		7726157C2A3E8FEA00DDE57B /* QuestionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7726157B2A3E8FEA00DDE57B /* QuestionDetailView.swift */; };
 		7726157F2A3E90C300DDE57B /* QuestionDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7726157E2A3E90C300DDE57B /* QuestionDetailVM.swift */; };
+		7787A81A2A9C5FFA00B830C1 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787A8192A9C5FFA00B830C1 /* WebView.swift */; };
 		B3FA301530FB64EF93B91AD0 /* Pods_Chatty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A88D7610438E16006A219B1A /* Pods_Chatty.framework */; };
 /* End PBXBuildFile section */
 
@@ -235,6 +236,7 @@
 		2EF5AC9529AF01DF0019A37D /* ChattyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChattyTests.swift; sourceTree = "<group>"; };
 		7726157B2A3E8FEA00DDE57B /* QuestionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionDetailView.swift; sourceTree = "<group>"; };
 		7726157E2A3E90C300DDE57B /* QuestionDetailVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionDetailVM.swift; sourceTree = "<group>"; };
+		7787A8192A9C5FFA00B830C1 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		972F13786752B3E6D058EE58 /* Pods-Chatty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatty.release.xcconfig"; path = "Target Support Files/Pods-Chatty/Pods-Chatty.release.xcconfig"; sourceTree = "<group>"; };
 		9C9832FFE99896C240EA2AEC /* Pods-ChattyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattyTests.debug.xcconfig"; path = "Target Support Files/Pods-ChattyTests/Pods-ChattyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A88D7610438E16006A219B1A /* Pods_Chatty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -687,6 +689,7 @@
 		00DF74552A6C822C009C711B /* Share */ = {
 			isa = PBXGroup;
 			children = (
+				7787A8182A9C5FEB00B830C1 /* WebView */,
 				002105212A6DCEE500A80EEA /* SaveQuestionImage */,
 				001A6CC22A750AF1000ADB2C /* UserCell */,
 				001A6CB62A73BF98000ADB2C /* QuestionEditor */,
@@ -915,6 +918,14 @@
 				A88D7610438E16006A219B1A /* Pods_Chatty.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7787A8182A9C5FEB00B830C1 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				7787A8192A9C5FFA00B830C1 /* WebView.swift */,
+			);
+			path = WebView;
 			sourceTree = "<group>";
 		};
 		94C951001C7AD06B2D831836 /* Pods */ = {
@@ -1174,6 +1185,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E71BD4B29F55FF100D17200 /* ProfileEditView.swift in Sources */,
+				7787A81A2A9C5FFA00B830C1 /* WebView.swift in Sources */,
 				2E0B649A2A36637C00EE7F90 /* FollowView.swift in Sources */,
 				2E9D85BE29DBB657007C9904 /* ErrorModel.swift in Sources */,
 				001A01102A40BC6F009F7692 /* UserOption.swift in Sources */,
