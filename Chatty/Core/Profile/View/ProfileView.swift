@@ -284,7 +284,8 @@ struct ProfileView: View {
                                                 .lineLimit(3)
                                         }
                                         
-                                        if let url = profileVM.profileModel?.urlLink {
+                                        if let url = profileVM.profileModel?.urlLink ,url.isEmpty != true {
+                                            
                                             Link(destination: URL(string: url)!) {
                                                         HStack(spacing: 2){
                                                             Image(systemName: "link")
@@ -576,8 +577,8 @@ struct ProfileView: View {
             }
             .ignoresSafeArea(.all, edges: .top)
             .onAppear{
-                profileVM.subscribe()
                 profileVM.reset()
+                profileVM.subscribe()
                 profileVM.getProfile(username: username)
                 profileVM.getQuestion(username: username)
             }
