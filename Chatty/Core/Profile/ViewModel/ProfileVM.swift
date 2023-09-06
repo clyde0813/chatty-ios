@@ -41,6 +41,7 @@ class ProfileVM : ObservableObject {
     
     func reset(){
         ChattyService.share.questionModel = nil
+        UserService.share.user = nil
         currentPage = 1
     }
     

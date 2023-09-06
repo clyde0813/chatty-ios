@@ -14,14 +14,14 @@ struct ChattyApp: App {
     
     var body: some Scene {
         WindowGroup {
-
-            if UserDefaults.standard.bool(forKey: "isLoggedIn") {
-                //MARK: -조건에 아래코드도 넣고싶지만, 데이터를불러오는과정에서 깜빡이는것때문에 일단은 뺴두었음
-                //chattyAppVM.currentUser != nil &&
-                MainView()
-            }else {
-                IndexView()
-            }
+            TestAdsView()
+//            if UserDefaults.standard.bool(forKey: "isLoggedIn") {
+//                //MARK: -조건에 아래코드도 넣고싶지만, 데이터를불러오는과정에서 깜빡이는것때문에 일단은 뺴두었음
+//                //chattyAppVM.currentUser != nil &&
+//                MainView()
+//            }else {
+//                IndexView()
+//            }
 
         }
     }

@@ -11,7 +11,7 @@ class FollowVM : ObservableObject{
     
     private var cancellable = Set<AnyCancellable>()
     
-    init() {
+    func fetchUserList() {
         UserService.share.$userList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] followModel in
