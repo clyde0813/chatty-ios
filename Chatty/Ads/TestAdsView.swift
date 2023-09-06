@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct TestAdsView: View {
+    @StateObject var viewmodel = ViewModel()
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            NativeAdView(nativeAdViewModel: viewmodel)
+                .frame(width: 400,height: 150)
+        }
+        .onAppear{
+            viewmodel.refreshAd()
+        }
     }
 }
 

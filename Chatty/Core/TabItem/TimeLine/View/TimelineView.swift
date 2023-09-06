@@ -15,6 +15,7 @@ enum StackPath : Hashable{
 
 struct TimelineView: View {
     @StateObject var timelineVM = TimeLineVM()
+    @StateObject var adVM = ViewModel()
     
     @State var showMsg = false
     
@@ -79,6 +80,7 @@ struct TimelineView: View {
                 timelineVM.currentPage = 1
                 timelineVM.subscribe()
                 timelineVM.timelineGet()
+                adVM.refreshAd()
             }
             .onDisappear{
                 timelineVM.currentPage = nil
@@ -260,7 +262,9 @@ extension TimelineView {
                                         }
                                     
                                     if index % 4 == 0 && index != 0 {
-                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
+                                        NativeAdView(nativeAdViewModel: adVM)
+                                            .frame(width: getWindowWidth()-32,height: 100)
+//                                        AdBannerView(bannerID: "ca-app-pub-3017845272648516/7121150693", width: proxy.size.width)
                                     }
                                 }
                             }
