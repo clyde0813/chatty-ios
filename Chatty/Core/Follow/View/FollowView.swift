@@ -59,14 +59,15 @@ struct FollowView: View {
             
         }
         .onAppear{
+            followVM.fetchUserList()
             followVM.getFollow(username: username,currentTab: currentTab)
         }
         .onDisappear{
             followVM.reset()
-            followVM.currentPage = nil
             followVM.cancel()
         }
         .onChange(of: currentTab, perform: { newValue in
+            print("FollowView on Change run!")
             followVM.reset()
             followVM.currentPage = 1
             followVM.getFollow(username: username, currentTab: currentTab)

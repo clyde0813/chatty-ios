@@ -31,9 +31,13 @@
 		00778D062A9A085D00AAB2C5 /* BindingExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00778D052A9A085D00AAB2C5 /* BindingExtention.swift */; };
 		0077E0FD2A441FBE00611776 /* Native.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0077E0F82A441FBE00611776 /* Native.swift */; };
 		0077E0FE2A441FBE00611776 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0077E0F92A441FBE00611776 /* AdBannerView.swift */; };
-		0077E0FF2A441FBE00611776 /* GADTSmallTemplateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0077E0FA2A441FBE00611776 /* GADTSmallTemplateView.xib */; };
 		0077E1002A441FBE00611776 /* AdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0077E0FB2A441FBE00611776 /* AdsView.swift */; };
-		0077E1012A441FBE00611776 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0077E0FC2A441FBE00611776 /* NativeAdView.xib */; };
+		007CFC352AA3089E00AF8541 /* NativeAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CFC342AA3089E00AF8541 /* NativeAdView.swift */; };
+		007CFC372AA308C400AF8541 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CFC362AA308C400AF8541 /* ViewModel.swift */; };
+		007CFC3C2AA30CCF00AF8541 /* GADTSmallTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 007CFC392AA30CCF00AF8541 /* GADTSmallTemplateView.m */; };
+		007CFC3D2AA30CCF00AF8541 /* GADTSmallTemplateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 007CFC3A2AA30CCF00AF8541 /* GADTSmallTemplateView.xib */; };
+		007CFC402AA30DA800AF8541 /* GADTTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 007CFC3E2AA30DA700AF8541 /* GADTTemplateView.m */; };
+		007CFC422AA3132100AF8541 /* TestAdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CFC412AA3132100AF8541 /* TestAdsView.swift */; };
 		00B37AB92A65C782008BD22B /* RankingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B37AB82A65C782008BD22B /* RankingVM.swift */; };
 		00C2E9522A4E7B4A0090E705 /* MyQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C2E9512A4E7B4A0090E705 /* MyQuestionView.swift */; };
 		00C2E9552A4EDB950090E705 /* MyQuestionVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C2E9542A4EDB950090E705 /* MyQuestionVM.swift */; };
@@ -153,9 +157,16 @@
 		00778D052A9A085D00AAB2C5 /* BindingExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtention.swift; sourceTree = "<group>"; };
 		0077E0F82A441FBE00611776 /* Native.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Native.swift; sourceTree = "<group>"; };
 		0077E0F92A441FBE00611776 /* AdBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
-		0077E0FA2A441FBE00611776 /* GADTSmallTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GADTSmallTemplateView.xib; sourceTree = "<group>"; };
 		0077E0FB2A441FBE00611776 /* AdsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdsView.swift; sourceTree = "<group>"; };
-		0077E0FC2A441FBE00611776 /* NativeAdView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NativeAdView.xib; sourceTree = "<group>"; };
+		007CFC342AA3089E00AF8541 /* NativeAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeAdView.swift; sourceTree = "<group>"; };
+		007CFC362AA308C400AF8541 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		007CFC382AA30CCE00AF8541 /* Chatty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Chatty-Bridging-Header.h"; sourceTree = "<group>"; };
+		007CFC392AA30CCF00AF8541 /* GADTSmallTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GADTSmallTemplateView.m; sourceTree = "<group>"; };
+		007CFC3A2AA30CCF00AF8541 /* GADTSmallTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GADTSmallTemplateView.xib; path = "../../../../Downloads/googleads-mobile-ios-native-templates-main/nativetemplates/GADTSmallTemplateView.xib"; sourceTree = "<group>"; };
+		007CFC3B2AA30CCF00AF8541 /* GADTSmallTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADTSmallTemplateView.h; sourceTree = "<group>"; };
+		007CFC3E2AA30DA700AF8541 /* GADTTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GADTTemplateView.m; sourceTree = "<group>"; };
+		007CFC3F2AA30DA700AF8541 /* GADTTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADTTemplateView.h; sourceTree = "<group>"; };
+		007CFC412AA3132100AF8541 /* TestAdsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAdsView.swift; sourceTree = "<group>"; };
 		00B37AB82A65C782008BD22B /* RankingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingVM.swift; sourceTree = "<group>"; };
 		00C2E9512A4E7B4A0090E705 /* MyQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyQuestionView.swift; sourceTree = "<group>"; };
 		00C2E9542A4EDB950090E705 /* MyQuestionVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyQuestionVM.swift; sourceTree = "<group>"; };
@@ -539,11 +550,18 @@
 		0077E0F72A441FBE00611776 /* Ads */ = {
 			isa = PBXGroup;
 			children = (
+				007CFC3F2AA30DA700AF8541 /* GADTTemplateView.h */,
+				007CFC3E2AA30DA700AF8541 /* GADTTemplateView.m */,
+				007CFC3B2AA30CCF00AF8541 /* GADTSmallTemplateView.h */,
+				007CFC392AA30CCF00AF8541 /* GADTSmallTemplateView.m */,
+				007CFC3A2AA30CCF00AF8541 /* GADTSmallTemplateView.xib */,
 				0077E0F82A441FBE00611776 /* Native.swift */,
 				0077E0F92A441FBE00611776 /* AdBannerView.swift */,
-				0077E0FA2A441FBE00611776 /* GADTSmallTemplateView.xib */,
 				0077E0FB2A441FBE00611776 /* AdsView.swift */,
-				0077E0FC2A441FBE00611776 /* NativeAdView.xib */,
+				007CFC342AA3089E00AF8541 /* NativeAdView.swift */,
+				007CFC362AA308C400AF8541 /* ViewModel.swift */,
+				007CFC382AA30CCE00AF8541 /* Chatty-Bridging-Header.h */,
+				007CFC412AA3132100AF8541 /* TestAdsView.swift */,
 			);
 			path = Ads;
 			sourceTree = "<group>";
@@ -848,6 +866,7 @@
 		2EE6CB312952F4F300E281A0 /* Chatty */ = {
 			isa = PBXGroup;
 			children = (
+				0077E0F72A441FBE00611776 /* Ads */,
 				001CC2172A722B2700383A3C /* ChattyAppVM.swift */,
 				2EE6CB322952F4F300E281A0 /* ChattyApp.swift */,
 				001CC1E52A6E6A7000383A3C /* Service */,
@@ -858,7 +877,6 @@
 				2EF5AC8B29AEB0770019A37D /* Extension */,
 				00B0ED492A754241009F6EB4 /* ETC */,
 				2EA1C7CE2A3CDB9000232CDB /* CoreData */,
-				0077E0F72A441FBE00611776 /* Ads */,
 				2EA1C7C62A3CD82200232CDB /* DataModel */,
 				2E5F21FB29AD6147003B2A14 /* Keychain */,
 				2E5243E62A02387F009C4E64 /* GoogleService-Info.plist */,
@@ -1014,6 +1032,7 @@
 				TargetAttributes = {
 					2EE6CB2E2952F4F300E281A0 = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1430;
 					};
 					2EE6CB3E2952F4F400E281A0 = {
 						CreatedOnToolsVersion = 14.1;
@@ -1051,11 +1070,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0077E0FF2A441FBE00611776 /* GADTSmallTemplateView.xib in Resources */,
+				007CFC3D2AA30CCF00AF8541 /* GADTSmallTemplateView.xib in Resources */,
 				2EE6CB3A2952F4F400E281A0 /* Preview Assets.xcassets in Resources */,
 				2E5243E72A02387F009C4E64 /* GoogleService-Info.plist in Resources */,
 				2E8747EC29FF373C00839360 /* SUIT-Heavy.ttf in Resources */,
-				0077E1012A441FBE00611776 /* NativeAdView.xib in Resources */,
 				2EE6CB372952F4F400E281A0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1205,7 +1223,9 @@
 				2E80F34129E2F65A002280D5 /* QuestionEditor.swift in Sources */,
 				001A01072A40A4DD009F7692 /* BlockedUsersView.swift in Sources */,
 				2EA1C7C02A3C5DD800232CDB /* MailExtensions.swift in Sources */,
+				007CFC352AA3089E00AF8541 /* NativeAdView.swift in Sources */,
 				2E71BD4629F4C6E300D17200 /* TestView.swift in Sources */,
+				007CFC372AA308C400AF8541 /* ViewModel.swift in Sources */,
 				001CC1F82A6E829B00383A3C /* QuestionOptionVM.swift in Sources */,
 				7726157F2A3E90C300DDE57B /* QuestionDetailVM.swift in Sources */,
 				001CC20B2A721EBB00383A3C /* MyPageVM.swift in Sources */,
@@ -1215,8 +1235,10 @@
 				00F90A002A57351500B15B13 /* TimelineOption.swift in Sources */,
 				2EA1C7D32A3CE3F900232CDB /* UserSearchHistoryModel.xcdatamodeld in Sources */,
 				00C2E9552A4EDB950090E705 /* MyQuestionVM.swift in Sources */,
+				007CFC402AA30DA800AF8541 /* GADTTemplateView.m in Sources */,
 				2E7E275B2A2C60B200651366 /* TimelineView.swift in Sources */,
 				0077E1002A441FBE00611776 /* AdsView.swift in Sources */,
+				007CFC3C2AA30CCF00AF8541 /* GADTSmallTemplateView.m in Sources */,
 				2EA1C7D52A3CE88E00232CDB /* UserSearchHistoryVM.swift in Sources */,
 				00DF744D2A6C5106009C711B /* TimeLineVM.swift in Sources */,
 				006C64CB2A7A10C8002EBA8F /* SettingView.swift in Sources */,
@@ -1244,6 +1266,7 @@
 				00778D062A9A085D00AAB2C5 /* BindingExtention.swift in Sources */,
 				001CC2052A70399000383A3C /* AnswerSheetVM.swift in Sources */,
 				001A6CC42A750B03000ADB2C /* UserCell.swift in Sources */,
+				007CFC422AA3132100AF8541 /* TestAdsView.swift in Sources */,
 				2EB0689E2A26280E002E9D7A /* ErrorView.swift in Sources */,
 				2EDF751029F033D1006D7257 /* RankingCell.swift in Sources */,
 				001A6CBE2A74FBC1000ADB2C /* PrivacyEditVM.swift in Sources */,
@@ -1432,6 +1455,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Chatty/Chatty.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1461,6 +1485,8 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Chatty/Ads/Chatty-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1472,6 +1498,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Chatty/Chatty.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1501,6 +1528,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Chatty/Ads/Chatty-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
