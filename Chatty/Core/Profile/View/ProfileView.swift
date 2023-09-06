@@ -1,6 +1,7 @@
 import SwiftUI
 import Kingfisher
 
+
 enum PostTab : String {
     case responsedTab = "responsed"
     case arrivedTab = "arrived"
@@ -284,6 +285,7 @@ struct ProfileView: View {
                                                 .lineLimit(3)
                                         }
                                         
+
                                         if let url = profileVM.profileModel?.urlLink ,url.isEmpty != true {
                                             
                                             Link(destination: URL(string: url)!) {
@@ -294,12 +296,11 @@ struct ProfileView: View {
                                                         .font(Font.system(size: 15,weight: .semibold))
                                                         .foregroundColor(.gray)
                                                         .lineLimit(1)
-                                                    }
+
                                         }
                                         
                                         //MARK: - follow/following
                                         HStack{
-                                          
                                             NavigationLink(value: StackPath.FollowView(username, followTab.follower)) {
                                                 Text("\(profileVM.profileModel?.follower ?? 0)")
                                                     .font(Font.system(size: 18, weight: .bold))
